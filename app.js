@@ -37,6 +37,8 @@ const state = {
   stores: [],
   transactions: [],
   deferredInstallPrompt: null,
+  pendingServiceWorker: null,
+  refreshingForUpdate: false,
   theme: "default"
 };
 
@@ -674,6 +676,54 @@ async function copyStoreToMealType(id, mealType) {
   await refresh();
 }
 
+function ensureUpdateToast() {
+  let toast = $("#updateToast");
+  if (toast) return toast;
+  toast = document.createElement("div");
+  toast.id = "updateToast";
+  toast.className = "update-toast hidden";
+  toast.innerHTML = `
+    <div>
+      <strong>有新版本可用</strong>
+      <span>更新後會重新載入 App，資料仍保存在本機。</span>
+    </div>
+    <button id="updateNowButton" class="primary-button" type="button">更新</button>
+  `;
+  document.body.appendChild(toast);
+  $("#updateNowButton").addEventListener("click", () => {
+    if (!state.pendingServiceWorker) return;
+    state.pendingServiceWorker.postMessage({ type: "SKIP_WAITING" });
+  });
+  return toast;
+}
+
+function showUpdateToast(worker) {
+  state.pendingServiceWorker = worker;
+  ensureUpdateToast().classList.remove("hidden");
+}
+
+function watchServiceWorkerUpdate(registration) {
+  if (registration.waiting && navigator.serviceWorker.controller) {
+    showUpdateToast(registration.waiting);
+  }
+
+  registration.addEventListener("updatefound", () => {
+    const newWorker = registration.installing;
+    if (!newWorker) return;
+    newWorker.addEventListener("statechange", () => {
+      if (newWorker.state === "installed" && navigator.serviceWorker.controller) {
+        showUpdateToast(newWorker);
+      }
+    });
+  });
+
+  navigator.serviceWorker.addEventListener("controllerchange", () => {
+    if (state.refreshingForUpdate) return;
+    state.refreshingForUpdate = true;
+    window.location.reload();
+  });
+}
+
 function bindEvents() {
   $(".bottom-tabs").addEventListener("click", (event) => {
     const button = event.target.closest(".tab");
@@ -731,7 +781,11 @@ async function init() {
   state.db = await openDb();
   await refresh();
   if ("serviceWorker" in navigator) {
-    navigator.serviceWorker.register("./service-worker.js");
+    const registration = await navigator.serviceWorker.register("./service-worker.js");
+    watchServiceWorkerUpdate(registration);
+    document.addEventListener("visibilitychange", () => {
+      if (document.visibilityState === "visible") registration.update();
+    });
   }
 }
 
