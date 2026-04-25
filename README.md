@@ -33,6 +33,32 @@ http://localhost:8080
 
 也可以用任何靜態檔案伺服器，例如 VS Code Live Server、`npx serve`、`http-server`。
 
+## GitHub Pages 部署
+
+本專案是純靜態 PWA，可直接部署到 GitHub Pages，不需要後端、登入系統或雲端同步。資料會繼續保存在使用者瀏覽器的 IndexedDB。
+
+部署方式：
+
+1. 將程式推送到 GitHub repository 的 `main` branch。
+2. 到 GitHub repository 頁面打開 `Settings`。
+3. 進入 `Pages`。
+4. 在 `Build and deployment` 的 `Source` 選擇 `Deploy from a branch`。
+5. Branch 選 `main`，資料夾選 `/ (root)`。
+6. 儲存後等待 GitHub Pages 完成部署。
+
+若 repository 名稱是 `Launch-gogogo`，部署網址通常會是：
+
+```text
+https://<你的 GitHub 帳號>.github.io/Launch-gogogo/
+```
+
+GitHub Pages 會把專案放在 repository 子路徑下，因此本專案所有本機資源都使用 `./` 相對路徑：
+
+- `index.html` 使用 `./manifest.json`、`./styles.css`、`./app.js`。
+- `manifest.json` 使用 `./index.html` 作為 `start_url`，並使用 `./` 作為 `scope`。
+- `app.js` 使用 `navigator.serviceWorker.register("./service-worker.js")` 註冊 Service Worker。
+- `service-worker.js` 快取清單使用 `./`、`./index.html` 等相對路徑。
+
 ## 手機加入主畫面
 
 1. 讓手機與電腦在同一個網路，或部署到 HTTPS 靜態網站。
