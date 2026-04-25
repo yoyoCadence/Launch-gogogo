@@ -12,13 +12,32 @@ const PAYMENT_LABELS = {
   unpaid: "尚未付款"
 };
 
+const THEME_STORAGE_KEY = "launch-gogogo-theme";
+const THEMES = [
+  { id: "default", name: "便當綠", colors: ["#1f6f5b", "#d66b3d", "#f6f4ee"] },
+  { id: "dark-purple", name: "暗夜紫", colors: ["#7c3aed", "#f59e0b", "#0d0d1a"] },
+  { id: "aurora-blue", name: "極光藍", colors: ["#0ea5e9", "#06d6a0", "#050d1a"] },
+  { id: "emerald", name: "翡翠綠", colors: ["#16a34a", "#fbbf24", "#080f0a"] },
+  { id: "flame", name: "赤焰", colors: ["#ea580c", "#fde047", "#120a05"] },
+  { id: "neon-pink", name: "霓虹粉", colors: ["#db2777", "#a855f7", "#12040f"] },
+  { id: "light", name: "純白光", colors: ["#7c3aed", "#d97706", "#f1f5f9"] },
+  { id: "wabi", name: "日系簡約", colors: ["#9b2335", "#7a6a4a", "#f5f0e8"] },
+  { id: "material", name: "Material", colors: ["#d0bcff", "#efb8c8", "#1c1b1f"] },
+  { id: "cyberpunk", name: "賽博龐克", colors: ["#00ff9f", "#ff2d78", "#050508"] },
+  { id: "pixel", name: "像素", colors: ["#39ff14", "#ffff00", "#0a0a0a"] },
+  { id: "anime", name: "動漫", colors: ["#ff6b9d", "#7ec8e3", "#fff5f8"] },
+  { id: "gothic", name: "哥德蘿莉", colors: ["#c41e3a", "#d4af37", "#0d0009"] },
+  { id: "github", name: "GitHub", colors: ["#1f6feb", "#2da44e", "#0d1117"] }
+];
+
 const state = {
   db: null,
   activePage: "ledger",
   coworkers: [],
   stores: [],
   transactions: [],
-  deferredInstallPrompt: null
+  deferredInstallPrompt: null,
+  theme: "default"
 };
 
 const $ = (selector) => document.querySelector(selector);
@@ -38,11 +57,31 @@ const escapeHtml = (value) => String(value ?? "").replace(/[&<>"']/g, (char) => 
 
 function defaultMealType(date = new Date()) {
   const hour = date.getHours();
-  return hour >= 5 && hour <= 14 ? "lunch" : "dinner";
+  return hour < 14 ? "lunch" : "dinner";
 }
 
 function googleSearchUrl(name) {
   return `https://www.google.com/search?q=${encodeURIComponent(name.trim())}`;
+}
+
+function getThemeById(themeId) {
+  return THEMES.find((theme) => theme.id === themeId) || THEMES[0];
+}
+
+function applyTheme(themeId) {
+  const theme = getThemeById(themeId);
+  state.theme = theme.id;
+  if (theme.id === "default") {
+    document.documentElement.removeAttribute("data-theme");
+  } else {
+    document.documentElement.dataset.theme = theme.id;
+  }
+  document.querySelector('meta[name="theme-color"]')?.setAttribute("content", theme.colors[0]);
+  localStorage.setItem(THEME_STORAGE_KEY, theme.id);
+}
+
+function requiredLabel(text) {
+  return `<span class="required-label">${text}</span>`;
 }
 
 function openDb() {
@@ -157,6 +196,7 @@ function render() {
   renderCoworkerHistory();
   renderStores("lunch");
   renderStores("dinner");
+  renderSettings();
 }
 
 function renderCoworkerOptions() {
@@ -296,13 +336,27 @@ function renderStores(mealType) {
   }).join("") : `<div class="empty">還沒有${mealType === "lunch" ? "午餐" : "晚餐"}店家。</div>`;
 }
 
+function renderSettings() {
+  const currentTheme = getThemeById(state.theme);
+  $("#currentThemeName").textContent = currentTheme.name;
+  $("#themeGrid").innerHTML = THEMES.map((theme) => `
+    <button class="theme-card ${theme.id === currentTheme.id ? "active" : ""}" type="button" data-action="set-theme" data-theme-id="${theme.id}" aria-pressed="${theme.id === currentTheme.id}">
+      <span class="theme-preview" aria-hidden="true">
+        ${theme.colors.map((color) => `<span class="theme-swatch" style="background:${color}"></span>`).join("")}
+      </span>
+      <span class="theme-name">${escapeHtml(theme.name)}</span>
+      ${theme.id === currentTheme.id ? `<span class="theme-check">✓</span>` : ""}
+    </button>
+  `).join("");
+}
+
 function setPage(page) {
   state.activePage = page;
   $(".page.active")?.classList.remove("active");
   $(".tab.active")?.classList.remove("active");
   $(`#${page}Page`).classList.add("active");
   $(`#${page}Tab`).classList.add("active");
-  $("#pageTitle").textContent = page === "ledger" ? "Ledger" : page === "lunch" ? "Lunch Stores" : "Dinner Stores";
+  $("#pageTitle").textContent = page === "ledger" ? "Ledger" : page === "lunch" ? "Lunch Stores" : page === "dinner" ? "Dinner Stores" : "Settings";
 }
 
 function coworkerOptions(selectedId = "") {
@@ -381,15 +435,15 @@ function openTopupEditor(transaction = null) {
     title: transaction ? "編輯儲值金" : "新增儲值金",
     body: `
       <label class="field">
-        <span>日期</span>
+        ${requiredLabel("日期")}
         <input name="date" type="date" required value="${transaction?.date || $("#ledgerDate").value || todayString()}">
       </label>
       <label class="field">
-        <span>同事</span>
+        ${requiredLabel("同事")}
         <select name="coworkerId" required>${coworkerOptions(transaction?.coworkerId)}</select>
       </label>
       <label class="field">
-        <span>金額</span>
+        ${requiredLabel("金額")}
         <input name="amount" type="number" inputmode="numeric" min="1" step="1" required value="${transaction?.amount || ""}">
       </label>
       <label class="field">
@@ -415,15 +469,16 @@ function openTopupEditor(transaction = null) {
 function orderStoreFields(mealType, selectedStoreId = "") {
   return `
     <label class="field">
-      <span>店家</span>
-      <select name="storeId" id="orderStoreSelect">
+      ${requiredLabel("店家")}
+      <select name="storeId" id="orderStoreSelect" required>
         ${storeOptions(mealType, selectedStoreId)}
         <option value="__new" ${selectedStoreId ? "" : "selected"}>新增店家</option>
       </select>
     </label>
     <label class="field" id="newStoreNameField">
-      <span>新店家名稱</span>
+      ${requiredLabel("新店家名稱")}
       <input name="newStoreName" maxlength="80" placeholder="例如：阿明便當">
+      <span class="field-hint">選擇「新增店家」時必填。</span>
     </label>
   `;
 }
@@ -433,8 +488,15 @@ function bindOrderStoreToggle() {
   const field = $("#newStoreNameField");
   if (!select || !field) return;
   const sync = () => field.classList.toggle("hidden", select.value !== "__new");
+  const syncRequired = () => {
+    const input = field.querySelector("input");
+    if (!input) return;
+    input.required = select.value === "__new";
+  };
   select.addEventListener("change", sync);
+  select.addEventListener("change", syncRequired);
   sync();
+  syncRequired();
 }
 
 async function ensureStoreForOrder(formData, mealType) {
@@ -479,31 +541,32 @@ function openOrderEditor(transaction = null) {
     title: transaction ? "編輯餐點訂單" : "新增餐點訂單",
     body: `
       <label class="field">
-        <span>日期</span>
+        ${requiredLabel("日期")}
         <input name="date" type="date" required value="${transaction?.date || $("#ledgerDate").value || todayString()}">
       </label>
       <label class="field">
-        <span>餐別</span>
+        ${requiredLabel("餐別")}
         <select name="mealType" id="mealTypeSelect" required>
           <option value="lunch" ${mealType === "lunch" ? "selected" : ""}>午餐</option>
           <option value="dinner" ${mealType === "dinner" ? "selected" : ""}>晚餐</option>
         </select>
+        <span class="field-hint">系統會依目前時間預選：14:00 前午餐，14:00 後晚餐。</span>
       </label>
       <div id="orderStoreFields">${orderStoreFields(mealType, transaction?.storeId)}</div>
       <label class="field">
-        <span>餐點名稱</span>
-        <input name="mealName" maxlength="80" value="${escapeHtml(transaction?.mealName || "")}" placeholder="例如：雞腿飯">
+        ${requiredLabel("餐點名稱")}
+        <input name="mealName" maxlength="80" required value="${escapeHtml(transaction?.mealName || "")}" placeholder="例如：雞腿飯">
       </label>
       <label class="field">
-        <span>同事</span>
+        ${requiredLabel("同事")}
         <select name="coworkerId" required>${coworkerOptions(transaction?.coworkerId)}</select>
       </label>
       <label class="field">
-        <span>金額</span>
+        ${requiredLabel("金額")}
         <input name="amount" type="number" inputmode="numeric" min="1" step="1" required value="${transaction?.amount || ""}">
       </label>
       <label class="field">
-        <span>付款方式</span>
+        ${requiredLabel("付款方式")}
         <select name="paymentMethod" required>
           <option value="prepaidBalance" ${transaction?.paymentMethod === "prepaidBalance" ? "selected" : ""}>從儲值金扣款</option>
           <option value="cashToday" ${transaction?.paymentMethod === "cashToday" ? "selected" : ""}>當天現金付款</option>
@@ -640,6 +703,10 @@ function bindEvents() {
     if (action === "delete-transaction") deleteTransaction(id);
     if (action === "edit-store") openStoreEditor(mealType, state.stores.find((item) => item.id === id));
     if (action === "copy-store") copyStoreToMealType(id, mealType);
+    if (action === "set-theme") {
+      applyTheme(trigger.dataset.themeId);
+      renderSettings();
+    }
   });
 
   window.addEventListener("beforeinstallprompt", (event) => {
@@ -658,6 +725,7 @@ function bindEvents() {
 }
 
 async function init() {
+  applyTheme(localStorage.getItem(THEME_STORAGE_KEY) || "default");
   $("#ledgerDate").value = todayString();
   bindEvents();
   state.db = await openDb();
