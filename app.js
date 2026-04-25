@@ -1,0 +1,673 @@
+const DB_NAME = "launch-gogogo-pwa";
+const DB_VERSION = 1;
+const STORE_NAMES = {
+  coworkers: "coworkers",
+  stores: "stores",
+  transactions: "transactions"
+};
+
+const PAYMENT_LABELS = {
+  prepaidBalance: "儲值金扣款",
+  cashToday: "當天現金付款",
+  unpaid: "尚未付款"
+};
+
+const state = {
+  db: null,
+  activePage: "ledger",
+  coworkers: [],
+  stores: [],
+  transactions: [],
+  deferredInstallPrompt: null
+};
+
+const $ = (selector) => document.querySelector(selector);
+const todayString = () => new Date().toISOString().slice(0, 10);
+const nowIso = () => new Date().toISOString();
+const uid = () => `${Date.now().toString(36)}-${crypto.getRandomValues(new Uint32Array(1))[0].toString(36)}`;
+const money = (value) => `$${Number(value || 0).toLocaleString("zh-TW")}`;
+const signedMoney = (value) => `${value >= 0 ? "" : "-"}$${Math.abs(value || 0).toLocaleString("zh-TW")}`;
+const parseMoney = (value) => Math.round(Number(value || 0));
+const escapeHtml = (value) => String(value ?? "").replace(/[&<>"']/g, (char) => ({
+  "&": "&amp;",
+  "<": "&lt;",
+  ">": "&gt;",
+  "\"": "&quot;",
+  "'": "&#039;"
+}[char]));
+
+function defaultMealType(date = new Date()) {
+  const hour = date.getHours();
+  return hour >= 5 && hour <= 14 ? "lunch" : "dinner";
+}
+
+function googleSearchUrl(name) {
+  return `https://www.google.com/search?q=${encodeURIComponent(name.trim())}`;
+}
+
+function openDb() {
+  return new Promise((resolve, reject) => {
+    const request = indexedDB.open(DB_NAME, DB_VERSION);
+    request.onupgradeneeded = () => {
+      const db = request.result;
+      if (!db.objectStoreNames.contains(STORE_NAMES.coworkers)) {
+        db.createObjectStore(STORE_NAMES.coworkers, { keyPath: "id" });
+      }
+      if (!db.objectStoreNames.contains(STORE_NAMES.stores)) {
+        db.createObjectStore(STORE_NAMES.stores, { keyPath: "id" });
+      }
+      if (!db.objectStoreNames.contains(STORE_NAMES.transactions)) {
+        db.createObjectStore(STORE_NAMES.transactions, { keyPath: "id" });
+      }
+    };
+    request.onsuccess = () => resolve(request.result);
+    request.onerror = () => reject(request.error);
+  });
+}
+
+function txStore(name, mode = "readonly") {
+  return state.db.transaction(name, mode).objectStore(name);
+}
+
+function getAll(name) {
+  return new Promise((resolve, reject) => {
+    const request = txStore(name).getAll();
+    request.onsuccess = () => resolve(request.result || []);
+    request.onerror = () => reject(request.error);
+  });
+}
+
+function putItem(name, item) {
+  return new Promise((resolve, reject) => {
+    const request = txStore(name, "readwrite").put(item);
+    request.onsuccess = () => resolve(item);
+    request.onerror = () => reject(request.error);
+  });
+}
+
+function deleteItem(name, id) {
+  return new Promise((resolve, reject) => {
+    const request = txStore(name, "readwrite").delete(id);
+    request.onsuccess = () => resolve();
+    request.onerror = () => reject(request.error);
+  });
+}
+
+async function loadData() {
+  const [coworkers, stores, transactions] = await Promise.all([
+    getAll(STORE_NAMES.coworkers),
+    getAll(STORE_NAMES.stores),
+    getAll(STORE_NAMES.transactions)
+  ]);
+  state.coworkers = coworkers.sort((a, b) => a.name.localeCompare(b.name, "zh-Hant"));
+  state.stores = stores.sort((a, b) => a.name.localeCompare(b.name, "zh-Hant"));
+  state.transactions = transactions.sort((a, b) => `${b.date}${b.createdAt}`.localeCompare(`${a.date}${a.createdAt}`));
+}
+
+async function recalculateDerivedData() {
+  const coworkerMap = new Map(state.coworkers.map((coworker) => [coworker.id, { ...coworker, balance: 0 }]));
+  const storeMap = new Map(state.stores.map((store) => [store.id, {
+    ...store,
+    lunchUsedCount: 0,
+    dinnerUsedCount: 0,
+    lunchLastUsedDate: "",
+    dinnerLastUsedDate: ""
+  }]));
+
+  const chronological = [...state.transactions].sort((a, b) => `${a.date}${a.createdAt}`.localeCompare(`${b.date}${b.createdAt}`));
+  chronological.forEach((entry) => {
+    const coworker = coworkerMap.get(entry.coworkerId);
+    if (coworker) {
+      if (entry.type === "topup") coworker.balance += entry.amount;
+      if (entry.type === "adjustment") coworker.balance += entry.amount;
+      if (entry.type === "mealOrder" && ["prepaidBalance", "unpaid"].includes(entry.paymentMethod)) {
+        coworker.balance -= entry.amount;
+      }
+    }
+
+    if (entry.type === "mealOrder" && entry.storeId && ["lunch", "dinner"].includes(entry.mealType)) {
+      const store = storeMap.get(entry.storeId);
+      if (!store) return;
+      const flag = entry.mealType === "lunch" ? "availableForLunch" : "availableForDinner";
+      const countKey = entry.mealType === "lunch" ? "lunchUsedCount" : "dinnerUsedCount";
+      const dateKey = entry.mealType === "lunch" ? "lunchLastUsedDate" : "dinnerLastUsedDate";
+      store[flag] = true;
+      store[countKey] += 1;
+      if (!store[dateKey] || entry.date > store[dateKey]) store[dateKey] = entry.date;
+    }
+  });
+
+  await Promise.all([
+    ...Array.from(coworkerMap.values()).map((coworker) => putItem(STORE_NAMES.coworkers, coworker)),
+    ...Array.from(storeMap.values()).map((store) => putItem(STORE_NAMES.stores, store))
+  ]);
+  await loadData();
+}
+
+async function refresh() {
+  await loadData();
+  await recalculateDerivedData();
+  render();
+}
+
+function render() {
+  renderCoworkerOptions();
+  renderCoworkers();
+  renderDailySummary();
+  renderCoworkerHistory();
+  renderStores("lunch");
+  renderStores("dinner");
+}
+
+function renderCoworkerOptions() {
+  const options = state.coworkers.map((coworker) => `<option value="${coworker.id}">${escapeHtml(coworker.name)}</option>`).join("");
+  $("#historyCoworkerSelect").innerHTML = `<option value="">選擇同事</option>${options}`;
+}
+
+function renderCoworkers() {
+  $("#coworkerCount").textContent = `${state.coworkers.length} 位`;
+  $("#coworkerList").innerHTML = state.coworkers.length ? state.coworkers.map((coworker) => {
+    const className = coworker.balance >= 0 ? "positive" : "negative";
+    return `
+      <article class="item">
+        <div class="item-title">
+          <strong>${escapeHtml(coworker.name)}</strong>
+          <span class="money ${className}">${signedMoney(coworker.balance)}</span>
+        </div>
+        <div class="muted">${coworker.balance < 0 ? "目前欠款" : "目前餘額"}</div>
+        <div class="card-actions">
+          <button type="button" data-action="edit-coworker" data-id="${coworker.id}">編輯</button>
+        </div>
+      </article>
+    `;
+  }).join("") : `<div class="empty">先新增同事，再開始記錄儲值金與餐點。</div>`;
+}
+
+function renderDailySummary() {
+  const selectedDate = $("#ledgerDate").value || todayString();
+  const entries = state.transactions.filter((entry) => entry.date === selectedDate);
+  const total = entries.filter((entry) => entry.type === "mealOrder").reduce((sum, entry) => sum + entry.amount, 0);
+  $("#dailyTotal").textContent = entries.length ? `餐點合計 ${money(total)}` : "";
+
+  $("#dailySummary").innerHTML = entries.length ? entries.map((entry) => {
+    const coworker = state.coworkers.find((item) => item.id === entry.coworkerId);
+    const store = state.stores.find((item) => item.id === entry.storeId);
+    if (entry.type === "topup") {
+      return `
+        <article class="item">
+          <div class="item-title">
+            <strong>儲值金：${escapeHtml(coworker?.name || "已刪同事")}</strong>
+            <span class="money positive">+${money(entry.amount)}</span>
+          </div>
+          <p class="muted">${escapeHtml(entry.note || "無備註")}</p>
+          <div class="card-actions">
+            <button type="button" data-action="edit-transaction" data-id="${entry.id}">編輯</button>
+            <button type="button" data-action="delete-transaction" data-id="${entry.id}">刪除</button>
+          </div>
+        </article>
+      `;
+    }
+    return `
+      <article class="item">
+        <div class="item-title">
+          <strong>${entry.mealType === "lunch" ? "午餐" : "晚餐"}：${escapeHtml(coworker?.name || "已刪同事")}</strong>
+          <span class="money">${money(entry.amount)}</span>
+        </div>
+        <div>${escapeHtml(store?.name || "已刪店家")} · ${escapeHtml(entry.mealName || "未填餐點")}</div>
+        <div class="pill-row">
+          <span class="pill">${PAYMENT_LABELS[entry.paymentMethod]}</span>
+          ${entry.note ? `<span class="pill">${escapeHtml(entry.note)}</span>` : ""}
+        </div>
+        <div class="card-actions">
+          <button type="button" data-action="edit-transaction" data-id="${entry.id}">編輯</button>
+          <button type="button" data-action="delete-transaction" data-id="${entry.id}">刪除</button>
+        </div>
+      </article>
+    `;
+  }).join("") : `<div class="empty">這一天還沒有紀錄。</div>`;
+}
+
+function renderCoworkerHistory() {
+  const coworkerId = $("#historyCoworkerSelect").value;
+  const entries = coworkerId ? state.transactions.filter((entry) => entry.coworkerId === coworkerId) : [];
+  $("#coworkerHistory").innerHTML = coworkerId && entries.length ? entries.map((entry) => {
+    const store = state.stores.find((item) => item.id === entry.storeId);
+    const direction = entry.type === "topup" || entry.type === "adjustment" ? "+" : entry.paymentMethod === "cashToday" ? "" : "-";
+    return `
+      <article class="item">
+        <div class="item-title">
+          <strong>${entry.date} · ${entry.type === "topup" ? "儲值" : entry.mealType === "lunch" ? "午餐" : "晚餐"}</strong>
+          <span class="money">${direction}${money(entry.amount)}</span>
+        </div>
+        <div class="muted">${entry.type === "mealOrder" ? `${escapeHtml(store?.name || "已刪店家")} · ${escapeHtml(entry.mealName || "")} · ${PAYMENT_LABELS[entry.paymentMethod]}` : escapeHtml(entry.note || "無備註")}</div>
+      </article>
+    `;
+  }).join("") : `<div class="empty">${coworkerId ? "尚無交易紀錄。" : "選擇一位同事查看歷史交易。"}</div>`;
+}
+
+function storeStats(store, mealType) {
+  return mealType === "lunch"
+    ? { count: store.lunchUsedCount || 0, last: store.lunchLastUsedDate || "" }
+    : { count: store.dinnerUsedCount || 0, last: store.dinnerLastUsedDate || "" };
+}
+
+function sortedStores(mealType) {
+  const sortValue = $(`#${mealType}Sort`).value;
+  const availableKey = mealType === "lunch" ? "availableForLunch" : "availableForDinner";
+  const stores = state.stores.filter((store) => store[availableKey]);
+  return stores.sort((a, b) => {
+    const aStats = storeStats(a, mealType);
+    const bStats = storeStats(b, mealType);
+    if (sortValue === "rating") return (b.rating || 0) - (a.rating || 0) || a.name.localeCompare(b.name, "zh-Hant");
+    if (sortValue === "recent") return (bStats.last || "").localeCompare(aStats.last || "");
+    if (sortValue === "oldest") return (aStats.last || "0000-00-00").localeCompare(bStats.last || "0000-00-00");
+    if (sortValue === "count") return bStats.count - aStats.count;
+    return 0;
+  });
+}
+
+function renderStores(mealType) {
+  const target = $(`#${mealType}StoreList`);
+  const otherType = mealType === "lunch" ? "dinner" : "lunch";
+  const stores = sortedStores(mealType);
+  target.innerHTML = stores.length ? stores.map((store) => {
+    const stats = storeStats(store, mealType);
+    const customUrl = store.customUrl || "";
+    const searchUrl = customUrl || store.searchUrl || googleSearchUrl(store.name);
+    return `
+      <article class="store-card">
+        <div class="store-title">
+          <strong>${escapeHtml(store.name)}</strong>
+          <span>${"★".repeat(store.rating || 0)}${"☆".repeat(5 - (store.rating || 0))}</span>
+        </div>
+        <p class="muted">${escapeHtml(store.notes || "未填類型 / 備註")}</p>
+        ${store.review ? `<p>${escapeHtml(store.review)}</p>` : ""}
+        <div class="pill-row">
+          <span class="pill">吃過 ${stats.count} 次</span>
+          <span class="pill">最後 ${stats.last || "尚未記錄"}</span>
+        </div>
+        <div class="card-actions">
+          <a href="${escapeHtml(searchUrl)}" target="_blank" rel="noopener">開啟連結</a>
+          <button type="button" data-action="edit-store" data-id="${store.id}" data-meal-type="${mealType}">編輯</button>
+          <button type="button" data-action="copy-store" data-id="${store.id}" data-meal-type="${otherType}">也加入${otherType === "lunch" ? "午餐" : "晚餐"}</button>
+        </div>
+      </article>
+    `;
+  }).join("") : `<div class="empty">還沒有${mealType === "lunch" ? "午餐" : "晚餐"}店家。</div>`;
+}
+
+function setPage(page) {
+  state.activePage = page;
+  $(".page.active")?.classList.remove("active");
+  $(".tab.active")?.classList.remove("active");
+  $(`#${page}Page`).classList.add("active");
+  $(`#${page}Tab`).classList.add("active");
+  $("#pageTitle").textContent = page === "ledger" ? "Ledger" : page === "lunch" ? "Lunch Stores" : "Dinner Stores";
+}
+
+function coworkerOptions(selectedId = "") {
+  return state.coworkers.map((coworker) => `<option value="${coworker.id}" ${coworker.id === selectedId ? "selected" : ""}>${escapeHtml(coworker.name)}</option>`).join("");
+}
+
+function storeOptions(mealType, selectedId = "") {
+  const availableKey = mealType === "lunch" ? "availableForLunch" : "availableForDinner";
+  return state.stores
+    .filter((store) => store[availableKey])
+    .map((store) => `<option value="${store.id}" ${store.id === selectedId ? "selected" : ""}>${escapeHtml(store.name)}</option>`)
+    .join("");
+}
+
+function openDialog({ title, body, onSave, onDelete, saveText = "儲存" }) {
+  const dialog = $("#editorDialog");
+  $("#dialogTitle").textContent = title;
+  $("#dialogBody").innerHTML = body;
+  $("#saveButton").textContent = saveText;
+  $("#deleteButton").classList.toggle("hidden", !onDelete);
+  $("#deleteButton").onclick = onDelete ? async () => {
+    if (!confirm("確定刪除？這個動作無法復原。")) return;
+    await onDelete();
+    dialog.close();
+    await refresh();
+  } : null;
+
+  $("#editorForm").onsubmit = async (event) => {
+    event.preventDefault();
+    if (event.submitter?.value === "cancel") {
+      dialog.close();
+      return;
+    }
+    try {
+      const formData = new FormData(event.currentTarget);
+      await onSave(formData);
+      dialog.close();
+      await refresh();
+    } catch (error) {
+      alert(error.message || "儲存失敗，請檢查輸入內容。");
+    }
+  };
+  dialog.showModal();
+}
+
+function openCoworkerEditor(coworker = null) {
+  openDialog({
+    title: coworker ? "編輯同事" : "新增同事",
+    body: `
+      <label class="field">
+        <span>姓名</span>
+        <input name="name" required maxlength="40" value="${escapeHtml(coworker?.name || "")}">
+      </label>
+    `,
+    onSave: async (formData) => {
+      const name = formData.get("name").trim();
+      const entry = coworker || { id: uid(), balance: 0, createdAt: nowIso() };
+      await putItem(STORE_NAMES.coworkers, { ...entry, name, updatedAt: nowIso() });
+    },
+    onDelete: coworker ? async () => {
+      const related = state.transactions.filter((entry) => entry.coworkerId === coworker.id);
+      await Promise.all([
+        deleteItem(STORE_NAMES.coworkers, coworker.id),
+        ...related.map((entry) => deleteItem(STORE_NAMES.transactions, entry.id))
+      ]);
+    } : null
+  });
+}
+
+function openTopupEditor(transaction = null) {
+  if (!state.coworkers.length) {
+    alert("請先新增同事。");
+    return;
+  }
+  openDialog({
+    title: transaction ? "編輯儲值金" : "新增儲值金",
+    body: `
+      <label class="field">
+        <span>日期</span>
+        <input name="date" type="date" required value="${transaction?.date || $("#ledgerDate").value || todayString()}">
+      </label>
+      <label class="field">
+        <span>同事</span>
+        <select name="coworkerId" required>${coworkerOptions(transaction?.coworkerId)}</select>
+      </label>
+      <label class="field">
+        <span>金額</span>
+        <input name="amount" type="number" inputmode="numeric" min="1" step="1" required value="${transaction?.amount || ""}">
+      </label>
+      <label class="field">
+        <span>備註</span>
+        <textarea name="note">${escapeHtml(transaction?.note || "")}</textarea>
+      </label>
+    `,
+    onSave: async (formData) => {
+      const entry = transaction || { id: uid(), type: "topup", mealType: null, storeId: null, mealName: "", paymentMethod: null, createdAt: nowIso() };
+      await putItem(STORE_NAMES.transactions, {
+        ...entry,
+        date: formData.get("date"),
+        coworkerId: formData.get("coworkerId"),
+        amount: parseMoney(formData.get("amount")),
+        note: formData.get("note").trim(),
+        updatedAt: nowIso()
+      });
+    },
+    onDelete: transaction ? async () => deleteItem(STORE_NAMES.transactions, transaction.id) : null
+  });
+}
+
+function orderStoreFields(mealType, selectedStoreId = "") {
+  return `
+    <label class="field">
+      <span>店家</span>
+      <select name="storeId" id="orderStoreSelect">
+        ${storeOptions(mealType, selectedStoreId)}
+        <option value="__new" ${selectedStoreId ? "" : "selected"}>新增店家</option>
+      </select>
+    </label>
+    <label class="field" id="newStoreNameField">
+      <span>新店家名稱</span>
+      <input name="newStoreName" maxlength="80" placeholder="例如：阿明便當">
+    </label>
+  `;
+}
+
+function bindOrderStoreToggle() {
+  const select = $("#orderStoreSelect");
+  const field = $("#newStoreNameField");
+  if (!select || !field) return;
+  const sync = () => field.classList.toggle("hidden", select.value !== "__new");
+  select.addEventListener("change", sync);
+  sync();
+}
+
+async function ensureStoreForOrder(formData, mealType) {
+  const selectedStoreId = formData.get("storeId");
+  if (selectedStoreId !== "__new") return selectedStoreId;
+  const name = formData.get("newStoreName").trim();
+  if (!name) throw new Error("請輸入店家名稱。");
+  const existing = state.stores.find((store) => store.name === name);
+  const availableKey = mealType === "lunch" ? "availableForLunch" : "availableForDinner";
+  if (existing) {
+    await putItem(STORE_NAMES.stores, { ...existing, [availableKey]: true, updatedAt: nowIso() });
+    return existing.id;
+  }
+  const store = {
+    id: uid(),
+    name,
+    notes: "",
+    rating: 3,
+    review: "",
+    searchUrl: googleSearchUrl(name),
+    customUrl: "",
+    availableForLunch: mealType === "lunch",
+    availableForDinner: mealType === "dinner",
+    lunchUsedCount: 0,
+    dinnerUsedCount: 0,
+    lunchLastUsedDate: "",
+    dinnerLastUsedDate: "",
+    createdAt: nowIso(),
+    updatedAt: nowIso()
+  };
+  await putItem(STORE_NAMES.stores, store);
+  return store.id;
+}
+
+function openOrderEditor(transaction = null) {
+  if (!state.coworkers.length) {
+    alert("請先新增同事。");
+    return;
+  }
+  const mealType = transaction?.mealType || defaultMealType();
+  openDialog({
+    title: transaction ? "編輯餐點訂單" : "新增餐點訂單",
+    body: `
+      <label class="field">
+        <span>日期</span>
+        <input name="date" type="date" required value="${transaction?.date || $("#ledgerDate").value || todayString()}">
+      </label>
+      <label class="field">
+        <span>餐別</span>
+        <select name="mealType" id="mealTypeSelect" required>
+          <option value="lunch" ${mealType === "lunch" ? "selected" : ""}>午餐</option>
+          <option value="dinner" ${mealType === "dinner" ? "selected" : ""}>晚餐</option>
+        </select>
+      </label>
+      <div id="orderStoreFields">${orderStoreFields(mealType, transaction?.storeId)}</div>
+      <label class="field">
+        <span>餐點名稱</span>
+        <input name="mealName" maxlength="80" value="${escapeHtml(transaction?.mealName || "")}" placeholder="例如：雞腿飯">
+      </label>
+      <label class="field">
+        <span>同事</span>
+        <select name="coworkerId" required>${coworkerOptions(transaction?.coworkerId)}</select>
+      </label>
+      <label class="field">
+        <span>金額</span>
+        <input name="amount" type="number" inputmode="numeric" min="1" step="1" required value="${transaction?.amount || ""}">
+      </label>
+      <label class="field">
+        <span>付款方式</span>
+        <select name="paymentMethod" required>
+          <option value="prepaidBalance" ${transaction?.paymentMethod === "prepaidBalance" ? "selected" : ""}>從儲值金扣款</option>
+          <option value="cashToday" ${transaction?.paymentMethod === "cashToday" ? "selected" : ""}>當天現金付款</option>
+          <option value="unpaid" ${transaction?.paymentMethod === "unpaid" ? "selected" : ""}>尚未付款</option>
+        </select>
+      </label>
+      <label class="field">
+        <span>備註</span>
+        <textarea name="note">${escapeHtml(transaction?.note || "")}</textarea>
+      </label>
+    `,
+    onSave: async (formData) => {
+      const selectedMealType = formData.get("mealType");
+      const storeId = await ensureStoreForOrder(formData, selectedMealType);
+      const entry = transaction || { id: uid(), type: "mealOrder", createdAt: nowIso() };
+      await putItem(STORE_NAMES.transactions, {
+        ...entry,
+        date: formData.get("date"),
+        mealType: selectedMealType,
+        coworkerId: formData.get("coworkerId"),
+        storeId,
+        mealName: formData.get("mealName").trim(),
+        amount: parseMoney(formData.get("amount")),
+        paymentMethod: formData.get("paymentMethod"),
+        note: formData.get("note").trim(),
+        updatedAt: nowIso()
+      });
+    },
+    onDelete: transaction ? async () => deleteItem(STORE_NAMES.transactions, transaction.id) : null
+  });
+  bindOrderStoreToggle();
+  $("#mealTypeSelect").addEventListener("change", (event) => {
+    $("#orderStoreFields").innerHTML = orderStoreFields(event.target.value, "");
+    bindOrderStoreToggle();
+  });
+}
+
+function openStoreEditor(mealType, store = null) {
+  const availableKey = mealType === "lunch" ? "availableForLunch" : "availableForDinner";
+  openDialog({
+    title: store ? "編輯店家" : `新增${mealType === "lunch" ? "午餐" : "晚餐"}店家`,
+    body: `
+      <label class="field">
+        <span>店名</span>
+        <input name="name" required maxlength="80" value="${escapeHtml(store?.name || "")}">
+      </label>
+      <label class="field">
+        <span>類型 / 備註</span>
+        <input name="notes" maxlength="120" value="${escapeHtml(store?.notes || "")}" placeholder="例如：便當、麵、清淡">
+      </label>
+      <label class="field">
+        <span>星星評分 1 到 5</span>
+        <select name="rating">
+          ${[1, 2, 3, 4, 5].map((value) => `<option value="${value}" ${Number(store?.rating || 3) === value ? "selected" : ""}>${value}</option>`).join("")}
+        </select>
+      </label>
+      <label class="field">
+        <span>評語</span>
+        <textarea name="review">${escapeHtml(store?.review || "")}</textarea>
+      </label>
+      <label class="field">
+        <span>自訂連結</span>
+        <input name="customUrl" type="url" value="${escapeHtml(store?.customUrl || "")}" placeholder="可貼 Google Map 或菜單連結">
+      </label>
+    `,
+    onSave: async (formData) => {
+      const name = formData.get("name").trim();
+      const entry = store || {
+        id: uid(),
+        availableForLunch: false,
+        availableForDinner: false,
+        lunchUsedCount: 0,
+        dinnerUsedCount: 0,
+        lunchLastUsedDate: "",
+        dinnerLastUsedDate: "",
+        createdAt: nowIso()
+      };
+      await putItem(STORE_NAMES.stores, {
+        ...entry,
+        name,
+        notes: formData.get("notes").trim(),
+        rating: Number(formData.get("rating")),
+        review: formData.get("review").trim(),
+        searchUrl: googleSearchUrl(name),
+        customUrl: formData.get("customUrl").trim(),
+        [availableKey]: true,
+        updatedAt: nowIso()
+      });
+    },
+    onDelete: store ? async () => deleteItem(STORE_NAMES.stores, store.id) : null
+  });
+}
+
+async function deleteTransaction(id) {
+  if (!confirm("確定刪除這筆紀錄？")) return;
+  await deleteItem(STORE_NAMES.transactions, id);
+  await refresh();
+}
+
+async function copyStoreToMealType(id, mealType) {
+  const store = state.stores.find((item) => item.id === id);
+  if (!store) return;
+  const key = mealType === "lunch" ? "availableForLunch" : "availableForDinner";
+  await putItem(STORE_NAMES.stores, { ...store, [key]: true, updatedAt: nowIso() });
+  await refresh();
+}
+
+function bindEvents() {
+  $(".bottom-tabs").addEventListener("click", (event) => {
+    const button = event.target.closest(".tab");
+    if (button) setPage(button.dataset.page);
+  });
+
+  $("#ledgerDate").addEventListener("change", renderDailySummary);
+  $("#historyCoworkerSelect").addEventListener("change", renderCoworkerHistory);
+  $("#addCoworkerButton").addEventListener("click", () => openCoworkerEditor());
+  $("#addTopupButton").addEventListener("click", () => openTopupEditor());
+  $("#addOrderButton").addEventListener("click", () => openOrderEditor());
+  $("#addLunchStoreButton").addEventListener("click", () => openStoreEditor("lunch"));
+  $("#addDinnerStoreButton").addEventListener("click", () => openStoreEditor("dinner"));
+  $("#lunchSort").addEventListener("change", () => renderStores("lunch"));
+  $("#dinnerSort").addEventListener("change", () => renderStores("dinner"));
+
+  document.body.addEventListener("click", (event) => {
+    const trigger = event.target.closest("[data-action]");
+    if (!trigger) return;
+    const { action, id, mealType } = trigger.dataset;
+    if (action === "edit-coworker") openCoworkerEditor(state.coworkers.find((item) => item.id === id));
+    if (action === "edit-transaction") {
+      const entry = state.transactions.find((item) => item.id === id);
+      if (entry?.type === "topup") openTopupEditor(entry);
+      if (entry?.type === "mealOrder") openOrderEditor(entry);
+    }
+    if (action === "delete-transaction") deleteTransaction(id);
+    if (action === "edit-store") openStoreEditor(mealType, state.stores.find((item) => item.id === id));
+    if (action === "copy-store") copyStoreToMealType(id, mealType);
+  });
+
+  window.addEventListener("beforeinstallprompt", (event) => {
+    event.preventDefault();
+    state.deferredInstallPrompt = event;
+    $("#installButton").classList.remove("hidden");
+  });
+
+  $("#installButton").addEventListener("click", async () => {
+    if (!state.deferredInstallPrompt) return;
+    state.deferredInstallPrompt.prompt();
+    await state.deferredInstallPrompt.userChoice;
+    state.deferredInstallPrompt = null;
+    $("#installButton").classList.add("hidden");
+  });
+}
+
+async function init() {
+  $("#ledgerDate").value = todayString();
+  bindEvents();
+  state.db = await openDb();
+  await refresh();
+  if ("serviceWorker" in navigator) {
+    navigator.serviceWorker.register("./service-worker.js");
+  }
+}
+
+init().catch((error) => {
+  console.error(error);
+  alert(`啟動失敗：${error.message}`);
+});

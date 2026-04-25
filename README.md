@@ -1,0 +1,132 @@
+# Launch-GoGoGo
+
+Launch-GoGoGo 是一個手機優先、可加入主畫面使用的午餐 / 晚餐代訂與儲值金管理工具。第一版不需要登入、不做雲端同步，資料保存在瀏覽器 IndexedDB，並透過 Service Worker 支援離線開啟。
+
+## 檔案結構
+
+```text
+.
+├── index.html
+├── styles.css
+├── app.js
+├── manifest.json
+├── service-worker.js
+├── icon.svg
+├── icon-192.png
+├── icon-512.png
+└── README.md
+```
+
+## 本機啟動
+
+PWA 與 Service Worker 需要透過 HTTP/HTTPS 來源執行，不建議直接用 `file://` 開啟。
+
+```bash
+python -m http.server 8080
+```
+
+啟動後打開：
+
+```text
+http://localhost:8080
+```
+
+也可以用任何靜態檔案伺服器，例如 VS Code Live Server、`npx serve`、`http-server`。
+
+## 手機加入主畫面
+
+1. 讓手機與電腦在同一個網路，或部署到 HTTPS 靜態網站。
+2. 用手機瀏覽器開啟 App 網址。
+3. Android Chrome：開啟選單，選「安裝應用程式」或「加入主畫面」。
+4. iPhone Safari：按分享按鈕，選「加入主畫面」。
+
+## 資料模型
+
+### Coworker
+
+```js
+{
+  id: string,
+  name: string,
+  balance: integer,
+  createdAt: ISODateString,
+  updatedAt: ISODateString
+}
+```
+
+`balance` 使用整數金額，不使用浮點數。每次新增、修改、刪除交易後會由交易紀錄重新計算。
+
+### Store
+
+```js
+{
+  id: string,
+  name: string,
+  notes: string,
+  rating: 1 | 2 | 3 | 4 | 5,
+  review: string,
+  searchUrl: string,
+  customUrl: string,
+  availableForLunch: boolean,
+  availableForDinner: boolean,
+  lunchUsedCount: integer,
+  dinnerUsedCount: integer,
+  lunchLastUsedDate: string,
+  dinnerLastUsedDate: string,
+  createdAt: ISODateString,
+  updatedAt: ISODateString
+}
+```
+
+午餐與晚餐使用同一個 Store 資料表，但用 `availableForLunch` / `availableForDinner` 分開顯示與統計。使用者可以把同一家店同時加入午餐與晚餐。
+
+### Transaction
+
+```js
+{
+  id: string,
+  date: "YYYY-MM-DD",
+  type: "topup" | "mealOrder" | "adjustment",
+  mealType: "lunch" | "dinner" | null,
+  coworkerId: string,
+  storeId: string | null,
+  mealName: string,
+  amount: integer,
+  paymentMethod: "prepaidBalance" | "cashToday" | "unpaid" | null,
+  note: string,
+  createdAt: ISODateString,
+  updatedAt: ISODateString
+}
+```
+
+目前 MVP UI 支援 `topup` 與 `mealOrder`。`adjustment` 已保留在模型中，適合下一版加入手動校正餘額。
+
+## 已完成功能
+
+- PWA 基礎架構：manifest、Service Worker、離線快取。
+- 三個主要分頁：Ledger、Lunch Stores、Dinner Stores。
+- IndexedDB 本機資料保存。
+- 同事新增、編輯、刪除與餘額顯示。
+- 儲值金新增、編輯、刪除。
+- 餐點訂單新增、編輯、刪除。
+- 付款方式：儲值金扣款、當天現金付款、尚未付款。
+- 儲值金與未付款會更新同事餘額，餘額可為負數。
+- 指定日期每日摘要。
+- 同事歷史交易紀錄。
+- 午餐 / 晚餐店家分開管理。
+- 店家新增、編輯、刪除、評分、評語、類型 / 備註、連結。
+- 無自訂連結時自動產生 Google 搜尋連結。
+- 店家可從午餐加入晚餐，或從晚餐加入午餐。
+- 訂餐使用店家後自動更新對應餐別的吃過次數與最後吃的日期。
+- 新店家可在新增訂單時直接建立，並歸入對應餐別。
+- 預設餐別：05:00 到 14:59 為午餐，15:00 到 04:59 為晚餐，表單可手動修改。
+
+## 下一階段 Roadmap
+
+1. 加入 `adjustment` 手動調整紀錄 UI，讓舊帳或特殊折扣更好處理。
+2. 加入資料匯入 / 匯出 JSON，方便換手機與備份。
+3. 加入店家菜單或常點餐點清單，讓訂餐輸入更快。
+4. 加入每週 / 每月結算報表。
+5. 加入搜尋與篩選，例如只看欠款同事、只看某店家紀錄。
+6. 加入 iOS 啟動畫面設定與更多尺寸的 PWA 圖示。
+7. 未來若需要多人共同使用，再加入雲端同步與權限設計。

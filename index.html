@@ -1,0 +1,127 @@
+<!doctype html>
+<html lang="zh-Hant">
+  <head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+    <meta name="theme-color" content="#1f6f5b">
+    <title>Launch-GoGoGo</title>
+    <link rel="manifest" href="manifest.json">
+    <link rel="icon" href="icon.svg" type="image/svg+xml">
+    <link rel="apple-touch-icon" href="icon.svg">
+    <link rel="stylesheet" href="styles.css">
+  </head>
+  <body>
+    <div class="app-shell">
+      <header class="topbar">
+        <div>
+          <p class="eyebrow">Launch-GoGoGo</p>
+          <h1 id="pageTitle">Ledger</h1>
+        </div>
+        <button id="installButton" class="ghost-button hidden" type="button">安裝</button>
+      </header>
+
+      <main>
+        <section id="ledgerPage" class="page active" aria-labelledby="ledgerTab">
+          <div class="toolbar">
+            <label class="field compact">
+              <span>日期</span>
+              <input id="ledgerDate" type="date">
+            </label>
+            <button id="addCoworkerButton" class="secondary-button" type="button">新增同事</button>
+          </div>
+
+          <div class="action-grid">
+            <button id="addTopupButton" class="primary-button" type="button">新增儲值金</button>
+            <button id="addOrderButton" class="primary-button alt" type="button">新增餐點訂單</button>
+          </div>
+
+          <section class="panel">
+            <div class="section-heading">
+              <h2>同事餘額</h2>
+              <span id="coworkerCount" class="muted"></span>
+            </div>
+            <div id="coworkerList" class="list"></div>
+          </section>
+
+          <section class="panel">
+            <div class="section-heading">
+              <h2>指定日期紀錄</h2>
+              <span id="dailyTotal" class="muted"></span>
+            </div>
+            <div id="dailySummary" class="list"></div>
+          </section>
+
+          <section class="panel">
+            <div class="section-heading">
+              <h2>同事交易紀錄</h2>
+              <select id="historyCoworkerSelect" class="inline-select" aria-label="選擇同事交易紀錄"></select>
+            </div>
+            <div id="coworkerHistory" class="list"></div>
+          </section>
+        </section>
+
+        <section id="lunchPage" class="page" aria-labelledby="lunchTab">
+          <div class="toolbar">
+            <label class="field compact">
+              <span>排序</span>
+              <select id="lunchSort">
+                <option value="rating">星星數高到低</option>
+                <option value="recent">最近吃過時間</option>
+                <option value="oldest">最久沒吃</option>
+                <option value="count">吃過次數</option>
+              </select>
+            </label>
+            <button id="addLunchStoreButton" class="primary-button" type="button">新增店家</button>
+          </div>
+          <div id="lunchStoreList" class="store-list"></div>
+        </section>
+
+        <section id="dinnerPage" class="page" aria-labelledby="dinnerTab">
+          <div class="toolbar">
+            <label class="field compact">
+              <span>排序</span>
+              <select id="dinnerSort">
+                <option value="rating">星星數高到低</option>
+                <option value="recent">最近吃過時間</option>
+                <option value="oldest">最久沒吃</option>
+                <option value="count">吃過次數</option>
+              </select>
+            </label>
+            <button id="addDinnerStoreButton" class="primary-button" type="button">新增店家</button>
+          </div>
+          <div id="dinnerStoreList" class="store-list"></div>
+        </section>
+      </main>
+
+      <nav class="bottom-tabs" aria-label="主要分頁">
+        <button id="ledgerTab" class="tab active" type="button" data-page="ledger">
+          <span>Ledger</span>
+        </button>
+        <button id="lunchTab" class="tab" type="button" data-page="lunch">
+          <span>Lunch</span>
+        </button>
+        <button id="dinnerTab" class="tab" type="button" data-page="dinner">
+          <span>Dinner</span>
+        </button>
+      </nav>
+    </div>
+
+    <dialog id="editorDialog">
+      <form id="editorForm" method="dialog">
+        <div class="dialog-head">
+          <h2 id="dialogTitle"></h2>
+          <button class="icon-button" value="cancel" formnovalidate type="submit" aria-label="關閉">×</button>
+        </div>
+        <div id="dialogBody" class="dialog-body"></div>
+        <div class="dialog-actions">
+          <button id="deleteButton" class="danger-button hidden" type="button">刪除</button>
+          <span class="spacer"></span>
+          <button class="secondary-button" value="cancel" formnovalidate type="submit">取消</button>
+          <button id="saveButton" class="primary-button" value="default" type="submit">儲存</button>
+        </div>
+      </form>
+    </dialog>
+
+    <script src="app.js" defer></script>
+  </body>
+</html>
