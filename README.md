@@ -15,8 +15,14 @@ https://yoyocadence.github.io/Launch-gogogo/
 ├── index.html
 ├── styles.css
 ├── app.js
+├── app-core.js
 ├── manifest.json
 ├── service-worker.js
+├── package.json
+├── playwright.config.js
+├── vitest.config.js
+├── eslint.config.js
+├── tests/
 ├── icon.svg
 ├── icon-192.png
 ├── icon-512.png
@@ -38,6 +44,43 @@ http://localhost:8080
 ```
 
 也可以用任何靜態檔案伺服器，例如 VS Code Live Server、`npx serve`、`http-server`。
+
+## 自動化測試
+
+本專案維持 Vanilla JS 與純靜態 PWA 架構。測試工具選擇：
+
+- Vitest：跑核心公式與 jsdom 元件測試，啟動快、適合目前沒有打包流程的 Vanilla JS 專案。
+- jsdom：測試小型 DOM 互動，不需要真的開瀏覽器。
+- Playwright：測試關鍵使用者流程，覆蓋 IndexedDB、dialog、真實瀏覽器與手機 viewport。
+- ESLint：建立一致的靜態檢查基準，避免低階語法與未定義全域漏進 main。
+
+第一次使用請先安裝依賴：
+
+```bash
+npm install
+```
+
+常用命令：
+
+```bash
+npm run lint
+npm run build
+npm run test
+npm run test:e2e
+npm run test:all
+```
+
+測試分層：
+
+- `tests/unit/`：核心商業規則，例如餘額重算、餐別統計、店家排序、金額格式與餐別預設。
+- `tests/component/`：重要 UI 小互動，例如頁籤切換、訂單新增店家欄位必填狀態、主題按鈕狀態。
+- `tests/e2e/`：關鍵使用者流程，目前覆蓋新增同事、儲值、建立午餐訂單、餘額扣款、店家統計。
+
+目前尚未覆蓋的風險：
+
+- Service Worker 更新流程只做語法檢查，尚未做瀏覽器情境測試。
+- IndexedDB migration 尚未有測試；目前 `DB_VERSION` 仍是 1，未做 schema 變更。
+- 刪除、編輯、晚餐流程、安裝提示與離線模式尚未進入第一版自動化覆蓋。
 
 ## GitHub Pages 部署
 
