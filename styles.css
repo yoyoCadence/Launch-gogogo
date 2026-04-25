@@ -1,33 +1,36 @@
 :root {
-  color-scheme: light;
-  --bg: #f6f4ee;
-  --surface: #ffffff;
-  --surface-soft: #eef6f2;
-  --ink: #17231f;
-  --muted: #65716c;
-  --line: #d9ded9;
-  --brand: #1f6f5b;
-  --brand-dark: #164d42;
+  color-scheme: dark;
+  --bg: #000000;
+  --surface: #0b0b0d;
+  --surface-soft: #1c1c1e;
+  --ink: #f5f5f7;
+  --muted: #8e8e93;
+  --line: rgba(255, 255, 255, 0.12);
+  --brand: #0a84ff;
+  --brand-dark: #5eb0ff;
   --on-brand: #ffffff;
-  --accent: #d66b3d;
-  --danger: #b4362f;
-  --shadow: 0 14px 34px rgba(23, 35, 31, 0.08);
-  --shadow-soft: 0 6px 18px rgba(23, 35, 31, 0.06);
+  --accent: #30d158;
+  --danger: #ff453a;
+  --shadow: none;
+  --shadow-soft: none;
   --space-1: 4px;
   --space-2: 8px;
   --space-3: 12px;
   --space-4: 16px;
   --space-5: 20px;
   --space-6: 24px;
-  --radius-sm: 8px;
-  --radius-md: 12px;
-  --radius-lg: 16px;
-  --radius-xl: 22px;
-  --font-xs: 0.78rem;
-  --font-sm: 0.88rem;
+  --radius-sm: 10px;
+  --radius-md: 14px;
+  --radius-lg: 18px;
+  --radius-xl: 28px;
+  --font-xs: 0.76rem;
+  --font-sm: 0.9rem;
   --font-md: 1rem;
-  --font-lg: 1.2rem;
-  --font-xl: 1.62rem;
+  --font-lg: 1.28rem;
+  --font-xl: 2rem;
+  --tab-bar-bg: color-mix(in srgb, #242426 82%, transparent);
+  --tab-text: #f5f5f7;
+  --tab-active-bg: rgba(255, 255, 255, 0.12);
 }
 
 [data-theme="dark-purple"] {
@@ -124,6 +127,9 @@
   --accent: #d97706;
   --danger: #dc2626;
   --shadow: 0 10px 30px rgba(30, 41, 59, 0.08);
+  --tab-bar-bg: color-mix(in srgb, #ffffff 88%, transparent);
+  --tab-text: #1e293b;
+  --tab-active-bg: rgba(124, 58, 237, 0.12);
 }
 
 [data-theme="wabi"] {
@@ -140,6 +146,9 @@
   --accent: #7a6a4a;
   --danger: #9b2335;
   --shadow: 0 8px 22px rgba(26, 21, 16, 0.1);
+  --tab-bar-bg: color-mix(in srgb, #faf7f2 88%, transparent);
+  --tab-text: #1a1510;
+  --tab-active-bg: rgba(155, 35, 53, 0.12);
 }
 
 [data-theme="material"] {
@@ -204,6 +213,9 @@
   --accent: #7ec8e3;
   --danger: #ff3366;
   --shadow: 0 10px 30px rgba(255, 107, 157, 0.12);
+  --tab-bar-bg: color-mix(in srgb, #ffffff 88%, transparent);
+  --tab-text: #2d1b2e;
+  --tab-active-bg: rgba(255, 107, 157, 0.14);
 }
 
 [data-theme="gothic"] {
@@ -250,9 +262,7 @@ html {
 body {
   min-height: 100%;
   margin: 0;
-  background:
-    linear-gradient(180deg, color-mix(in srgb, var(--surface-soft) 52%, transparent) 0, transparent 280px),
-    var(--bg);
+  background: var(--bg);
   color: var(--ink);
   font-family: system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif;
   line-height: 1.45;
@@ -272,7 +282,7 @@ button {
 
 .app-shell {
   min-height: 100vh;
-  width: min(100%, 1040px);
+  width: min(100%, 980px);
   margin: 0 auto;
   padding: env(safe-area-inset-top) var(--space-4) calc(92px + env(safe-area-inset-bottom));
 }
@@ -285,9 +295,9 @@ button {
   align-items: center;
   justify-content: space-between;
   gap: var(--space-3);
-  padding: var(--space-4) 0 var(--space-3);
-  background: color-mix(in srgb, var(--bg) 88%, transparent);
-  backdrop-filter: blur(16px);
+  padding: var(--space-6) 4px var(--space-4);
+  background: color-mix(in srgb, var(--bg) 82%, transparent);
+  backdrop-filter: blur(22px);
 }
 
 .eyebrow {
@@ -308,13 +318,15 @@ p {
 h1 {
   margin-bottom: 0;
   font-size: var(--font-xl);
-  line-height: 1.1;
+  font-weight: 850;
+  line-height: 1.04;
 }
 
 h2 {
   margin-bottom: 0;
-  font-size: var(--font-md);
-  line-height: 1.2;
+  font-size: 1.45rem;
+  font-weight: 850;
+  line-height: 1.14;
 }
 
 .page {
@@ -348,22 +360,22 @@ h2 {
   display: grid;
   grid-template-columns: 1fr 1fr;
   gap: var(--space-3);
-  margin-bottom: var(--space-4);
+  margin-bottom: var(--space-5);
 }
 
 .panel {
-  margin: var(--space-4) 0;
-  padding: var(--space-4);
-  border: 1px solid var(--line);
-  border-radius: var(--radius-lg);
-  background: var(--surface);
+  margin: var(--space-6) 0;
+  padding: 0;
+  border: 0;
+  border-radius: 0;
+  background: transparent;
   box-shadow: var(--shadow);
 }
 
 .section-heading {
   justify-content: space-between;
   align-items: flex-start;
-  margin-bottom: var(--space-3);
+  margin-bottom: var(--space-4);
 }
 
 .section-heading h2 {
@@ -372,11 +384,7 @@ h2 {
 }
 
 .section-heading h2::after {
-  content: "";
-  width: 28px;
-  height: 3px;
-  border-radius: 999px;
-  background: var(--brand);
+  content: none;
 }
 
 .field {
@@ -399,11 +407,11 @@ input,
 select,
 textarea {
   width: 100%;
-  min-height: 46px;
+  min-height: 48px;
   border: 1px solid var(--line);
-  border-radius: var(--radius-md);
-  padding: 11px var(--space-3);
-  background: var(--surface);
+  border-radius: var(--radius-lg);
+  padding: 12px var(--space-4);
+  background: var(--surface-soft);
   color: var(--ink);
   outline: none;
   transition: border-color 0.16s ease, box-shadow 0.16s ease, background 0.16s ease;
@@ -426,8 +434,8 @@ textarea {
 .ghost-button,
 .danger-button,
 .icon-button {
-  min-height: 46px;
-  border-radius: var(--radius-md);
+  min-height: 48px;
+  border-radius: 999px;
   border: 1px solid transparent;
   padding: 10px 14px;
   font-weight: 800;
@@ -447,20 +455,21 @@ textarea {
 }
 
 .primary-button {
-  background: linear-gradient(180deg, color-mix(in srgb, var(--brand) 92%, #fff 8%), var(--brand));
+  background: var(--brand);
   color: var(--on-brand);
-  box-shadow: 0 8px 20px color-mix(in srgb, var(--brand) 22%, transparent);
+  box-shadow: none;
 }
 
 .primary-button.alt {
-  background: linear-gradient(180deg, color-mix(in srgb, var(--accent) 90%, #fff 10%), var(--accent));
-  box-shadow: 0 8px 20px color-mix(in srgb, var(--accent) 20%, transparent);
+  background: var(--surface-soft);
+  color: var(--brand-dark);
+  box-shadow: none;
 }
 
 .secondary-button,
 .ghost-button {
   border-color: var(--line);
-  background: var(--surface);
+  background: var(--surface-soft);
   color: var(--ink);
 }
 
@@ -473,9 +482,9 @@ textarea {
 }
 
 .danger-button {
-  background: #fff2ef;
+  background: color-mix(in srgb, var(--danger) 14%, var(--surface-soft));
   color: var(--danger);
-  border-color: #f1c5bf;
+  border-color: color-mix(in srgb, var(--danger) 32%, var(--line));
 }
 
 .icon-button {
@@ -489,36 +498,37 @@ textarea {
 
 .bottom-tabs {
   position: fixed;
-  right: 0;
-  bottom: 0;
-  left: 0;
+  right: var(--space-4);
+  bottom: calc(var(--space-3) + env(safe-area-inset-bottom));
+  left: var(--space-4);
   z-index: 10;
   display: grid;
   grid-template-columns: repeat(4, 1fr);
-  gap: var(--space-2);
-  padding: var(--space-2) var(--space-3) calc(var(--space-2) + env(safe-area-inset-bottom));
-  border-top: 1px solid var(--line);
-  background: color-mix(in srgb, var(--surface) 94%, transparent);
-  backdrop-filter: blur(16px);
-  box-shadow: 0 -8px 24px rgba(0, 0, 0, 0.06);
+  gap: var(--space-1);
+  padding: 6px;
+  border: 1px solid rgba(255, 255, 255, 0.12);
+  border-radius: 999px;
+  background: var(--tab-bar-bg);
+  backdrop-filter: blur(26px) saturate(1.4);
+  box-shadow: 0 12px 34px rgba(0, 0, 0, 0.46);
 }
 
 .tab {
-  min-height: 52px;
-  border: 1px solid var(--line);
-  border-radius: var(--radius-lg);
-  background: var(--surface);
-  color: var(--muted);
+  min-height: 54px;
+  border: 0;
+  border-radius: 999px;
+  background: transparent;
+  color: var(--tab-text);
   font-size: var(--font-xs);
   font-weight: 900;
   transition: transform 0.12s ease, border-color 0.16s ease, background 0.16s ease, color 0.16s ease;
 }
 
 .tab.active {
-  border-color: var(--brand);
-  background: var(--brand);
-  color: var(--on-brand);
-  box-shadow: 0 8px 20px color-mix(in srgb, var(--brand) 20%, transparent);
+  border-color: transparent;
+  background: var(--tab-active-bg);
+  color: var(--brand-dark);
+  box-shadow: inset 0 1px 0 rgba(255, 255, 255, 0.08);
 }
 
 .list,
@@ -529,11 +539,17 @@ textarea {
 
 .item,
 .store-card {
-  border: 1px solid var(--line);
-  border-radius: var(--radius-lg);
-  padding: var(--space-4);
-  background: var(--surface);
+  border: 0;
+  border-bottom: 1px solid var(--line);
+  border-radius: 0;
+  padding: var(--space-4) 0;
+  background: transparent;
   box-shadow: var(--shadow-soft);
+}
+
+.item:first-child,
+.store-card:first-child {
+  padding-top: 0;
 }
 
 .item-title,
@@ -542,8 +558,14 @@ textarea {
   justify-content: space-between;
   align-items: flex-start;
   gap: var(--space-3);
-  margin-bottom: var(--space-2);
+  margin-bottom: var(--space-1);
   font-weight: 900;
+}
+
+.item-title strong,
+.store-title strong {
+  font-size: 1.12rem;
+  line-height: 1.25;
 }
 
 .store-title strong,
@@ -557,10 +579,10 @@ textarea {
 }
 
 .empty {
-  padding: var(--space-5);
-  border: 1px dashed var(--line);
-  border-radius: var(--radius-lg);
-  background: color-mix(in srgb, var(--surface-soft) 42%, var(--surface));
+  padding: var(--space-6) var(--space-4);
+  border: 1px solid var(--line);
+  border-radius: var(--radius-xl);
+  background: var(--surface);
   text-align: center;
   line-height: 1.6;
 }
@@ -591,8 +613,8 @@ textarea {
   min-height: 30px;
   border-radius: 999px;
   padding: 5px 10px;
-  background: var(--surface-soft);
-  color: var(--brand-dark);
+  background: rgba(255, 255, 255, 0.08);
+  color: var(--muted);
   font-size: var(--font-xs);
   font-weight: 800;
 }
@@ -607,11 +629,11 @@ textarea {
 .card-actions button,
 .card-actions a {
   min-height: 40px;
-  border: 1px solid var(--line);
-  border-radius: var(--radius-md);
-  padding: 8px var(--space-3);
-  background: var(--surface);
-  color: var(--ink);
+  border: 0;
+  border-radius: 999px;
+  padding: 8px var(--space-4);
+  background: var(--surface-soft);
+  color: var(--brand-dark);
   font-size: var(--font-sm);
   font-weight: 800;
   text-decoration: none;
@@ -627,7 +649,7 @@ textarea {
 }
 
 .summary-total {
-  margin: -2px 0 10px;
+  margin: -4px 0 var(--space-3);
 }
 
 .required-label::after {
@@ -651,8 +673,8 @@ textarea {
   display: grid;
   gap: var(--space-3);
   min-height: 104px;
-  border: 2px solid var(--line);
-  border-radius: var(--radius-lg);
+  border: 1px solid var(--line);
+  border-radius: var(--radius-xl);
   padding: var(--space-3);
   background: var(--surface);
   color: var(--ink);
@@ -662,7 +684,7 @@ textarea {
 
 .theme-card.active {
   border-color: var(--brand);
-  box-shadow: 0 0 0 3px color-mix(in srgb, var(--brand) 22%, transparent);
+  box-shadow: inset 0 0 0 1px var(--brand);
 }
 
 .theme-preview {
@@ -716,15 +738,15 @@ dialog {
   width: min(94vw, 560px);
   max-height: 88vh;
   border: 0;
-  border-radius: var(--radius-xl);
+  border-radius: 28px 28px 0 0;
   padding: 0;
-  box-shadow: 0 24px 80px rgba(0, 0, 0, 0.3);
+  box-shadow: 0 -12px 44px rgba(0, 0, 0, 0.62);
   background: var(--surface);
   color: var(--ink);
 }
 
 dialog::backdrop {
-  background: rgba(16, 24, 21, 0.45);
+  background: rgba(0, 0, 0, 0.58);
 }
 
 #editorForm {
@@ -790,11 +812,11 @@ dialog::backdrop {
   .bottom-tabs {
     right: 50%;
     left: auto;
-    width: min(900px, calc(100% - 48px));
+    bottom: calc(var(--space-4) + env(safe-area-inset-bottom));
+    width: min(720px, calc(100% - 48px));
     transform: translateX(50%);
     border: 1px solid var(--line);
-    border-bottom: 0;
-    border-radius: var(--radius-xl) var(--radius-xl) 0 0;
+    border-radius: 999px;
   }
 }
 
