@@ -43,28 +43,20 @@ const state = {
 };
 
 const $ = (selector) => document.querySelector(selector);
-const todayString = () => new Date().toISOString().slice(0, 10);
+const {
+  calculateDerivedData,
+  defaultMealType,
+  escapeHtml,
+  googleSearchUrl,
+  money,
+  parseMoney,
+  signedMoney,
+  sortStores,
+  storeStats,
+  todayString
+} = window.LaunchGoGoGoCore;
 const nowIso = () => new Date().toISOString();
 const uid = () => `${Date.now().toString(36)}-${crypto.getRandomValues(new Uint32Array(1))[0].toString(36)}`;
-const money = (value) => `$${Number(value || 0).toLocaleString("zh-TW")}`;
-const signedMoney = (value) => `${value >= 0 ? "" : "-"}$${Math.abs(value || 0).toLocaleString("zh-TW")}`;
-const parseMoney = (value) => Math.round(Number(value || 0));
-const escapeHtml = (value) => String(value ?? "").replace(/[&<>"']/g, (char) => ({
-  "&": "&amp;",
-  "<": "&lt;",
-  ">": "&gt;",
-  "\"": "&quot;",
-  "'": "&#039;"
-}[char]));
-
-function defaultMealType(date = new Date()) {
-  const hour = date.getHours();
-  return hour < 14 ? "lunch" : "dinner";
-}
-
-function googleSearchUrl(name) {
-  return `https://www.google.com/search?q=${encodeURIComponent(name.trim())}`;
-}
 
 function getThemeById(themeId) {
   return THEMES.find((theme) => theme.id === themeId) || THEMES[0];
@@ -146,41 +138,11 @@ async function loadData() {
 }
 
 async function recalculateDerivedData() {
-  const coworkerMap = new Map(state.coworkers.map((coworker) => [coworker.id, { ...coworker, balance: 0 }]));
-  const storeMap = new Map(state.stores.map((store) => [store.id, {
-    ...store,
-    lunchUsedCount: 0,
-    dinnerUsedCount: 0,
-    lunchLastUsedDate: "",
-    dinnerLastUsedDate: ""
-  }]));
-
-  const chronological = [...state.transactions].sort((a, b) => `${a.date}${a.createdAt}`.localeCompare(`${b.date}${b.createdAt}`));
-  chronological.forEach((entry) => {
-    const coworker = coworkerMap.get(entry.coworkerId);
-    if (coworker) {
-      if (entry.type === "topup") coworker.balance += entry.amount;
-      if (entry.type === "adjustment") coworker.balance += entry.amount;
-      if (entry.type === "mealOrder" && ["prepaidBalance", "unpaid"].includes(entry.paymentMethod)) {
-        coworker.balance -= entry.amount;
-      }
-    }
-
-    if (entry.type === "mealOrder" && entry.storeId && ["lunch", "dinner"].includes(entry.mealType)) {
-      const store = storeMap.get(entry.storeId);
-      if (!store) return;
-      const flag = entry.mealType === "lunch" ? "availableForLunch" : "availableForDinner";
-      const countKey = entry.mealType === "lunch" ? "lunchUsedCount" : "dinnerUsedCount";
-      const dateKey = entry.mealType === "lunch" ? "lunchLastUsedDate" : "dinnerLastUsedDate";
-      store[flag] = true;
-      store[countKey] += 1;
-      if (!store[dateKey] || entry.date > store[dateKey]) store[dateKey] = entry.date;
-    }
-  });
+  const derived = calculateDerivedData(state);
 
   await Promise.all([
-    ...Array.from(coworkerMap.values()).map((coworker) => putItem(STORE_NAMES.coworkers, coworker)),
-    ...Array.from(storeMap.values()).map((store) => putItem(STORE_NAMES.stores, store))
+    ...derived.coworkers.map((coworker) => putItem(STORE_NAMES.coworkers, coworker)),
+    ...derived.stores.map((store) => putItem(STORE_NAMES.stores, store))
   ]);
   await loadData();
 }
@@ -287,25 +249,9 @@ function renderCoworkerHistory() {
   }).join("") : `<div class="empty">${coworkerId ? "尚無交易紀錄。" : "選擇一位同事查看歷史交易。"}</div>`;
 }
 
-function storeStats(store, mealType) {
-  return mealType === "lunch"
-    ? { count: store.lunchUsedCount || 0, last: store.lunchLastUsedDate || "" }
-    : { count: store.dinnerUsedCount || 0, last: store.dinnerLastUsedDate || "" };
-}
-
 function sortedStores(mealType) {
   const sortValue = $(`#${mealType}Sort`).value;
-  const availableKey = mealType === "lunch" ? "availableForLunch" : "availableForDinner";
-  const stores = state.stores.filter((store) => store[availableKey]);
-  return stores.sort((a, b) => {
-    const aStats = storeStats(a, mealType);
-    const bStats = storeStats(b, mealType);
-    if (sortValue === "rating") return (b.rating || 0) - (a.rating || 0) || a.name.localeCompare(b.name, "zh-Hant");
-    if (sortValue === "recent") return (bStats.last || "").localeCompare(aStats.last || "");
-    if (sortValue === "oldest") return (aStats.last || "0000-00-00").localeCompare(bStats.last || "0000-00-00");
-    if (sortValue === "count") return bStats.count - aStats.count;
-    return 0;
-  });
+  return sortStores(state.stores, mealType, sortValue);
 }
 
 function renderStores(mealType) {
@@ -789,7 +735,17 @@ async function init() {
   }
 }
 
-init().catch((error) => {
-  console.error(error);
-  alert(`啟動失敗：${error.message}`);
-});
+window.LaunchGoGoGoApp = {
+  bindOrderStoreToggle,
+  orderStoreFields,
+  renderSettings,
+  setPage,
+  state
+};
+
+if (!window.LAUNCH_GOGOGO_SKIP_AUTO_INIT) {
+  init().catch((error) => {
+    console.error(error);
+    alert(`啟動失敗：${error.message}`);
+  });
+}
