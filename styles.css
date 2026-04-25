@@ -26,11 +26,48 @@
   --font-xs: 0.76rem;
   --font-sm: 0.9rem;
   --font-md: 1rem;
-  --font-lg: 1.28rem;
-  --font-xl: 2rem;
+  --font-lg: 1.22rem;
+  --font-xl: clamp(2.35rem, 10vw, 3.75rem);
   --tab-bar-bg: color-mix(in srgb, #242426 82%, transparent);
   --tab-text: #f5f5f7;
   --tab-active-bg: rgba(255, 255, 255, 0.12);
+}
+
+:root {
+  --ds-color-background: var(--bg);
+  --ds-color-surface: var(--surface);
+  --ds-color-surface-raised: var(--surface-soft);
+  --ds-color-border: var(--line);
+  --ds-color-text: var(--ink);
+  --ds-color-text-secondary: var(--muted);
+  --ds-color-text-muted: color-mix(in srgb, var(--muted) 72%, transparent);
+  --ds-color-primary: var(--brand);
+  --ds-color-primary-soft: var(--brand-dark);
+  --ds-color-success: var(--accent);
+  --ds-color-danger: var(--danger);
+  --ds-color-on-primary: var(--on-brand);
+  --ds-space-1: var(--space-1);
+  --ds-space-2: var(--space-2);
+  --ds-space-3: var(--space-3);
+  --ds-space-4: var(--space-4);
+  --ds-space-5: var(--space-5);
+  --ds-space-6: var(--space-6);
+  --ds-space-7: 32px;
+  --ds-space-8: 40px;
+  --ds-radius-control: 999px;
+  --ds-radius-card: 24px;
+  --ds-radius-sheet: 30px;
+  --ds-shadow-none: none;
+  --ds-shadow-float: 0 18px 44px rgba(0, 0, 0, 0.52);
+  --ds-font-family: system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif;
+  --ds-font-caption: var(--font-xs);
+  --ds-font-body: var(--font-md);
+  --ds-font-list-title: 1.16rem;
+  --ds-font-section: clamp(1.55rem, 5.8vw, 2rem);
+  --ds-font-page: var(--font-xl);
+  --ds-line-tight: 1.08;
+  --ds-line-body: 1.42;
+  --ds-row-min: 72px;
 }
 
 [data-theme="dark-purple"] {
@@ -263,9 +300,9 @@ body {
   min-height: 100%;
   margin: 0;
   background: var(--bg);
-  color: var(--ink);
-  font-family: system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif;
-  line-height: 1.45;
+  color: var(--ds-color-text);
+  font-family: var(--ds-font-family);
+  line-height: var(--ds-line-body);
 }
 
 button,
@@ -284,7 +321,7 @@ button {
   min-height: 100vh;
   width: min(100%, 980px);
   margin: 0 auto;
-  padding: env(safe-area-inset-top) var(--space-4) calc(92px + env(safe-area-inset-bottom));
+  padding: env(safe-area-inset-top) var(--ds-space-5) calc(100px + env(safe-area-inset-bottom));
 }
 
 .topbar {
@@ -294,16 +331,16 @@ button {
   display: flex;
   align-items: center;
   justify-content: space-between;
-  gap: var(--space-3);
-  padding: var(--space-6) 4px var(--space-4);
-  background: color-mix(in srgb, var(--bg) 82%, transparent);
+  gap: var(--ds-space-3);
+  padding: var(--ds-space-7) 0 var(--ds-space-5);
+  background: color-mix(in srgb, var(--ds-color-background) 82%, transparent);
   backdrop-filter: blur(22px);
 }
 
 .eyebrow {
-  margin: 0 0 var(--space-1);
-  color: var(--muted);
-  font-size: var(--font-xs);
+  margin: 0 0 var(--ds-space-1);
+  color: var(--ds-color-text-secondary);
+  font-size: var(--ds-font-caption);
   font-weight: 700;
   letter-spacing: 0.02em;
 }
@@ -317,16 +354,16 @@ p {
 
 h1 {
   margin-bottom: 0;
-  font-size: var(--font-xl);
+  font-size: var(--ds-font-page);
   font-weight: 850;
-  line-height: 1.04;
+  line-height: var(--ds-line-tight);
 }
 
 h2 {
   margin-bottom: 0;
-  font-size: 1.45rem;
+  font-size: var(--ds-font-section);
   font-weight: 850;
-  line-height: 1.14;
+  line-height: 1.12;
 }
 
 .page {
@@ -345,11 +382,11 @@ h2 {
 .meta-row {
   display: flex;
   align-items: center;
-  gap: var(--space-3);
+  gap: var(--ds-space-3);
 }
 
 .toolbar {
-  margin-bottom: var(--space-4);
+  margin-bottom: var(--ds-space-5);
 }
 
 .toolbar .field {
@@ -359,12 +396,12 @@ h2 {
 .action-grid {
   display: grid;
   grid-template-columns: 1fr 1fr;
-  gap: var(--space-3);
-  margin-bottom: var(--space-5);
+  gap: var(--ds-space-3);
+  margin-bottom: var(--ds-space-6);
 }
 
 .panel {
-  margin: var(--space-6) 0;
+  margin: var(--ds-space-8) 0;
   padding: 0;
   border: 0;
   border-radius: 0;
@@ -375,7 +412,8 @@ h2 {
 .section-heading {
   justify-content: space-between;
   align-items: flex-start;
-  margin-bottom: var(--space-4);
+  gap: var(--ds-space-4);
+  margin-bottom: var(--ds-space-5);
 }
 
 .section-heading h2 {
@@ -389,13 +427,13 @@ h2 {
 
 .field {
   display: grid;
-  gap: var(--space-2);
+  gap: var(--ds-space-2);
 }
 
 .field span,
 .label-text {
-  color: var(--muted);
-  font-size: var(--font-xs);
+  color: var(--ds-color-text-secondary);
+  font-size: var(--ds-font-caption);
   font-weight: 700;
 }
 
@@ -407,12 +445,12 @@ input,
 select,
 textarea {
   width: 100%;
-  min-height: 48px;
-  border: 1px solid var(--line);
-  border-radius: var(--radius-lg);
-  padding: 12px var(--space-4);
-  background: var(--surface-soft);
-  color: var(--ink);
+  min-height: 50px;
+  border: 1px solid var(--ds-color-border);
+  border-radius: var(--ds-radius-control);
+  padding: 12px var(--ds-space-5);
+  background: var(--ds-color-surface-raised);
+  color: var(--ds-color-text);
   outline: none;
   transition: border-color 0.16s ease, box-shadow 0.16s ease, background 0.16s ease;
 }
@@ -434,10 +472,10 @@ textarea {
 .ghost-button,
 .danger-button,
 .icon-button {
-  min-height: 48px;
-  border-radius: 999px;
+  min-height: 50px;
+  border-radius: var(--ds-radius-control);
   border: 1px solid transparent;
-  padding: 10px 14px;
+  padding: 10px var(--ds-space-5);
   font-weight: 800;
   transition: transform 0.12s ease, border-color 0.16s ease, background 0.16s ease, box-shadow 0.16s ease;
 }
@@ -455,62 +493,62 @@ textarea {
 }
 
 .primary-button {
-  background: var(--brand);
-  color: var(--on-brand);
+  background: var(--ds-color-primary);
+  color: var(--ds-color-on-primary);
   box-shadow: none;
 }
 
 .primary-button.alt {
-  background: var(--surface-soft);
-  color: var(--brand-dark);
+  background: var(--ds-color-surface-raised);
+  color: var(--ds-color-primary-soft);
   box-shadow: none;
 }
 
 .secondary-button,
 .ghost-button {
-  border-color: var(--line);
-  background: var(--surface-soft);
-  color: var(--ink);
+  border-color: var(--ds-color-border);
+  background: var(--ds-color-surface-raised);
+  color: var(--ds-color-text);
 }
 
 .secondary-button:hover,
 .ghost-button:hover,
 .card-actions button:hover,
 .card-actions a:hover {
-  border-color: color-mix(in srgb, var(--brand) 50%, var(--line));
-  background: color-mix(in srgb, var(--surface-soft) 72%, var(--surface));
+  border-color: color-mix(in srgb, var(--ds-color-primary) 50%, var(--ds-color-border));
+  background: color-mix(in srgb, var(--ds-color-surface-raised) 76%, var(--ds-color-surface));
 }
 
 .danger-button {
-  background: color-mix(in srgb, var(--danger) 14%, var(--surface-soft));
-  color: var(--danger);
-  border-color: color-mix(in srgb, var(--danger) 32%, var(--line));
+  background: color-mix(in srgb, var(--ds-color-danger) 14%, var(--ds-color-surface-raised));
+  color: var(--ds-color-danger);
+  border-color: color-mix(in srgb, var(--ds-color-danger) 32%, var(--ds-color-border));
 }
 
 .icon-button {
   width: 44px;
   padding: 0;
-  background: var(--surface-soft);
-  color: var(--ink);
+  background: var(--ds-color-surface-raised);
+  color: var(--ds-color-text);
   font-size: 1.5rem;
   line-height: 1;
 }
 
 .bottom-tabs {
   position: fixed;
-  right: var(--space-4);
-  bottom: calc(var(--space-3) + env(safe-area-inset-bottom));
-  left: var(--space-4);
+  right: var(--ds-space-5);
+  bottom: calc(var(--ds-space-4) + env(safe-area-inset-bottom));
+  left: var(--ds-space-5);
   z-index: 10;
   display: grid;
   grid-template-columns: repeat(4, 1fr);
-  gap: var(--space-1);
+  gap: var(--ds-space-1);
   padding: 6px;
   border: 1px solid rgba(255, 255, 255, 0.12);
   border-radius: 999px;
   background: var(--tab-bar-bg);
   backdrop-filter: blur(26px) saturate(1.4);
-  box-shadow: 0 12px 34px rgba(0, 0, 0, 0.46);
+  box-shadow: var(--ds-shadow-float);
 }
 
 .tab {
@@ -527,22 +565,23 @@ textarea {
 .tab.active {
   border-color: transparent;
   background: var(--tab-active-bg);
-  color: var(--brand-dark);
+  color: var(--ds-color-primary-soft);
   box-shadow: inset 0 1px 0 rgba(255, 255, 255, 0.08);
 }
 
 .list,
 .store-list {
   display: grid;
-  gap: var(--space-3);
+  gap: 0;
 }
 
 .item,
 .store-card {
   border: 0;
-  border-bottom: 1px solid var(--line);
+  min-height: var(--ds-row-min);
+  border-bottom: 1px solid var(--ds-color-border);
   border-radius: 0;
-  padding: var(--space-4) 0;
+  padding: var(--ds-space-5) 0;
   background: transparent;
   box-shadow: var(--shadow-soft);
 }
@@ -557,14 +596,14 @@ textarea {
   display: flex;
   justify-content: space-between;
   align-items: flex-start;
-  gap: var(--space-3);
-  margin-bottom: var(--space-1);
+  gap: var(--ds-space-3);
+  margin-bottom: var(--ds-space-1);
   font-weight: 900;
 }
 
 .item-title strong,
 .store-title strong {
-  font-size: 1.12rem;
+  font-size: var(--ds-font-list-title);
   line-height: 1.25;
 }
 
@@ -575,14 +614,14 @@ textarea {
 
 .muted,
 .empty {
-  color: var(--muted);
+  color: var(--ds-color-text-secondary);
 }
 
 .empty {
-  padding: var(--space-6) var(--space-4);
-  border: 1px solid var(--line);
-  border-radius: var(--radius-xl);
-  background: var(--surface);
+  padding: var(--ds-space-8) var(--ds-space-5);
+  border: 1px solid var(--ds-color-border);
+  border-radius: var(--ds-radius-card);
+  background: var(--ds-color-surface);
   text-align: center;
   line-height: 1.6;
 }
@@ -593,47 +632,47 @@ textarea {
 }
 
 .positive {
-  color: var(--brand-dark);
+  color: var(--ds-color-primary-soft);
 }
 
 .negative {
-  color: var(--danger);
+  color: var(--ds-color-danger);
 }
 
 .pill-row {
   display: flex;
   flex-wrap: wrap;
-  gap: var(--space-2);
-  margin-top: var(--space-2);
+  gap: var(--ds-space-2);
+  margin-top: var(--ds-space-2);
 }
 
 .pill {
   display: inline-flex;
   align-items: center;
   min-height: 30px;
-  border-radius: 999px;
+  border-radius: var(--ds-radius-control);
   padding: 5px 10px;
   background: rgba(255, 255, 255, 0.08);
-  color: var(--muted);
-  font-size: var(--font-xs);
+  color: var(--ds-color-text-secondary);
+  font-size: var(--ds-font-caption);
   font-weight: 800;
 }
 
 .card-actions {
   display: flex;
   flex-wrap: wrap;
-  gap: var(--space-2);
-  margin-top: var(--space-3);
+  gap: var(--ds-space-2);
+  margin-top: var(--ds-space-3);
 }
 
 .card-actions button,
 .card-actions a {
   min-height: 40px;
   border: 0;
-  border-radius: 999px;
-  padding: 8px var(--space-4);
-  background: var(--surface-soft);
-  color: var(--brand-dark);
+  border-radius: var(--ds-radius-control);
+  padding: 8px var(--ds-space-5);
+  background: var(--ds-color-surface-raised);
+  color: var(--ds-color-primary-soft);
   font-size: var(--font-sm);
   font-weight: 800;
   text-decoration: none;
@@ -649,35 +688,35 @@ textarea {
 }
 
 .summary-total {
-  margin: -4px 0 var(--space-3);
+  margin: -4px 0 var(--ds-space-3);
 }
 
 .required-label::after {
   content: " *";
-  color: var(--danger);
+  color: var(--ds-color-danger);
 }
 
 .field-hint {
-  color: var(--muted);
-  font-size: var(--font-xs);
+  color: var(--ds-color-text-secondary);
+  font-size: var(--ds-font-caption);
 }
 
 .theme-grid {
   display: grid;
   grid-template-columns: repeat(2, minmax(0, 1fr));
-  gap: var(--space-3);
+  gap: var(--ds-space-3);
 }
 
 .theme-card {
   position: relative;
   display: grid;
-  gap: var(--space-3);
+  gap: var(--ds-space-3);
   min-height: 104px;
-  border: 1px solid var(--line);
-  border-radius: var(--radius-xl);
-  padding: var(--space-3);
-  background: var(--surface);
-  color: var(--ink);
+  border: 1px solid var(--ds-color-border);
+  border-radius: var(--ds-radius-card);
+  padding: var(--ds-space-3);
+  background: var(--ds-color-surface);
+  color: var(--ds-color-text);
   text-align: left;
   box-shadow: var(--shadow-soft);
 }
@@ -712,8 +751,8 @@ textarea {
   width: 24px;
   height: 24px;
   border-radius: 50%;
-  background: var(--brand);
-  color: var(--on-brand);
+  background: var(--ds-color-primary);
+  color: var(--ds-color-on-primary);
   font-size: 0.8rem;
   font-weight: 900;
 }
@@ -738,11 +777,11 @@ dialog {
   width: min(94vw, 560px);
   max-height: 88vh;
   border: 0;
-  border-radius: 28px 28px 0 0;
+  border-radius: var(--ds-radius-sheet) var(--ds-radius-sheet) 0 0;
   padding: 0;
   box-shadow: 0 -12px 44px rgba(0, 0, 0, 0.62);
-  background: var(--surface);
-  color: var(--ink);
+  background: var(--ds-color-surface);
+  color: var(--ds-color-text);
 }
 
 dialog::backdrop {
@@ -756,24 +795,24 @@ dialog::backdrop {
 
 .dialog-head,
 .dialog-actions {
-  padding: var(--space-4);
-  background: var(--surface);
+  padding: var(--ds-space-5);
+  background: var(--ds-color-surface);
 }
 
 .dialog-head {
   justify-content: space-between;
-  border-bottom: 1px solid var(--line);
+  border-bottom: 1px solid var(--ds-color-border);
 }
 
 .dialog-body {
   display: grid;
-  gap: var(--space-4);
+  gap: var(--ds-space-4);
   overflow: auto;
-  padding: var(--space-4);
+  padding: var(--ds-space-5);
 }
 
 .dialog-actions {
-  border-top: 1px solid var(--line);
+  border-top: 1px solid var(--ds-color-border);
 }
 
 .spacer {
@@ -786,21 +825,21 @@ dialog::backdrop {
 
 .update-toast {
   position: fixed;
-  right: var(--space-4);
+  right: var(--ds-space-5);
   bottom: calc(88px + env(safe-area-inset-bottom));
-  left: var(--space-4);
+  left: var(--ds-space-5);
   z-index: 40;
   display: flex;
   align-items: center;
   justify-content: space-between;
-  gap: var(--space-3);
+  gap: var(--ds-space-3);
   max-width: 560px;
   margin: 0 auto;
-  padding: var(--space-3);
-  border: 1px solid var(--line);
-  border-radius: var(--radius-xl);
+  padding: var(--ds-space-3);
+  border: 1px solid var(--ds-color-border);
+  border-radius: var(--ds-radius-card);
   background: var(--tab-bar-bg);
-  color: var(--ink);
+  color: var(--ds-color-text);
   box-shadow: 0 18px 42px rgba(0, 0, 0, 0.5);
   backdrop-filter: blur(26px) saturate(1.4);
 }
@@ -815,19 +854,19 @@ dialog::backdrop {
 }
 
 .update-toast span {
-  color: var(--muted);
-  font-size: var(--font-xs);
+  color: var(--ds-color-text-secondary);
+  font-size: var(--ds-font-caption);
 }
 
 .update-toast button {
   flex: 0 0 auto;
   min-height: 40px;
-  padding-inline: var(--space-4);
+  padding-inline: var(--ds-space-5);
 }
 
 @media (min-width: 760px) {
   .app-shell {
-    padding-inline: var(--space-6);
+    padding-inline: var(--ds-space-7);
   }
 
   .store-list,
@@ -853,7 +892,7 @@ dialog::backdrop {
   .bottom-tabs {
     right: 50%;
     left: auto;
-    bottom: calc(var(--space-4) + env(safe-area-inset-bottom));
+    bottom: calc(var(--ds-space-5) + env(safe-area-inset-bottom));
     width: min(720px, calc(100% - 48px));
     transform: translateX(50%);
     border: 1px solid var(--line);
@@ -863,7 +902,7 @@ dialog::backdrop {
 
 @media (max-width: 420px) {
   .app-shell {
-    padding-inline: var(--space-3);
+    padding-inline: var(--ds-space-4);
   }
 
   .action-grid {
