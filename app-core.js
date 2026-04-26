@@ -1,5 +1,6 @@
 (function attachLaunchGoGoGoCore(global) {
   const BALANCE_DEDUCTING_PAYMENT_METHODS = ["prepaidBalance", "unpaid"];
+  const BACKUP_SCHEMA_VERSION = 1;
 
   function todayString(date = new Date()) {
     return date.toISOString().slice(0, 10);
@@ -93,8 +94,98 @@
     });
   }
 
+  function createBackupPayload({ coworkers = [], stores = [], transactions = [] }, exportedAt = new Date().toISOString()) {
+    return {
+      app: "Launch-GoGoGo",
+      schemaVersion: BACKUP_SCHEMA_VERSION,
+      exportedAt,
+      data: {
+        coworkers,
+        stores,
+        transactions
+      }
+    };
+  }
+
+  function validateBackupPayload(payload) {
+    const errors = [];
+    if (!payload || typeof payload !== "object" || Array.isArray(payload)) {
+      return { ok: false, errors: ["備份檔必須是 JSON object。"] };
+    }
+    if (payload.app !== "Launch-GoGoGo") errors.push("備份檔 app 名稱不符合。");
+    if (payload.schemaVersion !== BACKUP_SCHEMA_VERSION) errors.push("備份檔版本不支援。");
+    if (!payload.data || typeof payload.data !== "object" || Array.isArray(payload.data)) {
+      errors.push("備份檔缺少 data 區塊。");
+      return { ok: false, errors };
+    }
+
+    const { coworkers, stores, transactions } = payload.data;
+    validateArray("coworkers", coworkers, validateCoworker, errors);
+    validateArray("stores", stores, validateStore, errors);
+    validateArray("transactions", transactions, validateTransaction, errors);
+
+    return { ok: errors.length === 0, errors };
+  }
+
+  function validateArray(name, value, validator, errors) {
+    if (!Array.isArray(value)) {
+      errors.push(`${name} 必須是陣列。`);
+      return;
+    }
+    value.forEach((item, index) => {
+      const itemErrors = validator(item);
+      itemErrors.forEach((error) => errors.push(`${name}[${index}] ${error}`));
+    });
+  }
+
+  function validateCoworker(item) {
+    const errors = validateBaseRecord(item);
+    if (!isNonEmptyString(item?.name)) errors.push("name 必須是非空字串。");
+    if (!Number.isInteger(item?.balance)) errors.push("balance 必須是整數。");
+    return errors;
+  }
+
+  function validateStore(item) {
+    const errors = validateBaseRecord(item);
+    if (!isNonEmptyString(item?.name)) errors.push("name 必須是非空字串。");
+    if (!Number.isInteger(item?.rating) || item.rating < 1 || item.rating > 5) errors.push("rating 必須是 1 到 5 的整數。");
+    ["availableForLunch", "availableForDinner"].forEach((key) => {
+      if (typeof item?.[key] !== "boolean") errors.push(`${key} 必須是 boolean。`);
+    });
+    ["lunchUsedCount", "dinnerUsedCount"].forEach((key) => {
+      if (!Number.isInteger(item?.[key]) || item[key] < 0) errors.push(`${key} 必須是非負整數。`);
+    });
+    return errors;
+  }
+
+  function validateTransaction(item) {
+    const errors = validateBaseRecord(item);
+    if (!/^\d{4}-\d{2}-\d{2}$/.test(item?.date || "")) errors.push("date 必須是 YYYY-MM-DD。");
+    if (!["topup", "mealOrder", "adjustment"].includes(item?.type)) errors.push("type 不支援。");
+    if (!(item?.mealType === null || ["lunch", "dinner"].includes(item?.mealType))) errors.push("mealType 不支援。");
+    if (!isNonEmptyString(item?.coworkerId)) errors.push("coworkerId 必須是非空字串。");
+    if (!(item?.storeId === null || typeof item?.storeId === "string")) errors.push("storeId 必須是字串或 null。");
+    if (!Number.isInteger(item?.amount)) errors.push("amount 必須是整數。");
+    if (!(item?.paymentMethod === null || ["prepaidBalance", "cashToday", "unpaid"].includes(item?.paymentMethod))) errors.push("paymentMethod 不支援。");
+    return errors;
+  }
+
+  function validateBaseRecord(item) {
+    const errors = [];
+    if (!item || typeof item !== "object" || Array.isArray(item)) return ["必須是 object。"];
+    if (!isNonEmptyString(item.id)) errors.push("id 必須是非空字串。");
+    if (!isNonEmptyString(item.createdAt)) errors.push("createdAt 必須是非空字串。");
+    if (!isNonEmptyString(item.updatedAt)) errors.push("updatedAt 必須是非空字串。");
+    return errors;
+  }
+
+  function isNonEmptyString(value) {
+    return typeof value === "string" && value.trim().length > 0;
+  }
+
   const api = {
     calculateDerivedData,
+    createBackupPayload,
     defaultMealType,
     escapeHtml,
     googleSearchUrl,
@@ -103,7 +194,8 @@
     signedMoney,
     sortStores,
     storeStats,
-    todayString
+    todayString,
+    validateBackupPayload
   };
 
   if (typeof module !== "undefined" && module.exports) {

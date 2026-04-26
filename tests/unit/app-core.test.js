@@ -69,6 +69,40 @@ describe("core business rules", () => {
     expect(core.escapeHtml("<b>A&B</b>")).toBe("&lt;b&gt;A&amp;B&lt;/b&gt;");
     expect(core.googleSearchUrl(" 阿明 便當 ")).toBe("https://www.google.com/search?q=%E9%98%BF%E6%98%8E%20%E4%BE%BF%E7%95%B6");
   });
+
+  it("creates and validates backup payloads", () => {
+    const payload = core.createBackupPayload({
+      coworkers: [coworker({ id: "amy", name: "Amy" })],
+      stores: [store({ id: "store", name: "阿明便當" })],
+      transactions: [tx({ id: "tx1", coworkerId: "amy", storeId: "store" })]
+    }, "2026-04-26T00:00:00.000Z");
+
+    expect(payload).toMatchObject({
+      app: "Launch-GoGoGo",
+      schemaVersion: 1,
+      exportedAt: "2026-04-26T00:00:00.000Z"
+    });
+    expect(core.validateBackupPayload(payload)).toEqual({ ok: true, errors: [] });
+  });
+
+  it("rejects invalid backup payloads before import", () => {
+    const result = core.validateBackupPayload({
+      app: "Launch-GoGoGo",
+      schemaVersion: 1,
+      data: {
+        coworkers: [{ id: "", name: "", balance: 1.5 }],
+        stores: [],
+        transactions: []
+      }
+    });
+
+    expect(result.ok).toBe(false);
+    expect(result.errors).toEqual(expect.arrayContaining([
+      "coworkers[0] id 必須是非空字串。",
+      "coworkers[0] name 必須是非空字串。",
+      "coworkers[0] balance 必須是整數。"
+    ]));
+  });
 });
 
 function tx(overrides = {}) {
@@ -82,6 +116,7 @@ function tx(overrides = {}) {
     amount: 100,
     paymentMethod: "prepaidBalance",
     createdAt: "2026-04-01T00:00:00.000Z",
+    updatedAt: "2026-04-01T00:00:00.000Z",
     ...overrides
   };
 }
@@ -97,6 +132,19 @@ function store(overrides = {}) {
     dinnerUsedCount: 0,
     lunchLastUsedDate: "",
     dinnerLastUsedDate: "",
+    createdAt: "2026-04-01T00:00:00.000Z",
+    updatedAt: "2026-04-01T00:00:00.000Z",
+    ...overrides
+  };
+}
+
+function coworker(overrides = {}) {
+  return {
+    id: "coworker",
+    name: "Coworker",
+    balance: 0,
+    createdAt: "2026-04-01T00:00:00.000Z",
+    updatedAt: "2026-04-01T00:00:00.000Z",
     ...overrides
   };
 }

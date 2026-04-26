@@ -400,6 +400,12 @@ h2 {
   margin-bottom: var(--ds-space-6);
 }
 
+.data-actions {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: var(--ds-space-3);
+}
+
 .panel {
   margin: var(--ds-space-8) 0;
   padding: 0;
@@ -699,6 +705,14 @@ textarea {
 .field-hint {
   color: var(--ds-color-text-secondary);
   font-size: var(--ds-font-caption);
+}
+
+#dataStatus[data-status="success"] {
+  color: var(--ds-color-success);
+}
+
+#dataStatus[data-status="error"] {
+  color: var(--ds-color-danger);
 }
 
 .theme-grid {
