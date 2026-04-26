@@ -4,9 +4,9 @@ This file tracks upcoming work for Launch-GoGoGo. Keep tasks ordered by product 
 
 ## Priority Queue
 
-### P0 - Data Backup And Recovery
+### Done - Data Backup And Recovery
 
-Status: Todo
+Status: Done
 
 Why: Current data lives in browser IndexedDB only. Before adding richer location or preference data, users need a way to move or recover their records.
 
@@ -14,7 +14,7 @@ Tasks:
 
 - Export coworkers, stores, and transactions to JSON.
 - Import JSON with validation before writing to IndexedDB.
-- Show a clear warning before import overwrites or merges local data.
+- Show a clear warning before import overwrites local data.
 - Add unit tests for validation and an E2E smoke test for export/import.
 
 Acceptance:
@@ -22,7 +22,7 @@ Acceptance:
 - A user can export all local data and import it into a fresh browser profile.
 - Invalid JSON or incompatible schema is rejected without changing current data.
 
-### P1 - Manual Balance Adjustment
+### P0 - Manual Balance Adjustment
 
 Status: Todo
 
@@ -40,7 +40,7 @@ Acceptance:
 - Positive and negative adjustments update coworker balance correctly.
 - Adjustment history is auditable from daily and coworker views.
 
-### P2 - Nearby Favorite Restaurant Recommendation
+### P1 - Nearby Favorite Restaurant Recommendation
 
 Status: Todo
 
@@ -103,7 +103,7 @@ Acceptance:
 - The app works without a Google API key.
 - API-backed enrichment is optional and does not block manual store management.
 
-### P3 - Store Menu And Frequent Meals
+### P2 - Store Menu And Frequent Meals
 
 Status: Todo
 
@@ -115,7 +115,7 @@ Tasks:
 - Let order forms select a saved meal name and default amount.
 - Test store meal selection and order creation.
 
-### P4 - Search And Filtering
+### P3 - Search And Filtering
 
 Status: Todo
 
@@ -127,7 +127,7 @@ Tasks:
 - Search transaction history by coworker, store, meal name, and date.
 - Filter store list by rating, keyword, availability, and favorite status.
 
-### P5 - Weekly And Monthly Reports
+### P4 - Weekly And Monthly Reports
 
 Status: Todo
 
@@ -139,7 +139,7 @@ Tasks:
 - Summarize top stores and unpaid balances.
 - Add focused tests for report calculations.
 
-### P6 - PWA Polish
+### P5 - PWA Polish
 
 Status: Todo
 

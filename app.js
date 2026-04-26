@@ -45,6 +45,7 @@ const state = {
 const $ = (selector) => document.querySelector(selector);
 const {
   calculateDerivedData,
+  createBackupPayload,
   defaultMealType,
   escapeHtml,
   googleSearchUrl,
@@ -53,7 +54,8 @@ const {
   signedMoney,
   sortStores,
   storeStats,
-  todayString
+  todayString,
+  validateBackupPayload
 } = window.LaunchGoGoGoCore;
 const nowIso = () => new Date().toISOString();
 const uid = () => `${Date.now().toString(36)}-${crypto.getRandomValues(new Uint32Array(1))[0].toString(36)}`;
@@ -123,6 +125,27 @@ function deleteItem(name, id) {
     const request = txStore(name, "readwrite").delete(id);
     request.onsuccess = () => resolve();
     request.onerror = () => reject(request.error);
+  });
+}
+
+function replaceAllData({ coworkers, stores, transactions }) {
+  return new Promise((resolve, reject) => {
+    const transaction = state.db.transaction(Object.values(STORE_NAMES), "readwrite");
+    transaction.oncomplete = () => resolve();
+    transaction.onerror = () => reject(transaction.error);
+    transaction.onabort = () => reject(transaction.error);
+
+    const coworkerStore = transaction.objectStore(STORE_NAMES.coworkers);
+    const storeStore = transaction.objectStore(STORE_NAMES.stores);
+    const transactionStore = transaction.objectStore(STORE_NAMES.transactions);
+
+    coworkerStore.clear();
+    storeStore.clear();
+    transactionStore.clear();
+
+    coworkers.forEach((item) => coworkerStore.put(item));
+    stores.forEach((item) => storeStore.put(item));
+    transactions.forEach((item) => transactionStore.put(item));
   });
 }
 
@@ -296,6 +319,13 @@ function renderSettings() {
       ${theme.id === currentTheme.id ? `<span class="theme-check">✓</span>` : ""}
     </button>
   `).join("");
+}
+
+function setDataStatus(message, type = "info") {
+  const status = $("#dataStatus");
+  if (!status) return;
+  status.textContent = message;
+  status.dataset.status = type;
 }
 
 function setPage(page) {
@@ -622,6 +652,43 @@ async function copyStoreToMealType(id, mealType) {
   await refresh();
 }
 
+function exportData() {
+  const payload = createBackupPayload(state);
+  const blob = new Blob([JSON.stringify(payload, null, 2)], { type: "application/json" });
+  const url = URL.createObjectURL(blob);
+  const link = document.createElement("a");
+  link.href = url;
+  link.download = `launch-gogogo-backup-${todayString()}.json`;
+  document.body.appendChild(link);
+  link.click();
+  link.remove();
+  URL.revokeObjectURL(url);
+  setDataStatus("已建立備份檔。", "success");
+}
+
+async function importDataFile(file) {
+  if (!file) return;
+  try {
+    const payload = JSON.parse(await file.text());
+    const validation = validateBackupPayload(payload);
+    if (!validation.ok) {
+      setDataStatus(`匯入失敗：${validation.errors[0]}`, "error");
+      return;
+    }
+    const counts = payload.data;
+    const ok = confirm(`匯入會覆寫目前本機資料。\n\n同事：${counts.coworkers.length}\n店家：${counts.stores.length}\n交易：${counts.transactions.length}\n\n確定匯入？`);
+    if (!ok) {
+      setDataStatus("已取消匯入。", "info");
+      return;
+    }
+    await replaceAllData(payload.data);
+    await refresh();
+    setDataStatus("匯入完成，已重新計算餘額與店家統計。", "success");
+  } catch (error) {
+    setDataStatus(`匯入失敗：${error.message || "無法讀取 JSON 檔案。"}`, "error");
+  }
+}
+
 function ensureUpdateToast() {
   let toast = $("#updateToast");
   if (toast) return toast;
@@ -685,6 +752,12 @@ function bindEvents() {
   $("#addDinnerStoreButton").addEventListener("click", () => openStoreEditor("dinner"));
   $("#lunchSort").addEventListener("change", () => renderStores("lunch"));
   $("#dinnerSort").addEventListener("change", () => renderStores("dinner"));
+  $("#exportDataButton").addEventListener("click", exportData);
+  $("#importDataButton").addEventListener("click", () => $("#importDataInput").click());
+  $("#importDataInput").addEventListener("change", async (event) => {
+    await importDataFile(event.target.files?.[0]);
+    event.target.value = "";
+  });
 
   document.body.addEventListener("click", (event) => {
     const trigger = event.target.closest("[data-action]");
@@ -737,8 +810,10 @@ async function init() {
 
 window.LaunchGoGoGoApp = {
   bindOrderStoreToggle,
+  importDataFile,
   orderStoreFields,
   renderSettings,
+  replaceAllData,
   setPage,
   state
 };

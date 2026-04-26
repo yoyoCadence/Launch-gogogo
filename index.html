@@ -101,6 +101,18 @@
             </div>
             <div id="themeGrid" class="theme-grid"></div>
           </section>
+
+          <section class="panel">
+            <div class="section-heading">
+              <h2>資料備份</h2>
+            </div>
+            <div class="data-actions">
+              <button id="exportDataButton" class="secondary-button" type="button">匯出 JSON</button>
+              <button id="importDataButton" class="danger-button" type="button">匯入 JSON</button>
+              <input id="importDataInput" class="hidden" type="file" accept="application/json,.json">
+            </div>
+            <p id="dataStatus" class="field-hint" aria-live="polite">匯入會覆寫目前本機資料，請先匯出備份。</p>
+          </section>
         </section>
       </main>
 

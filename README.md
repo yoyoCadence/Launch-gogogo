@@ -33,6 +33,14 @@ https://yoyocadence.github.io/Launch-gogogo/
 
 PWA 與 Service Worker 需要透過 HTTP/HTTPS 來源執行，不建議直接用 `file://` 開啟。
 
+Windows 建議使用 Python Launcher：
+
+```powershell
+py -m http.server 8080
+```
+
+macOS / Linux 或 Python 指令正常指向 Python 3 時，也可以使用：
+
 ```bash
 python -m http.server 8080
 ```
@@ -40,8 +48,10 @@ python -m http.server 8080
 啟動後打開：
 
 ```text
-http://localhost:8080
+http://127.0.0.1:8080
 ```
+
+如果 Windows 執行 `python -m http.server 8080` 後立刻回到提示符，通常是 `python` 指到 WindowsApps alias，請改用 `py -m http.server 8080`。
 
 也可以用任何靜態檔案伺服器，例如 VS Code Live Server、`npx serve`、`http-server`。
 
@@ -240,14 +250,14 @@ Launch-GoGoGo 的 UI 採用 mobile-first、iOS dark productivity 風格。後續
 - 新店家可在新增訂單時直接建立，並歸入對應餐別。
 - 預設餐別：14:00 前為午餐，14:00 後為晚餐，表單可手動修改。
 - 新增餐點訂單時會標示必填欄位，並依系統時間預選餐別：14:00 前午餐，14:00 後晚餐。
+- 設定頁可匯出 / 匯入 JSON 備份；匯入前會驗證格式並要求確認，匯入後重新計算餘額與店家統計。
 
 ## 下一階段 Roadmap
 
 詳細待辦與驗收標準請看 [`task.md`](./task.md)。
 
-1. 加入資料匯入 / 匯出 JSON，方便換手機與備份，先降低本機資料遺失風險。
-2. 加入 `adjustment` 手動調整紀錄 UI，讓舊帳、折扣、臨時補差額更好處理。
-3. 加入附近喜好店家推薦，依使用者設定過的 Google Maps / 店家連結與目前地理位置，推薦當下附近可吃的店。
+1. 加入 `adjustment` 手動調整紀錄 UI，讓舊帳、折扣、臨時補差額更好處理。
+2. 加入附近喜好店家推薦，依使用者設定過的 Google Maps / 店家連結與目前地理位置，推薦當下附近可吃的店。
    - 店家資料擴充：在 Store 保留 Google Maps 連結、Place ID 或座標欄位，並維持手動輸入連結可用。
    - 偏好設定：讓使用者把店家標記為喜好店家，並可設定午餐 / 晚餐適用、喜好程度、備註。
    - 位置權限：在使用者主動按下「附近推薦」時才要求瀏覽器地理位置權限，並提供拒絕權限時的手動排序備案。
@@ -255,8 +265,8 @@ Launch-GoGoGo 的 UI 採用 mobile-first、iOS dark productivity 風格。後續
    - Google Maps 整合：第一階段先解析 / 保存使用者貼上的 Google Maps 連結；第二階段再評估 Google Places API 補齊座標、店名與營業資訊。
    - 推薦 UI：新增「目前建議」區塊，顯示推薦原因，例如距離、評分、最後吃的日期、午餐 / 晚餐可用狀態。
    - 測試保護：補距離計算、排序權重、權限拒絕 fallback、推薦流程 E2E。
-4. 加入店家菜單或常點餐點清單，讓訂餐輸入更快。
-5. 加入搜尋與篩選，例如只看欠款同事、只看某店家紀錄。
-6. 加入每週 / 每月結算報表。
-7. 加入 iOS 啟動畫面設定與更多尺寸的 PWA 圖示。
-8. 未來若需要多人共同使用，再加入雲端同步與權限設計。
+3. 加入店家菜單或常點餐點清單，讓訂餐輸入更快。
+4. 加入搜尋與篩選，例如只看欠款同事、只看某店家紀錄。
+5. 加入每週 / 每月結算報表。
+6. 加入 iOS 啟動畫面設定與更多尺寸的 PWA 圖示。
+7. 未來若需要多人共同使用，再加入雲端同步與權限設計。
