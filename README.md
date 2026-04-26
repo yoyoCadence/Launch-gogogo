@@ -33,6 +33,14 @@ https://yoyocadence.github.io/Launch-gogogo/
 
 PWA 與 Service Worker 需要透過 HTTP/HTTPS 來源執行，不建議直接用 `file://` 開啟。
 
+Windows 建議使用 Python Launcher：
+
+```powershell
+py -m http.server 8080
+```
+
+macOS / Linux 或 Python 指令正常指向 Python 3 時，也可以使用：
+
 ```bash
 python -m http.server 8080
 ```
@@ -40,8 +48,10 @@ python -m http.server 8080
 啟動後打開：
 
 ```text
-http://localhost:8080
+http://127.0.0.1:8080
 ```
+
+如果 Windows 執行 `python -m http.server 8080` 後立刻回到提示符，通常是 `python` 指到 WindowsApps alias，請改用 `py -m http.server 8080`。
 
 也可以用任何靜態檔案伺服器，例如 VS Code Live Server、`npx serve`、`http-server`。
 
