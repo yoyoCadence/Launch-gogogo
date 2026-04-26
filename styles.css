@@ -592,6 +592,52 @@ textarea {
   box-shadow: var(--shadow-soft);
 }
 
+.coworker-group {
+  display: grid;
+  gap: 0;
+}
+
+.coworker-group + .coworker-group {
+  margin-top: var(--ds-space-7);
+}
+
+.group-heading {
+  display: flex;
+  justify-content: space-between;
+  gap: var(--ds-space-3);
+  margin-bottom: var(--ds-space-3);
+  color: var(--ds-color-text-secondary);
+  font-size: var(--ds-font-caption);
+  font-weight: 900;
+}
+
+.coworker-item {
+  display: grid;
+  grid-template-columns: 52px minmax(0, 1fr);
+  gap: var(--ds-space-4);
+  align-items: start;
+}
+
+.coworker-main {
+  min-width: 0;
+}
+
+.avatar {
+  width: 52px;
+  height: 52px;
+  border-radius: 999px;
+  object-fit: cover;
+  border: 1px solid var(--ds-color-border);
+  background: var(--ds-color-surface-raised);
+}
+
+.avatar-fallback {
+  display: inline-grid;
+  place-items: center;
+  color: var(--ds-color-primary-soft);
+  font-weight: 900;
+}
+
 .item:first-child,
 .store-card:first-child {
   padding-top: 0;

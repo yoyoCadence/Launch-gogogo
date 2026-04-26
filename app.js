@@ -13,6 +13,7 @@ const PAYMENT_LABELS = {
 };
 
 const THEME_STORAGE_KEY = "launch-gogogo-theme";
+const DEFAULT_MEAL_NAME = "未指定餐點";
 const THEMES = [
   { id: "default", name: "便當綠", colors: ["#1f6f5b", "#d66b3d", "#f6f4ee"] },
   { id: "dark-purple", name: "暗夜紫", colors: ["#7c3aed", "#f59e0b", "#0d0d1a"] },
@@ -193,10 +194,45 @@ function renderCoworkerOptions() {
 
 function renderCoworkers() {
   $("#coworkerCount").textContent = `${state.coworkers.length} 位`;
-  $("#coworkerList").innerHTML = state.coworkers.length ? state.coworkers.map((coworker) => {
-    const className = coworker.balance >= 0 ? "positive" : "negative";
-    return `
-      <article class="item">
+  if (!state.coworkers.length) {
+    $("#coworkerList").innerHTML = `<div class="empty">先新增同事，再開始記錄儲值金與餐點。</div>`;
+    return;
+  }
+
+  const groups = groupCoworkers(state.coworkers);
+  $("#coworkerList").innerHTML = groups.map(({ name, coworkers }) => `
+    <section class="coworker-group" aria-label="${escapeHtml(name)}">
+      <div class="group-heading">
+        <span>${escapeHtml(name)}</span>
+        <span>${coworkers.length} 位</span>
+      </div>
+      ${coworkers.map(renderCoworkerItem).join("")}
+    </section>
+  `).join("");
+}
+
+function groupCoworkers(coworkers) {
+  const map = new Map();
+  coworkers.forEach((coworker) => {
+    const groupName = coworker.group?.trim() || "未分組";
+    if (!map.has(groupName)) map.set(groupName, []);
+    map.get(groupName).push(coworker);
+  });
+  return Array.from(map.entries())
+    .sort(([a], [b]) => {
+      if (a === "未分組") return 1;
+      if (b === "未分組") return -1;
+      return a.localeCompare(b, "zh-Hant");
+    })
+    .map(([name, groupedCoworkers]) => ({ name, coworkers: groupedCoworkers }));
+}
+
+function renderCoworkerItem(coworker) {
+  const className = coworker.balance >= 0 ? "positive" : "negative";
+  return `
+    <article class="item coworker-item">
+      ${renderCoworkerAvatar(coworker)}
+      <div class="coworker-main">
         <div class="item-title">
           <strong>${escapeHtml(coworker.name)}</strong>
           <span class="money ${className}">${signedMoney(coworker.balance)}</span>
@@ -205,9 +241,16 @@ function renderCoworkers() {
         <div class="card-actions">
           <button type="button" data-action="edit-coworker" data-id="${coworker.id}">編輯</button>
         </div>
-      </article>
-    `;
-  }).join("") : `<div class="empty">先新增同事，再開始記錄儲值金與餐點。</div>`;
+      </div>
+    </article>
+  `;
+}
+
+function renderCoworkerAvatar(coworker) {
+  if (coworker.avatarDataUrl) {
+    return `<img class="avatar" src="${escapeHtml(coworker.avatarDataUrl)}" alt="${escapeHtml(coworker.name)} 頭像">`;
+  }
+  return `<span class="avatar avatar-fallback" aria-hidden="true">${escapeHtml((coworker.name || "?").trim().slice(0, 1).toUpperCase())}</span>`;
 }
 
 function renderDailySummary() {
@@ -240,7 +283,7 @@ function renderDailySummary() {
           <strong>${entry.mealType === "lunch" ? "午餐" : "晚餐"}：${escapeHtml(coworker?.name || "已刪同事")}</strong>
           <span class="money">${money(entry.amount)}</span>
         </div>
-        <div>${escapeHtml(store?.name || "已刪店家")} · ${escapeHtml(entry.mealName || "未填餐點")}</div>
+        <div>${escapeHtml(store?.name || "已刪店家")} · ${escapeHtml(entry.mealName || DEFAULT_MEAL_NAME)}</div>
         <div class="pill-row">
           <span class="pill">${PAYMENT_LABELS[entry.paymentMethod]}</span>
           ${entry.note ? `<span class="pill">${escapeHtml(entry.note)}</span>` : ""}
@@ -266,7 +309,7 @@ function renderCoworkerHistory() {
           <strong>${entry.date} · ${entry.type === "topup" ? "儲值" : entry.mealType === "lunch" ? "午餐" : "晚餐"}</strong>
           <span class="money">${direction}${money(entry.amount)}</span>
         </div>
-        <div class="muted">${entry.type === "mealOrder" ? `${escapeHtml(store?.name || "已刪店家")} · ${escapeHtml(entry.mealName || "")} · ${PAYMENT_LABELS[entry.paymentMethod]}` : escapeHtml(entry.note || "無備註")}</div>
+        <div class="muted">${entry.type === "mealOrder" ? `${escapeHtml(store?.name || "已刪店家")} · ${escapeHtml(entry.mealName || DEFAULT_MEAL_NAME)} · ${PAYMENT_LABELS[entry.paymentMethod]}` : escapeHtml(entry.note || "無備註")}</div>
       </article>
     `;
   }).join("") : `<div class="empty">${coworkerId ? "尚無交易紀錄。" : "選擇一位同事查看歷史交易。"}</div>`;
@@ -338,7 +381,11 @@ function setPage(page) {
 }
 
 function coworkerOptions(selectedId = "") {
-  return state.coworkers.map((coworker) => `<option value="${coworker.id}" ${coworker.id === selectedId ? "selected" : ""}>${escapeHtml(coworker.name)}</option>`).join("");
+  return state.coworkers.map((coworker) => {
+    const groupName = coworker.group?.trim();
+    const label = groupName ? `${coworker.name}（${groupName}）` : coworker.name;
+    return `<option value="${coworker.id}" ${coworker.id === selectedId ? "selected" : ""}>${escapeHtml(label)}</option>`;
+  }).join("");
 }
 
 function storeOptions(mealType, selectedId = "") {
@@ -381,6 +428,10 @@ function openDialog({ title, body, onSave, onDelete, saveText = "儲存" }) {
 }
 
 function openCoworkerEditor(coworker = null) {
+  const groupOptions = Array.from(new Set(state.coworkers.map((item) => item.group?.trim()).filter(Boolean)))
+    .sort((a, b) => a.localeCompare(b, "zh-Hant"))
+    .map((group) => `<option value="${escapeHtml(group)}"></option>`)
+    .join("");
   openDialog({
     title: coworker ? "編輯同事" : "新增同事",
     body: `
@@ -388,11 +439,29 @@ function openCoworkerEditor(coworker = null) {
         <span>姓名</span>
         <input name="name" required maxlength="40" value="${escapeHtml(coworker?.name || "")}">
       </label>
+      <label class="field">
+        <span>群組</span>
+        <input name="group" maxlength="40" list="coworkerGroupOptions" value="${escapeHtml(coworker?.group || "")}" placeholder="例如：業務部、設計部">
+        <datalist id="coworkerGroupOptions">${groupOptions}</datalist>
+      </label>
+      <label class="field">
+        <span>頭像</span>
+        <input name="avatarFile" type="file" accept="image/*">
+        <span class="field-hint">可上傳圖片作為同事頭像；不選檔會保留目前頭像。</span>
+      </label>
     `,
     onSave: async (formData) => {
       const name = formData.get("name").trim();
+      const avatarFile = formData.get("avatarFile");
+      const avatarDataUrl = avatarFile?.size ? await readFileAsDataUrl(avatarFile) : coworker?.avatarDataUrl || "";
       const entry = coworker || { id: uid(), balance: 0, createdAt: nowIso() };
-      await putItem(STORE_NAMES.coworkers, { ...entry, name, updatedAt: nowIso() });
+      await putItem(STORE_NAMES.coworkers, {
+        ...entry,
+        name,
+        group: formData.get("group").trim(),
+        avatarDataUrl,
+        updatedAt: nowIso()
+      });
     },
     onDelete: coworker ? async () => {
       const related = state.transactions.filter((entry) => entry.coworkerId === coworker.id);
@@ -401,6 +470,15 @@ function openCoworkerEditor(coworker = null) {
         ...related.map((entry) => deleteItem(STORE_NAMES.transactions, entry.id))
       ]);
     } : null
+  });
+}
+
+function readFileAsDataUrl(file) {
+  return new Promise((resolve, reject) => {
+    const reader = new FileReader();
+    reader.onload = () => resolve(reader.result);
+    reader.onerror = () => reject(reader.error);
+    reader.readAsDataURL(file);
   });
 }
 
@@ -532,8 +610,9 @@ function openOrderEditor(transaction = null) {
       </label>
       <div id="orderStoreFields">${orderStoreFields(mealType, transaction?.storeId)}</div>
       <label class="field">
-        ${requiredLabel("餐點名稱")}
-        <input name="mealName" maxlength="80" required value="${escapeHtml(transaction?.mealName || "")}" placeholder="例如：雞腿飯">
+        <span>餐點名稱</span>
+        <input name="mealName" maxlength="80" value="${escapeHtml(transaction?.mealName === DEFAULT_MEAL_NAME ? "" : transaction?.mealName || "")}" placeholder="可先留空，之後再補">
+        <span class="field-hint">留空會先記為「${DEFAULT_MEAL_NAME}」。</span>
       </label>
       <label class="field">
         ${requiredLabel("同事")}
@@ -566,7 +645,7 @@ function openOrderEditor(transaction = null) {
         mealType: selectedMealType,
         coworkerId: formData.get("coworkerId"),
         storeId,
-        mealName: formData.get("mealName").trim(),
+        mealName: formData.get("mealName").trim() || DEFAULT_MEAL_NAME,
         amount: parseMoney(formData.get("amount")),
         paymentMethod: formData.get("paymentMethod"),
         note: formData.get("note").trim(),

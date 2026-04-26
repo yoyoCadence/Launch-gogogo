@@ -176,6 +176,8 @@ Launch-GoGoGo 的 UI 採用 mobile-first、iOS dark productivity 風格。後續
 {
   id: string,
   name: string,
+  group: string,
+  avatarDataUrl: string,
   balance: integer,
   createdAt: ISODateString,
   updatedAt: ISODateString
@@ -183,6 +185,7 @@ Launch-GoGoGo 的 UI 採用 mobile-first、iOS dark productivity 風格。後續
 ```
 
 `balance` 使用整數金額，不使用浮點數。每次新增、修改、刪除交易後會由交易紀錄重新計算。
+`group` 與 `avatarDataUrl` 是選填欄位；舊資料沒有這兩個欄位時仍可正常顯示。
 
 ### Store
 
@@ -242,6 +245,7 @@ Launch-GoGoGo 的 UI 採用 mobile-first、iOS dark productivity 風格。後續
 - 儲值金與未付款會更新同事餘額，餘額可為負數。
 - 指定日期每日摘要。
 - 同事歷史交易紀錄。
+- 同事可設定群組並上傳頭像，列表會依群組分段顯示。
 - 午餐 / 晚餐店家分開管理。
 - 店家新增、編輯、刪除、評分、評語、類型 / 備註、連結。
 - 無自訂連結時自動產生 Google 搜尋連結。
@@ -250,6 +254,7 @@ Launch-GoGoGo 的 UI 採用 mobile-first、iOS dark productivity 風格。後續
 - 新店家可在新增訂單時直接建立，並歸入對應餐別。
 - 預設餐別：14:00 前為午餐，14:00 後為晚餐，表單可手動修改。
 - 新增餐點訂單時會標示必填欄位，並依系統時間預選餐別：14:00 前午餐，14:00 後晚餐。
+- 新增餐點訂單時可先不填餐點名稱，系統會記為「未指定餐點」，之後可再編輯補上。
 - 設定頁可匯出 / 匯入 JSON 備份；匯入前會驗證格式並要求確認，匯入後重新計算餘額與店家統計。
 
 ## 下一階段 Roadmap

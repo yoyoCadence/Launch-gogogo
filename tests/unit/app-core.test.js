@@ -72,7 +72,7 @@ describe("core business rules", () => {
 
   it("creates and validates backup payloads", () => {
     const payload = core.createBackupPayload({
-      coworkers: [coworker({ id: "amy", name: "Amy" })],
+      coworkers: [coworker({ id: "amy", name: "Amy", group: "業務部", avatarDataUrl: "data:image/png;base64,abc" })],
       stores: [store({ id: "store", name: "阿明便當" })],
       transactions: [tx({ id: "tx1", coworkerId: "amy", storeId: "store" })]
     }, "2026-04-26T00:00:00.000Z");
@@ -102,6 +102,17 @@ describe("core business rules", () => {
       "coworkers[0] name 必須是非空字串。",
       "coworkers[0] balance 必須是整數。"
     ]));
+  });
+
+  it("rejects non-image coworker avatar data in backups", () => {
+    const result = core.validateBackupPayload(core.createBackupPayload({
+      coworkers: [coworker({ avatarDataUrl: "data:text/plain;base64,abc" })],
+      stores: [],
+      transactions: []
+    }));
+
+    expect(result.ok).toBe(false);
+    expect(result.errors).toContain("coworkers[0] avatarDataUrl 必須是圖片 data URL。");
   });
 });
 
