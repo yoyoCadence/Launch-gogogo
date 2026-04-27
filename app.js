@@ -239,6 +239,7 @@ function renderCoworkerItem(coworker) {
         </div>
         <div class="muted">${coworker.balance < 0 ? "目前欠款" : "目前餘額"}</div>
         <div class="card-actions">
+          <button type="button" data-action="open-payment" data-id="${coworker.id}">收款</button>
           <button type="button" data-action="edit-coworker" data-id="${coworker.id}">編輯</button>
         </div>
       </div>
@@ -256,8 +257,9 @@ function renderCoworkerAvatar(coworker) {
 function renderDailySummary() {
   const selectedDate = $("#ledgerDate").value || todayString();
   const entries = state.transactions.filter((entry) => entry.date === selectedDate);
-  const total = entries.filter((entry) => entry.type === "mealOrder").reduce((sum, entry) => sum + entry.amount, 0);
-  $("#dailyTotal").textContent = entries.length ? `餐點合計 ${money(total)}` : "";
+  const mealEntries = entries.filter((entry) => entry.type === "mealOrder");
+  const total = mealEntries.reduce((sum, entry) => sum + entry.amount, 0);
+  $("#dailyTotal").textContent = mealEntries.length ? `餐點合計 ${money(total)}` : "";
 
   $("#dailySummary").innerHTML = entries.length ? entries.map((entry) => {
     const coworker = state.coworkers.find((item) => item.id === entry.coworkerId);
@@ -267,6 +269,21 @@ function renderDailySummary() {
         <article class="item">
           <div class="item-title">
             <strong>儲值金：${escapeHtml(coworker?.name || "已刪同事")}</strong>
+            <span class="money positive">+${money(entry.amount)}</span>
+          </div>
+          <p class="muted">${escapeHtml(entry.note || "無備註")}</p>
+          <div class="card-actions">
+            <button type="button" data-action="edit-transaction" data-id="${entry.id}">編輯</button>
+            <button type="button" data-action="delete-transaction" data-id="${entry.id}">刪除</button>
+          </div>
+        </article>
+      `;
+    }
+    if (entry.type === "payment") {
+      return `
+        <article class="item">
+          <div class="item-title">
+            <strong>收款：${escapeHtml(coworker?.name || "已刪同事")}</strong>
             <span class="money positive">+${money(entry.amount)}</span>
           </div>
           <p class="muted">${escapeHtml(entry.note || "無備註")}</p>
@@ -318,10 +335,11 @@ function renderCoworkerHistory() {
   const entries = coworkerId ? state.transactions.filter((entry) => entry.coworkerId === coworkerId) : [];
   $("#coworkerHistory").innerHTML = coworkerId && entries.length ? entries.map((entry) => {
     const store = state.stores.find((item) => item.id === entry.storeId);
-    const direction = entry.type === "topup" ? "+"
+    const direction = entry.type === "topup" || entry.type === "payment" ? "+"
       : entry.type === "adjustment" ? (entry.amount >= 0 ? "+" : "")
       : entry.paymentMethod === "cashToday" ? "" : "-";
     const typeLabel = entry.type === "topup" ? "儲值"
+      : entry.type === "payment" ? "收款"
       : entry.type === "adjustment" ? "調整"
       : entry.mealType === "lunch" ? "午餐" : "晚餐";
     return `
@@ -530,6 +548,47 @@ function openTopupEditor(transaction = null) {
     `,
     onSave: async (formData) => {
       const entry = transaction || { id: uid(), type: "topup", mealType: null, storeId: null, mealName: "", paymentMethod: null, createdAt: nowIso() };
+      await putItem(STORE_NAMES.transactions, {
+        ...entry,
+        date: formData.get("date"),
+        coworkerId: formData.get("coworkerId"),
+        amount: parseMoney(formData.get("amount")),
+        note: formData.get("note").trim(),
+        updatedAt: nowIso()
+      });
+    },
+    onDelete: transaction ? async () => deleteItem(STORE_NAMES.transactions, transaction.id) : null
+  });
+}
+
+function openPaymentEditor(coworkerId = null, transaction = null) {
+  if (!state.coworkers.length) {
+    alert("請先新增同事。");
+    return;
+  }
+  const selectedCoworkerId = transaction?.coworkerId || coworkerId || "";
+  openDialog({
+    title: transaction ? "編輯收款" : "記錄收款",
+    body: `
+      <label class="field">
+        ${requiredLabel("日期")}
+        <input name="date" type="date" required value="${transaction?.date || $("#ledgerDate").value || todayString()}">
+      </label>
+      <label class="field">
+        ${requiredLabel("同事")}
+        <select name="coworkerId" required>${coworkerOptions(selectedCoworkerId)}</select>
+      </label>
+      <label class="field">
+        ${requiredLabel("金額")}
+        <input name="amount" type="number" inputmode="numeric" min="1" step="1" required value="${transaction?.amount || ""}">
+      </label>
+      <label class="field">
+        <span>備註</span>
+        <textarea name="note">${escapeHtml(transaction?.note || "")}</textarea>
+      </label>
+    `,
+    onSave: async (formData) => {
+      const entry = transaction || { id: uid(), type: "payment", mealType: null, storeId: null, mealName: "", paymentMethod: null, createdAt: nowIso() };
       await putItem(STORE_NAMES.transactions, {
         ...entry,
         date: formData.get("date"),
@@ -863,10 +922,12 @@ function bindEvents() {
     const trigger = event.target.closest("[data-action]");
     if (!trigger) return;
     const { action, id, mealType } = trigger.dataset;
+    if (action === "open-payment") openPaymentEditor(id);
     if (action === "edit-coworker") openCoworkerEditor(state.coworkers.find((item) => item.id === id));
     if (action === "edit-transaction") {
       const entry = state.transactions.find((item) => item.id === id);
       if (entry?.type === "topup") openTopupEditor(entry);
+      if (entry?.type === "payment") openPaymentEditor(null, entry);
       if (entry?.type === "mealOrder") openOrderEditor(entry);
     }
     if (action === "delete-transaction") deleteTransaction(id);
