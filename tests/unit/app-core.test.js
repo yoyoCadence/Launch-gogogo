@@ -61,13 +61,85 @@ describe("core business rules", () => {
   });
 
   it("keeps formatting and defaults predictable", () => {
-    expect(core.defaultMealType(new Date("2026-04-26T13:59:00+08:00"))).toBe("lunch");
-    expect(core.defaultMealType(new Date("2026-04-26T14:00:00+08:00"))).toBe("dinner");
+    // Use Date(y,m,d,h) constructor — no timezone offset, always local time
+    expect(core.defaultMealType(new Date(2026, 3, 26, 13, 59))).toBe("lunch");
+    expect(core.defaultMealType(new Date(2026, 3, 26, 14, 0))).toBe("dinner");
     expect(core.parseMoney("99.6")).toBe(100);
     expect(core.money(1234)).toBe("$1,234");
     expect(core.signedMoney(-42)).toBe("-$42");
+    expect(core.signedMoney(0)).toBe("$0");
     expect(core.escapeHtml("<b>A&B</b>")).toBe("&lt;b&gt;A&amp;B&lt;/b&gt;");
+    expect(core.escapeHtml('"quoted" & \'apostrophe\'')).toBe("&quot;quoted&quot; &amp; &#039;apostrophe&#039;");
     expect(core.googleSearchUrl(" 阿明 便當 ")).toBe("https://www.google.com/search?q=%E9%98%BF%E6%98%8E%20%E4%BE%BF%E7%95%B6");
+  });
+
+  it("storeStats returns correct count and last date per meal type", () => {
+    const s = store({
+      lunchUsedCount: 3,
+      lunchLastUsedDate: "2026-04-01",
+      dinnerUsedCount: 7,
+      dinnerLastUsedDate: "2026-03-15"
+    });
+    expect(core.storeStats(s, "lunch")).toEqual({ count: 3, last: "2026-04-01" });
+    expect(core.storeStats(s, "dinner")).toEqual({ count: 7, last: "2026-03-15" });
+    expect(core.storeStats(store(), "lunch")).toEqual({ count: 0, last: "" });
+  });
+
+  it("sortStores filters out stores not available for the requested meal type", () => {
+    const stores = [
+      store({ id: "a", availableForLunch: true, availableForDinner: false }),
+      store({ id: "b", availableForLunch: false, availableForDinner: true }),
+      store({ id: "c", availableForLunch: true, availableForDinner: true })
+    ];
+    const lunchIds = core.sortStores(stores, "lunch", "rating").map((s) => s.id);
+    expect(lunchIds).toContain("a");
+    expect(lunchIds).toContain("c");
+    expect(lunchIds).not.toContain("b");
+
+    const dinnerIds = core.sortStores(stores, "dinner", "rating").map((s) => s.id);
+    expect(dinnerIds).toContain("b");
+    expect(dinnerIds).toContain("c");
+    expect(dinnerIds).not.toContain("a");
+
+    expect(core.sortStores([], "lunch", "rating")).toEqual([]);
+  });
+
+  it("validateBackupPayload rejects invalid root types and wrong metadata", () => {
+    expect(core.validateBackupPayload(null).ok).toBe(false);
+    expect(core.validateBackupPayload([]).ok).toBe(false);
+    expect(core.validateBackupPayload("string").ok).toBe(false);
+
+    const base = { app: "Launch-GoGoGo", schemaVersion: 1, data: { coworkers: [], stores: [], transactions: [] } };
+    expect(core.validateBackupPayload({ ...base, app: "WrongApp" }).ok).toBe(false);
+    expect(core.validateBackupPayload({ ...base, schemaVersion: 99 }).ok).toBe(false);
+
+    const noData = { app: "Launch-GoGoGo", schemaVersion: 1 };
+    expect(core.validateBackupPayload(noData).ok).toBe(false);
+    expect(core.validateBackupPayload(noData).errors).toContain("備份檔缺少 data 區塊。");
+  });
+
+  it("validates individual store and transaction records in backup payloads", () => {
+    const base = { app: "Launch-GoGoGo", schemaVersion: 1, data: {} };
+
+    const storeResult = core.validateBackupPayload({
+      ...base,
+      data: { coworkers: [], stores: [{ ...store(), rating: 0 }], transactions: [] }
+    });
+    expect(storeResult.ok).toBe(false);
+    expect(storeResult.errors).toContain("stores[0] rating 必須是 1 到 5 的整數。");
+
+    const txResult = core.validateBackupPayload({
+      ...base,
+      data: { coworkers: [], stores: [], transactions: [{ ...tx(), date: "20260401" }] }
+    });
+    expect(txResult.ok).toBe(false);
+    expect(txResult.errors).toContain("transactions[0] date 必須是 YYYY-MM-DD。");
+
+    const nullMealTypeResult = core.validateBackupPayload({
+      ...base,
+      data: { coworkers: [], stores: [], transactions: [{ ...tx(), type: "topup", mealType: null, paymentMethod: null }] }
+    });
+    expect(nullMealTypeResult.ok).toBe(true);
   });
 
   it("creates and validates backup payloads", () => {
