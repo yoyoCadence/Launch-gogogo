@@ -57,6 +57,7 @@
       const coworker = coworkerMap.get(entry.coworkerId);
       if (coworker) {
         if (entry.type === "topup") coworker.balance += entry.amount;
+        if (entry.type === "payment") coworker.balance += entry.amount;
         if (entry.type === "adjustment") coworker.balance += entry.amount;
         if (entry.type === "mealOrder" && BALANCE_DEDUCTING_PAYMENT_METHODS.includes(entry.paymentMethod)) {
           coworker.balance -= entry.amount;
@@ -164,7 +165,7 @@
   function validateTransaction(item) {
     const errors = validateBaseRecord(item);
     if (!/^\d{4}-\d{2}-\d{2}$/.test(item?.date || "")) errors.push("date 必須是 YYYY-MM-DD。");
-    if (!["topup", "mealOrder", "adjustment"].includes(item?.type)) errors.push("type 不支援。");
+    if (!["topup", "payment", "mealOrder", "adjustment"].includes(item?.type)) errors.push("type 不支援。");
     if (!(item?.mealType === null || ["lunch", "dinner"].includes(item?.mealType))) errors.push("mealType 不支援。");
     if (!isNonEmptyString(item?.coworkerId)) errors.push("coworkerId 必須是非空字串。");
     if (!(item?.storeId === null || typeof item?.storeId === "string")) errors.push("storeId 必須是字串或 null。");

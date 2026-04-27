@@ -1,4 +1,4 @@
-const CACHE_NAME = "launch-gogogo-pwa-v3";
+const CACHE_NAME = "launch-gogogo-pwa-v4";
 const ASSETS = [
   "./",
   "./index.html",

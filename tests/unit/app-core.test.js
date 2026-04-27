@@ -142,6 +142,31 @@ describe("core business rules", () => {
     expect(nullMealTypeResult.ok).toBe(true);
   });
 
+  it("payment type adds to coworker balance", () => {
+    const result = core.calculateDerivedData({
+      coworkers: [{ id: "amy", name: "Amy", balance: 0 }],
+      stores: [],
+      transactions: [
+        tx({ id: "1", coworkerId: "amy", type: "mealOrder", paymentMethod: "unpaid", amount: 120 }),
+        tx({ id: "2", coworkerId: "amy", type: "payment", mealType: null, paymentMethod: null, amount: 80 })
+      ]
+    });
+    expect(result.coworkers.find((c) => c.id === "amy").balance).toBe(-40);
+  });
+
+  it("validateBackupPayload accepts payment type transactions", () => {
+    const base = { app: "Launch-GoGoGo", schemaVersion: 1, data: {} };
+    const result = core.validateBackupPayload({
+      ...base,
+      data: {
+        coworkers: [],
+        stores: [],
+        transactions: [{ ...tx(), type: "payment", mealType: null, paymentMethod: null }]
+      }
+    });
+    expect(result.ok).toBe(true);
+  });
+
   it("creates and validates backup payloads", () => {
     const payload = core.createBackupPayload({
       coworkers: [coworker({ id: "amy", name: "Amy", group: "業務部", avatarDataUrl: "data:image/png;base64,abc" })],

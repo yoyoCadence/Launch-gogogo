@@ -128,6 +128,48 @@ describe("app UI components", () => {
     expect(document.querySelector("#dailySummary").textContent).not.toContain("排骨飯");
   });
 
+  it("renderCoworkers shows a payment button on each coworker card", () => {
+    document.body.innerHTML = `
+      <span id="coworkerCount"></span>
+      <div id="coworkerList"></div>
+    `;
+    window.LaunchGoGoGoApp.state.coworkers = [
+      { id: "c1", name: "Amy", balance: -50, createdAt: "", updatedAt: "" }
+    ];
+
+    window.LaunchGoGoGoApp.renderCoworkers();
+
+    const btn = document.querySelector('[data-action="open-payment"][data-id="c1"]');
+    expect(btn).not.toBeNull();
+    expect(btn.textContent).toBe("收款");
+  });
+
+  it("renderDailySummary shows payment entry with 收款 label and excludes it from meal total", () => {
+    document.body.innerHTML = `
+      <input id="ledgerDate" value="2026-04-27">
+      <div id="dailyTotal"></div>
+      <div id="dailySummary"></div>
+    `;
+    window.LaunchGoGoGoApp.state.coworkers = [
+      { id: "c1", name: "Amy", balance: 0, createdAt: "", updatedAt: "" }
+    ];
+    window.LaunchGoGoGoApp.state.stores = [];
+    window.LaunchGoGoGoApp.state.transactions = [
+      {
+        id: "t1", date: "2026-04-27", type: "payment",
+        coworkerId: "c1", storeId: null, mealName: "", amount: 150,
+        mealType: null, paymentMethod: null, createdAt: "", updatedAt: ""
+      }
+    ];
+
+    window.LaunchGoGoGoApp.renderDailySummary();
+
+    expect(document.querySelector("#dailySummary").textContent).toContain("收款");
+    expect(document.querySelector("#dailySummary").textContent).toContain("Amy");
+    expect(document.querySelector("#dailySummary").textContent).toContain("150");
+    expect(document.querySelector("#dailyTotal").textContent).toBe("");
+  });
+
   it("renders the selected theme as pressed and updates the current name", () => {
     document.body.innerHTML = `
       <span id="currentThemeName"></span>
