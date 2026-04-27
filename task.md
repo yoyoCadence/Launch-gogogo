@@ -22,17 +22,23 @@ Acceptance:
 - A user can export all local data and import it into a fresh browser profile.
 - Invalid JSON or incompatible schema is rejected without changing current data.
 
-### P0 - Manual Balance Adjustment
+### Done - Payment Collection
+
+Status: Done (2026-04-27)
+
+Why: Coworkers needed a way to pay back cash owed without going through meal order flow. Added `payment` transaction type (distinct from `topup`) with a "收款" button on each coworker balance card.
+
+### P0 - Manual Balance Adjustment UI
 
 Status: Todo
 
-Why: The data model already reserves `adjustment`. Adding UI for it closes a real accounting gap for old balances, discounts, corrections, and ad hoc payments.
+Why: The data model already supports `adjustment` (import only). Adding an editor closes the gap for corrections, discounts, and manual balance fixes that don't fit topup or payment.
 
 Tasks:
 
-- Add an adjustment entry point in Ledger.
+- Add an adjustment entry point in Ledger (positive and negative amounts).
 - Save `adjustment` transactions with date, coworker, amount, and note.
-- Render adjustment records in daily summary and coworker history.
+- Render adjustment records in daily summary and coworker history (already done for display, needs editor).
 - Cover balance recalculation and UI flow with tests.
 
 Acceptance:
