@@ -9,6 +9,7 @@ describe("app UI components", () => {
     document.body.innerHTML = "";
     window.LaunchGoGoGoApp.state.coworkers = [];
     window.LaunchGoGoGoApp.state.stores = [];
+    window.LaunchGoGoGoApp.state.transactions = [];
     window.LaunchGoGoGoApp.state.theme = "default";
   });
 
@@ -50,6 +51,81 @@ describe("app UI components", () => {
 
     expect(field.classList.contains("hidden")).toBe(true);
     expect(input.required).toBe(false);
+  });
+
+  it("setPage updates title correctly for all pages", () => {
+    document.body.innerHTML = `
+      <h1 id="pageTitle">Ledger</h1>
+      <section id="ledgerPage" class="page active"></section>
+      <section id="lunchPage" class="page"></section>
+      <section id="dinnerPage" class="page"></section>
+      <section id="settingsPage" class="page"></section>
+      <button id="ledgerTab" class="tab active"></button>
+      <button id="lunchTab" class="tab"></button>
+      <button id="dinnerTab" class="tab"></button>
+      <button id="settingsTab" class="tab"></button>
+    `;
+    window.LaunchGoGoGoApp.setPage("dinner");
+    expect(document.querySelector("#pageTitle").textContent).toBe("Dinner Stores");
+    window.LaunchGoGoGoApp.setPage("settings");
+    expect(document.querySelector("#pageTitle").textContent).toBe("Settings");
+    window.LaunchGoGoGoApp.setPage("ledger");
+    expect(document.querySelector("#pageTitle").textContent).toBe("Ledger");
+  });
+
+  it("renders coworker list with names, balances, and correct positive/negative classes", () => {
+    document.body.innerHTML = `
+      <span id="coworkerCount"></span>
+      <div id="coworkerList"></div>
+    `;
+    window.LaunchGoGoGoApp.state.coworkers = [
+      { id: "c1", name: "Amy", balance: 300, createdAt: "", updatedAt: "" },
+      { id: "c2", name: "Ben", balance: -50, createdAt: "", updatedAt: "" }
+    ];
+
+    window.LaunchGoGoGoApp.renderCoworkers();
+
+    expect(document.querySelector("#coworkerCount").textContent).toBe("2 位");
+    expect(document.querySelector("#coworkerList").textContent).toContain("Amy");
+    expect(document.querySelector("#coworkerList").textContent).toContain("Ben");
+    expect(document.querySelector(".money.positive").textContent).toContain("300");
+    expect(document.querySelector(".money.negative").textContent).toContain("50");
+    expect(document.querySelector("#coworkerList").textContent).toContain("目前餘額");
+    expect(document.querySelector("#coworkerList").textContent).toContain("目前欠款");
+  });
+
+  it("renderDailySummary shows meal order entries and daily total for the selected date", () => {
+    document.body.innerHTML = `
+      <input id="ledgerDate" value="2026-04-20">
+      <div id="dailyTotal"></div>
+      <div id="dailySummary"></div>
+    `;
+    window.LaunchGoGoGoApp.state.coworkers = [
+      { id: "c1", name: "Amy", balance: 0, createdAt: "", updatedAt: "" }
+    ];
+    window.LaunchGoGoGoApp.state.stores = [
+      { id: "s1", name: "阿明便當", rating: 3, availableForLunch: true, availableForDinner: false, createdAt: "", updatedAt: "" }
+    ];
+    window.LaunchGoGoGoApp.state.transactions = [
+      {
+        id: "t1", date: "2026-04-20", type: "mealOrder", mealType: "lunch",
+        coworkerId: "c1", storeId: "s1", mealName: "雞腿飯", amount: 100,
+        paymentMethod: "prepaidBalance", createdAt: "", updatedAt: ""
+      },
+      {
+        id: "t2", date: "2026-04-19", type: "mealOrder", mealType: "lunch",
+        coworkerId: "c1", storeId: "s1", mealName: "排骨飯", amount: 90,
+        paymentMethod: "prepaidBalance", createdAt: "", updatedAt: ""
+      }
+    ];
+
+    window.LaunchGoGoGoApp.renderDailySummary();
+
+    expect(document.querySelector("#dailyTotal").textContent).toBe("餐點合計 $100");
+    expect(document.querySelector("#dailySummary").textContent).toContain("Amy");
+    expect(document.querySelector("#dailySummary").textContent).toContain("阿明便當");
+    expect(document.querySelector("#dailySummary").textContent).toContain("雞腿飯");
+    expect(document.querySelector("#dailySummary").textContent).not.toContain("排骨飯");
   });
 
   it("renders the selected theme as pressed and updates the current name", () => {

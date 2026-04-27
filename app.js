@@ -234,6 +234,22 @@ function renderDailySummary() {
         </article>
       `;
     }
+    if (entry.type === "adjustment") {
+      const amountDisplay = entry.amount >= 0 ? `+${money(entry.amount)}` : signedMoney(entry.amount);
+      const amountClass = entry.amount >= 0 ? "positive" : "negative";
+      return `
+        <article class="item">
+          <div class="item-title">
+            <strong>餘額調整：${escapeHtml(coworker?.name || "已刪同事")}</strong>
+            <span class="money ${amountClass}">${amountDisplay}</span>
+          </div>
+          <p class="muted">${escapeHtml(entry.note || "無備註")}</p>
+          <div class="card-actions">
+            <button type="button" data-action="delete-transaction" data-id="${entry.id}">刪除</button>
+          </div>
+        </article>
+      `;
+    }
     return `
       <article class="item">
         <div class="item-title">
@@ -259,11 +275,16 @@ function renderCoworkerHistory() {
   const entries = coworkerId ? state.transactions.filter((entry) => entry.coworkerId === coworkerId) : [];
   $("#coworkerHistory").innerHTML = coworkerId && entries.length ? entries.map((entry) => {
     const store = state.stores.find((item) => item.id === entry.storeId);
-    const direction = entry.type === "topup" || entry.type === "adjustment" ? "+" : entry.paymentMethod === "cashToday" ? "" : "-";
+    const direction = entry.type === "topup" ? "+"
+      : entry.type === "adjustment" ? (entry.amount >= 0 ? "+" : "")
+      : entry.paymentMethod === "cashToday" ? "" : "-";
+    const typeLabel = entry.type === "topup" ? "儲值"
+      : entry.type === "adjustment" ? "調整"
+      : entry.mealType === "lunch" ? "午餐" : "晚餐";
     return `
       <article class="item">
         <div class="item-title">
-          <strong>${entry.date} · ${entry.type === "topup" ? "儲值" : entry.mealType === "lunch" ? "午餐" : "晚餐"}</strong>
+          <strong>${entry.date} · ${typeLabel}</strong>
           <span class="money">${direction}${money(entry.amount)}</span>
         </div>
         <div class="muted">${entry.type === "mealOrder" ? `${escapeHtml(store?.name || "已刪店家")} · ${escapeHtml(entry.mealName || "")} · ${PAYMENT_LABELS[entry.paymentMethod]}` : escapeHtml(entry.note || "無備註")}</div>
@@ -812,6 +833,8 @@ window.LaunchGoGoGoApp = {
   bindOrderStoreToggle,
   importDataFile,
   orderStoreFields,
+  renderCoworkers,
+  renderDailySummary,
   renderSettings,
   replaceAllData,
   setPage,
