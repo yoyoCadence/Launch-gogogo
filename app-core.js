@@ -142,6 +142,9 @@
     const errors = validateBaseRecord(item);
     if (!isNonEmptyString(item?.name)) errors.push("name 必須是非空字串。");
     if (!Number.isInteger(item?.balance)) errors.push("balance 必須是整數。");
+    if (item?.group !== undefined && typeof item.group !== "string") errors.push("group 必須是字串。");
+    if (item?.avatarDataUrl !== undefined && typeof item.avatarDataUrl !== "string") errors.push("avatarDataUrl 必須是字串。");
+    if (item?.avatarDataUrl && !item.avatarDataUrl.startsWith("data:image/")) errors.push("avatarDataUrl 必須是圖片 data URL。");
     return errors;
   }
 
