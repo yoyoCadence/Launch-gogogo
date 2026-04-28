@@ -233,6 +233,7 @@ describe("app UI components", () => {
     expect(document.querySelector("#statusTheater").textContent).toContain("待收款");
     expect(document.querySelector(".theater-stage").classList.contains("stage-waiting")).toBe(true);
     expect(document.querySelector(".actor-arm.right")).not.toBeNull();
+    expect(document.querySelector(".anime-actor-sprite").getAttribute("src")).toBe("./assets/theater/anime/characters/foodie.png");
     expect(document.querySelector(".meal-prop").textContent).toBe("飲料");
 
     window.LaunchGoGoGoApp.state.transactions.push({

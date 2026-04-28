@@ -652,7 +652,7 @@ function renderStatusTheater() {
         <span class="pill">餘額 ${balanceText}</span>
       </div>
     </div>
-    <div class="theater-stage stage-${stage}" style="--character-color:${character.color}; --character-hair:${character.hair}; --character-detail:${character.detail}; --shop-color:${restaurantType.accent};" data-sequence="${state.theaterSequence}">
+    <div class="theater-stage stage-${stage} restaurant-${restaurantType.id}" style="--character-color:${character.color}; --character-hair:${character.hair}; --character-detail:${character.detail}; --shop-color:${restaurantType.accent};" data-sequence="${state.theaterSequence}">
       <div class="shop-front">
         <span class="shop-awning"></span>
         <span>${escapeHtml(restaurantType.counter)}</span>
@@ -667,6 +667,7 @@ function renderStatusTheater() {
       <div class="meal-prop">${escapeHtml(restaurantType.prop)}</div>
       <div class="payment-flash"></div>
       <div class="actor actor-${character.id}">
+        <img class="anime-actor-sprite" src="./assets/theater/anime/characters/${character.id}.png" alt="" aria-hidden="true">
         <span class="actor-shadow"></span>
         <span class="actor-head"></span>
         <span class="actor-face"></span>
