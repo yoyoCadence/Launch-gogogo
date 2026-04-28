@@ -11,9 +11,11 @@ describe("app UI components", () => {
     window.LaunchGoGoGoApp.state.stores = [];
     window.LaunchGoGoGoApp.state.transactions = [];
     window.LaunchGoGoGoApp.state.theme = "default";
+    window.LaunchGoGoGoApp.state.theaterStyle = "miniature";
     window.LaunchGoGoGoApp.state.activePage = "ledger";
     window.LaunchGoGoGoApp.state.theaterCollapsed = false;
     document.body.className = "";
+    document.documentElement.removeAttribute("data-theater-style");
   });
 
   it("switches the active page and tab together", () => {
@@ -181,14 +183,32 @@ describe("app UI components", () => {
     document.body.innerHTML = `
       <span id="currentThemeName"></span>
       <div id="themeGrid"></div>
+      <span id="currentTheaterStyleName"></span>
+      <div id="theaterStyleGrid"></div>
     `;
     window.LaunchGoGoGoApp.state.theme = "github";
+    window.LaunchGoGoGoApp.state.theaterStyle = "anime";
 
     window.LaunchGoGoGoApp.renderSettings();
 
     expect(document.querySelector("#currentThemeName").textContent).toBe("GitHub");
     expect(document.querySelector('[data-theme-id="github"]').getAttribute("aria-pressed")).toBe("true");
     expect(document.querySelector('[data-theme-id="default"]').getAttribute("aria-pressed")).toBe("false");
+    expect(document.querySelector("#currentTheaterStyleName").textContent).toBe("日本動漫風格");
+    expect(document.querySelector('[data-theater-style-id="anime"]').getAttribute("aria-pressed")).toBe("true");
+    expect(document.querySelector('[data-theater-style-id="cyberpunk"]').disabled).toBe(true);
+  });
+
+  it("applies the anime theater style and rejects unfinished styles", () => {
+    window.LaunchGoGoGoApp.applyTheaterStyle("anime");
+
+    expect(window.LaunchGoGoGoApp.state.theaterStyle).toBe("anime");
+    expect(document.documentElement.dataset.theaterStyle).toBe("anime");
+
+    window.LaunchGoGoGoApp.applyTheaterStyle("cyberpunk");
+
+    expect(window.LaunchGoGoGoApp.state.theaterStyle).toBe("miniature");
+    expect(document.documentElement.hasAttribute("data-theater-style")).toBe(false);
   });
 
   it("renders the status theater as waiting until an unpaid order has a payment", () => {

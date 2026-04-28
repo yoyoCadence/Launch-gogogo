@@ -27,6 +27,7 @@ const RESTAURANT_TYPES = [
 ];
 
 const THEME_STORAGE_KEY = "launch-gogogo-theme";
+const THEATER_STYLE_STORAGE_KEY = "launch-gogogo-theater-style";
 const DEFAULT_MEAL_NAME = "未指定餐點";
 const THEMES = [
   { id: "default", name: "便當綠", colors: ["#1f6f5b", "#d66b3d", "#f6f4ee"] },
@@ -44,6 +45,104 @@ const THEMES = [
   { id: "gothic", name: "哥德蘿莉", colors: ["#c41e3a", "#d4af37", "#0d0009"] },
   { id: "github", name: "GitHub", colors: ["#1f6feb", "#2da44e", "#0d1117"] }
 ];
+const THEATER_STYLES = [
+  {
+    id: "miniature",
+    name: "迷你劇場",
+    status: "可使用",
+    available: true,
+    colors: ["#f97316", "#6ee7b7", "#1c1c1e"],
+    description: "目前的輕量 CSS miniature，小巧穩定，適合快速讀取付款狀態。"
+  },
+  {
+    id: "anime",
+    name: "日本動漫風格",
+    status: "可使用",
+    available: true,
+    colors: ["#ff8ab3", "#7ec8ff", "#fff6fb"],
+    description: "乾淨線稿、柔和賽璐璐上色、明亮表情與可愛生活感，適合訂餐小劇場。"
+  },
+  {
+    id: "cyberpunk",
+    name: "科技感 / Cyberpunk",
+    status: "待製作",
+    available: false,
+    colors: ["#00ff9f", "#ff2d78", "#050508"],
+    description: "霓虹邊光、深色高對比、科幻面板與掃描線，付款狀態像任務 HUD。"
+  },
+  {
+    id: "gothic-lolita",
+    name: "歌德蘿莉",
+    status: "待製作",
+    available: false,
+    colors: ["#c41e3a", "#d4af37", "#14000d"],
+    description: "蕾絲、緞帶、暗紅金色、精緻茶會感，餐廳像華麗甜點沙龍。"
+  },
+  {
+    id: "pixel",
+    name: "像素風格",
+    status: "待製作",
+    available: false,
+    colors: ["#39ff14", "#ffff00", "#0a0a0a"],
+    description: "清楚格點、有限色盤、低解析角色與道具，重點是可讀性與懷舊感。"
+  },
+  {
+    id: "arcade",
+    name: "街機風格",
+    status: "待製作",
+    available: false,
+    colors: ["#ff005d", "#00e5ff", "#1a103d"],
+    description: "高飽和、強對比、投幣機氛圍與誇張狀態特效，適合熱鬧演出。"
+  },
+  {
+    id: "retro-16bit",
+    name: "復古 16-bit RPG",
+    status: "待製作",
+    available: false,
+    colors: ["#7c3f58", "#f9c22e", "#283d3b"],
+    description: "16-bit RPG 俯視角色、格狀地板、明確輪廓與短循環動畫。"
+  },
+  {
+    id: "storybook",
+    name: "手繪童話風",
+    status: "待製作",
+    available: false,
+    colors: ["#8bb174", "#f4d35e", "#f7ede2"],
+    description: "溫暖紙感、手繪線條、柔和材質，讓訂餐像小繪本場景。"
+  },
+  {
+    id: "chibi",
+    name: "Q 版 Chibi",
+    status: "待製作",
+    available: false,
+    colors: ["#ffb3c7", "#bde0fe", "#fff1f2"],
+    description: "大頭小身、圓潤表情、誇張可愛動作，適合強化同事角色辨識。"
+  },
+  {
+    id: "painted-fantasy",
+    name: "厚塗奇幻 RPG",
+    status: "待製作",
+    available: false,
+    colors: ["#7f5539", "#ddb892", "#2f1b45"],
+    description: "厚塗光影、奇幻酒館質感、飽滿材質與較戲劇化的餐廳舞台。"
+  },
+  {
+    id: "muted-jp-life",
+    name: "低飽和日系生活感",
+    status: "待製作",
+    available: false,
+    colors: ["#9aa38f", "#d6ccc2", "#f5ebe0"],
+    description: "低彩度、生活雜貨感、自然光與安靜午餐氣氛。"
+  },
+  {
+    id: "arcade-fighter-90s",
+    name: "90 年代街機格鬥感",
+    status: "待製作",
+    available: false,
+    colors: ["#f72585", "#ffd166", "#111827"],
+    description: "粗黑輪廓、動作殘影、能量閃光與對戰遊戲式角色站姿。"
+  }
+];
 
 const state = {
   db: null,
@@ -55,6 +154,7 @@ const state = {
   pendingServiceWorker: null,
   refreshingForUpdate: false,
   theme: "default",
+  theaterStyle: "miniature",
   activeTheaterTransactionId: "",
   theaterSequence: 0,
   theaterCollapsed: false
@@ -82,6 +182,10 @@ function getThemeById(themeId) {
   return THEMES.find((theme) => theme.id === themeId) || THEMES[0];
 }
 
+function getTheaterStyleById(styleId) {
+  return THEATER_STYLES.find((style) => style.id === styleId) || THEATER_STYLES[0];
+}
+
 function applyTheme(themeId) {
   const theme = getThemeById(themeId);
   state.theme = theme.id;
@@ -92,6 +196,17 @@ function applyTheme(themeId) {
   }
   document.querySelector('meta[name="theme-color"]')?.setAttribute("content", theme.colors[0]);
   localStorage.setItem(THEME_STORAGE_KEY, theme.id);
+}
+
+function applyTheaterStyle(styleId) {
+  const style = getTheaterStyleById(styleId);
+  state.theaterStyle = style.available ? style.id : THEATER_STYLES[0].id;
+  if (state.theaterStyle === "miniature") {
+    document.documentElement.removeAttribute("data-theater-style");
+  } else {
+    document.documentElement.dataset.theaterStyle = state.theaterStyle;
+  }
+  localStorage.setItem(THEATER_STYLE_STORAGE_KEY, state.theaterStyle);
 }
 
 function requiredLabel(text) {
@@ -568,6 +683,7 @@ function renderStatusTheater() {
 
 function renderSettings() {
   const currentTheme = getThemeById(state.theme);
+  const currentTheaterStyle = getTheaterStyleById(state.theaterStyle);
   $("#currentThemeName").textContent = currentTheme.name;
   $("#themeGrid").innerHTML = THEMES.map((theme) => `
     <button class="theme-card ${theme.id === currentTheme.id ? "active" : ""}" type="button" data-action="set-theme" data-theme-id="${theme.id}" aria-pressed="${theme.id === currentTheme.id}">
@@ -576,6 +692,24 @@ function renderSettings() {
       </span>
       <span class="theme-name">${escapeHtml(theme.name)}</span>
       ${theme.id === currentTheme.id ? `<span class="theme-check">✓</span>` : ""}
+    </button>
+  `).join("");
+  $("#currentTheaterStyleName").textContent = currentTheaterStyle.name;
+  $("#theaterStyleGrid").innerHTML = THEATER_STYLES.map((style) => `
+    <button class="theme-card theater-style-card ${style.id === currentTheaterStyle.id ? "active" : ""} ${style.available ? "" : "disabled"}"
+      type="button"
+      data-action="set-theater-style"
+      data-theater-style-id="${style.id}"
+      aria-pressed="${style.id === currentTheaterStyle.id}"
+      ${style.available ? "" : "disabled"}
+    >
+      <span class="theme-preview" aria-hidden="true">
+        ${style.colors.map((color) => `<span class="theme-swatch" style="background:${color}"></span>`).join("")}
+      </span>
+      <span class="theme-name">${escapeHtml(style.name)}</span>
+      <span class="theater-style-desc">${escapeHtml(style.description)}</span>
+      <span class="style-status">${escapeHtml(style.status)}</span>
+      ${style.id === currentTheaterStyle.id ? `<span class="theme-check">✓</span>` : ""}
     </button>
   `).join("");
 }
@@ -1163,6 +1297,11 @@ function bindEvents() {
       applyTheme(trigger.dataset.themeId);
       renderSettings();
     }
+    if (action === "set-theater-style") {
+      applyTheaterStyle(trigger.dataset.theaterStyleId);
+      renderSettings();
+      renderStatusTheater();
+    }
   });
 
   window.addEventListener("beforeinstallprompt", (event) => {
@@ -1182,6 +1321,7 @@ function bindEvents() {
 
 async function init() {
   applyTheme(localStorage.getItem(THEME_STORAGE_KEY) || "default");
+  applyTheaterStyle(localStorage.getItem(THEATER_STYLE_STORAGE_KEY) || "miniature");
   $("#ledgerDate").value = todayString();
   bindEvents();
   state.db = await openDb();
@@ -1199,6 +1339,7 @@ window.LaunchGoGoGoApp = {
   bindOrderStoreToggle,
   importDataFile,
   orderStoreFields,
+  applyTheaterStyle,
   renderCoworkers,
   renderDailySummary,
   renderSettings,

@@ -976,6 +976,102 @@ body.theater-collapsed .theater-copy h2 {
   animation: waitingBob 1.6s ease-in-out infinite;
 }
 
+[data-theater-style="anime"] .status-theater {
+  border-color: color-mix(in srgb, #ff8ab3 38%, var(--ds-color-border));
+  background:
+    linear-gradient(135deg, color-mix(in srgb, #fff6fb 12%, transparent), transparent 42%),
+    color-mix(in srgb, var(--ds-color-surface) 82%, transparent);
+}
+
+[data-theater-style="anime"] .theater-stage {
+  border-color: color-mix(in srgb, #ff8ab3 58%, white);
+  background:
+    radial-gradient(circle at 20% 18%, rgba(255, 206, 232, 0.28) 0 12%, transparent 28%),
+    radial-gradient(circle at 82% 24%, rgba(126, 200, 255, 0.24) 0 16%, transparent 32%),
+    linear-gradient(0deg, rgba(255, 255, 255, 0.07) 1px, transparent 1px),
+    linear-gradient(90deg, rgba(255, 255, 255, 0.05) 1px, transparent 1px),
+    linear-gradient(160deg, color-mix(in srgb, var(--shop-color) 18%, #fff6fb), color-mix(in srgb, var(--ds-color-surface) 80%, #ffe4f0));
+  background-size: auto, auto, 30px 30px, 30px 30px, auto;
+}
+
+[data-theater-style="anime"] .theater-stage::after {
+  content: "";
+  position: absolute;
+  inset: 10px;
+  border-radius: 14px;
+  pointer-events: none;
+  box-shadow: inset 0 0 0 1px rgba(255, 255, 255, 0.14);
+}
+
+[data-theater-style="anime"] .shop-front {
+  border-color: color-mix(in srgb, var(--shop-color) 56%, #fff6fb);
+  background:
+    linear-gradient(to bottom, color-mix(in srgb, #fff 46%, var(--shop-color)) 0 14px, transparent 14px),
+    color-mix(in srgb, #fff6fb 44%, var(--shop-color));
+  color: #321827;
+  text-shadow: 0 1px 0 rgba(255, 255, 255, 0.45);
+}
+
+[data-theater-style="anime"] .shop-awning {
+  background:
+    repeating-linear-gradient(90deg, color-mix(in srgb, var(--shop-color) 64%, #fff) 0 12px, #fff6fb 12px 24px);
+}
+
+[data-theater-style="anime"] .counter-desk,
+[data-theater-style="anime"] .food-tray {
+  box-shadow:
+    0 8px 16px rgba(255, 138, 179, 0.16),
+    inset 0 -6px 0 rgba(0, 0, 0, 0.12);
+}
+
+[data-theater-style="anime"] .dining-table {
+  background:
+    radial-gradient(circle at 36% 30%, rgba(255, 255, 255, 0.5) 0 12%, transparent 18%),
+    color-mix(in srgb, #ff8ab3 28%, var(--ds-color-surface-raised));
+}
+
+[data-theater-style="anime"] .actor-head {
+  border: 2px solid rgba(57, 25, 42, 0.5);
+  background:
+    radial-gradient(circle at 36% 44%, rgba(255, 255, 255, 0.68) 0 10%, transparent 12%),
+    var(--character-color);
+  box-shadow:
+    inset 0 -5px 0 color-mix(in srgb, #000 10%, transparent),
+    0 0 0 2px rgba(255, 255, 255, 0.14);
+}
+
+[data-theater-style="anime"] .actor-face {
+  top: 8px;
+  left: 13px;
+  width: 15px;
+  height: 7px;
+  border-top: 0;
+  border-bottom: 2px solid rgba(57, 25, 42, 0.58);
+  box-shadow:
+    -5px -1px 0 -1px rgba(57, 25, 42, 0.78),
+    5px -1px 0 -1px rgba(57, 25, 42, 0.78);
+}
+
+[data-theater-style="anime"] .actor-hair {
+  height: 14px;
+  border-radius: 14px 14px 8px 8px;
+  box-shadow: 6px 5px 0 -3px var(--character-hair);
+}
+
+[data-theater-style="anime"] .actor-body {
+  border: 2px solid rgba(57, 25, 42, 0.36);
+  background:
+    linear-gradient(90deg, transparent 0 9px, color-mix(in srgb, var(--character-detail) 68%, #fff) 9px 19px, transparent 19px),
+    linear-gradient(to bottom, color-mix(in srgb, var(--character-color) 62%, #fff), var(--character-color));
+}
+
+[data-theater-style="anime"] .payment-flash {
+  border-color: #ff8ab3;
+  box-shadow:
+    0 0 14px rgba(255, 138, 179, 0.72),
+    0 0 28px rgba(126, 200, 255, 0.35);
+}
+
 .bottom-tabs {
   position: fixed;
   right: var(--ds-space-5);
@@ -1222,6 +1318,11 @@ body.theater-collapsed .theater-copy h2 {
   box-shadow: inset 0 0 0 1px var(--brand);
 }
 
+.theme-card.disabled {
+  cursor: not-allowed;
+  opacity: 0.52;
+}
+
 .theme-preview {
   display: grid;
   grid-template-columns: repeat(3, 1fr);
@@ -1236,6 +1337,32 @@ body.theater-collapsed .theater-copy h2 {
 
 .theme-name {
   font-weight: 900;
+}
+
+.theater-style-card {
+  min-height: 156px;
+}
+
+.theater-style-desc {
+  color: var(--ds-color-text-secondary);
+  font-size: var(--ds-font-caption);
+  line-height: 1.45;
+}
+
+.style-status {
+  justify-self: start;
+  min-height: 26px;
+  border-radius: var(--ds-radius-control);
+  padding: 4px 9px;
+  background: color-mix(in srgb, var(--ds-color-primary) 16%, transparent);
+  color: var(--ds-color-primary-soft);
+  font-size: 0.72rem;
+  font-weight: 900;
+}
+
+.theme-card.disabled .style-status {
+  background: color-mix(in srgb, var(--ds-color-text-secondary) 16%, transparent);
+  color: var(--ds-color-text-secondary);
 }
 
 .theme-check {
