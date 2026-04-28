@@ -46,6 +46,45 @@ Acceptance:
 - Positive and negative adjustments update coworker balance correctly.
 - Adjustment history is auditable from daily and coworker views.
 
+### P1 - Theater Visual Style Expansion
+
+Status: In progress
+
+Why: The lunch status theater is useful as a payment-state signal. Letting users choose a visual style makes it feel more personal without changing the accounting workflow.
+
+Done:
+
+- Add a Settings section for theater styles.
+- Ship the first switchable style: Japanese anime style, using clean linework, soft cel-shaded colors, brighter expressions, and a lighter lunch-scene mood.
+
+Style backlog:
+
+- Technology / cyberpunk / sci-fi UI: neon rim light, dark high-contrast surfaces, scan-line accents, holographic payment pulse, status-HUD feel.
+- Gothic lolita: lace, ribbons, deep red and gold, ornate dessert-salon mood, elegant tea-table staging.
+- Pixel style: visible pixel grid, limited palette, low-resolution silhouettes, crisp readable props and short looping animations.
+- Arcade style: saturated colors, coin-op cabinet mood, high-energy flashes, bold status transitions.
+- Retro 16-bit RPG: top-down 16-bit character language, tile-like floor patterns, clear outlines, compact RPG loop animations.
+- Hand-painted storybook: warm paper texture, hand-drawn linework, soft props, cozy illustrated lunch scene.
+- Chibi: big-head small-body proportions, rounded expressions, exaggerated cute eating and waiting poses.
+- Painted fantasy RPG: richer light and shadow, tavern-like stage texture, heavier materials, more dramatic food and payment effects.
+- Muted Japanese daily-life: low-saturation palette, natural light, quiet lunch-counter atmosphere, soft stationery-like surfaces.
+- 90s arcade fighting: heavy outlines, impact streaks, afterimages, energetic stance animation, dramatic payment/eating transitions.
+
+Tasks:
+
+- Generate or design visual references for each style before implementation.
+- Decide for each style whether it should be CSS-only, raster background, sprite sheets, or a mixed pipeline.
+- For raster styles, generate five restaurant stage backgrounds: bento, drink, noodle, fast food, cafe.
+- For sprite styles, generate three coworker character variants with idle, walk, waiting, paying, and eating loops.
+- Keep style switching independent from ledger math, payment state, and stored transaction data.
+- Add component and e2e coverage for every style that becomes selectable.
+
+Acceptance:
+
+- Users can switch theater style from Settings without affecting app theme or financial records.
+- Unfinished styles are not selectable until their visuals and tests are ready.
+- Every finished style keeps the payment state readable at mobile and desktop sizes.
+
 ### P1 - Nearby Favorite Restaurant Recommendation
 
 Status: Todo
