@@ -28,6 +28,13 @@ test("records a coworker topup and a prepaid lunch order", async ({ page }) => {
   await page.locator('[data-action="toggle-theater"]').click();
   await expect(page.locator("body")).toHaveClass(/theater-collapsed/);
 
+  await page.getByRole("button", { name: "Settings" }).click();
+  await page.getByRole("button", { name: /日本動漫風格/ }).click();
+  await expect(page.locator("html")).toHaveAttribute("data-theater-style", "anime");
+
+  await page.getByRole("button", { name: "Ledger" }).click();
+  await expect(page.locator("#statusTheater .anime-actor-sprite")).toHaveJSProperty("naturalWidth", 128);
+
   await page.getByRole("button", { name: "Dinner" }).click();
   await expect(page.locator("#statusTheater")).toBeHidden();
 

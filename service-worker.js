@@ -1,4 +1,4 @@
-const CACHE_NAME = "launch-gogogo-pwa-v4";
+const CACHE_NAME = "launch-gogogo-pwa-v5";
 const ASSETS = [
   "./",
   "./index.html",
@@ -8,7 +8,11 @@ const ASSETS = [
   "./manifest.json",
   "./icon.svg",
   "./icon-192.png",
-  "./icon-512.png"
+  "./icon-512.png",
+  "./assets/theater/anime/stages/lunch-stage.png",
+  "./assets/theater/anime/characters/runner.png",
+  "./assets/theater/anime/characters/foodie.png",
+  "./assets/theater/anime/characters/thinker.png"
 ];
 
 self.addEventListener("install", (event) => {

@@ -56,6 +56,7 @@ Done:
 
 - Add a Settings section for theater styles.
 - Ship the first switchable style: Japanese anime style, using clean linework, soft cel-shaded colors, brighter expressions, and a lighter lunch-scene mood.
+- Upgrade Japanese anime style from CSS-only skin to generated raster assets: one anime lunch stage background plus three transparent coworker character cutouts.
 
 Style backlog:
 
