@@ -12,6 +12,20 @@ const PAYMENT_LABELS = {
   unpaid: "尚未付款"
 };
 
+const PLAYER_CHARACTERS = [
+  { id: "runner", name: "效率上班族", tone: "快步", color: "#6ee7b7", hair: "#334155", detail: "#0f766e" },
+  { id: "foodie", name: "開心吃貨", tone: "雀躍", color: "#fbbf24", hair: "#78350f", detail: "#f97316" },
+  { id: "thinker", name: "冷靜工程師", tone: "淡定", color: "#93c5fd", hair: "#1e293b", detail: "#2563eb" }
+];
+
+const RESTAURANT_TYPES = [
+  { id: "bento", name: "便當店", counter: "BENTO", accent: "#f97316", prop: "便當" },
+  { id: "drink", name: "飲料店", counter: "TEA", accent: "#14b8a6", prop: "飲料" },
+  { id: "noodle", name: "麵店", counter: "NOODLE", accent: "#ef4444", prop: "熱麵" },
+  { id: "fastFood", name: "速食店", counter: "FAST", accent: "#eab308", prop: "托盤" },
+  { id: "cafe", name: "咖啡輕食", counter: "CAFE", accent: "#a78bfa", prop: "咖啡" }
+];
+
 const THEME_STORAGE_KEY = "launch-gogogo-theme";
 const DEFAULT_MEAL_NAME = "未指定餐點";
 const THEMES = [
@@ -40,7 +54,10 @@ const state = {
   deferredInstallPrompt: null,
   pendingServiceWorker: null,
   refreshingForUpdate: false,
-  theme: "default"
+  theme: "default",
+  activeTheaterTransactionId: "",
+  theaterSequence: 0,
+  theaterCollapsed: false
 };
 
 const $ = (selector) => document.querySelector(selector);
@@ -79,6 +96,28 @@ function applyTheme(themeId) {
 
 function requiredLabel(text) {
   return `<span class="required-label">${text}</span>`;
+}
+
+function playerCharacterOptions(selectedId = "") {
+  const selected = selectedId || PLAYER_CHARACTERS[0].id;
+  return PLAYER_CHARACTERS.map((character) => `
+    <option value="${character.id}" ${character.id === selected ? "selected" : ""}>${character.name}</option>
+  `).join("");
+}
+
+function restaurantTypeOptions(selectedId = "") {
+  const selected = selectedId || RESTAURANT_TYPES[0].id;
+  return RESTAURANT_TYPES.map((type) => `
+    <option value="${type.id}" ${type.id === selected ? "selected" : ""}>${type.name}</option>
+  `).join("");
+}
+
+function getPlayerCharacter(id) {
+  return PLAYER_CHARACTERS.find((character) => character.id === id) || PLAYER_CHARACTERS[0];
+}
+
+function getRestaurantType(id) {
+  return RESTAURANT_TYPES.find((type) => type.id === id) || RESTAURANT_TYPES[0];
 }
 
 function openDb() {
@@ -185,6 +224,7 @@ function render() {
   renderStores("lunch");
   renderStores("dinner");
   renderSettings();
+  renderStatusTheater();
 }
 
 function renderCoworkerOptions() {
@@ -229,6 +269,7 @@ function groupCoworkers(coworkers) {
 
 function renderCoworkerItem(coworker) {
   const className = coworker.balance >= 0 ? "positive" : "negative";
+  const character = getPlayerCharacter(coworker.playerCharacter);
   return `
     <article class="item coworker-item">
       ${renderCoworkerAvatar(coworker)}
@@ -238,7 +279,11 @@ function renderCoworkerItem(coworker) {
           <span class="money ${className}">${signedMoney(coworker.balance)}</span>
         </div>
         <div class="muted">${coworker.balance < 0 ? "目前欠款" : "目前餘額"}</div>
+        <div class="pill-row">
+          <span class="pill">${escapeHtml(character.name)}</span>
+        </div>
         <div class="card-actions">
+          <button type="button" data-action="show-coworker-theater" data-id="${coworker.id}">小劇場</button>
           <button type="button" data-action="open-payment" data-id="${coworker.id}">收款</button>
           <button type="button" data-action="edit-coworker" data-id="${coworker.id}">編輯</button>
         </div>
@@ -322,6 +367,7 @@ function renderDailySummary() {
           ${entry.note ? `<span class="pill">${escapeHtml(entry.note)}</span>` : ""}
         </div>
         <div class="card-actions">
+          <button type="button" data-action="show-theater" data-id="${entry.id}">看動畫</button>
           <button type="button" data-action="edit-transaction" data-id="${entry.id}">編輯</button>
           <button type="button" data-action="delete-transaction" data-id="${entry.id}">刪除</button>
         </div>
@@ -367,6 +413,7 @@ function renderStores(mealType) {
     const stats = storeStats(store, mealType);
     const customUrl = store.customUrl || "";
     const searchUrl = customUrl || store.searchUrl || googleSearchUrl(store.name);
+    const restaurantType = getRestaurantType(store.restaurantType);
     return `
       <article class="store-card">
         <div class="store-title">
@@ -376,6 +423,7 @@ function renderStores(mealType) {
         <p class="muted">${escapeHtml(store.notes || "未填類型 / 備註")}</p>
         ${store.review ? `<p>${escapeHtml(store.review)}</p>` : ""}
         <div class="pill-row">
+          <span class="pill">${escapeHtml(restaurantType.name)}</span>
           <span class="pill">吃過 ${stats.count} 次</span>
           <span class="pill">最後 ${stats.last || "尚未記錄"}</span>
         </div>
@@ -387,6 +435,135 @@ function renderStores(mealType) {
       </article>
     `;
   }).join("") : `<div class="empty">還沒有${mealType === "lunch" ? "午餐" : "晚餐"}店家。</div>`;
+}
+
+function latestMealOrderForCoworker(coworkerId) {
+  return state.transactions
+    .filter((entry) => entry.type === "mealOrder" && entry.coworkerId === coworkerId)
+    .sort((a, b) => `${b.date}${b.createdAt}`.localeCompare(`${a.date}${a.createdAt}`))[0];
+}
+
+function latestMealOrder() {
+  return state.transactions
+    .filter((entry) => entry.type === "mealOrder")
+    .sort((a, b) => `${b.date}${b.createdAt}`.localeCompare(`${a.date}${a.createdAt}`))[0];
+}
+
+function isUnpaidOrderCollected(order) {
+  if (!order || order.paymentMethod !== "unpaid") return false;
+  const orderCreatedAt = order.createdAt || `${order.date}T00:00:00.000Z`;
+  return state.transactions.some((entry) => (
+    entry.type === "payment"
+    && entry.coworkerId === order.coworkerId
+    && (entry.createdAt || `${entry.date}T00:00:00.000Z`).localeCompare(orderCreatedAt) >= 0
+  ));
+}
+
+function theaterStageForOrder(order) {
+  if (!order) return "idle";
+  if (order.paymentMethod === "unpaid" && !isUnpaidOrderCollected(order)) return "waiting";
+  return "eating";
+}
+
+function theaterCopy(order, coworker, store) {
+  if (!order) {
+    return {
+      title: "今日訂餐小劇場",
+      detail: "新增訂單或點同事，這裡會演出付款狀態。",
+      status: "待命"
+    };
+  }
+  if (order.paymentMethod === "prepaidBalance") {
+    return {
+      title: `${coworker?.name || "同事"} 已用儲值金扣款`,
+      detail: `${store?.name || "店家"} 已結帳，吃飯中。`,
+      status: "已扣款"
+    };
+  }
+  if (order.paymentMethod === "cashToday") {
+    return {
+      title: `${coworker?.name || "同事"} 今天現金付款`,
+      detail: `${store?.name || "店家"} 已收現金，吃飯中。`,
+      status: "已收現金"
+    };
+  }
+  if (isUnpaidOrderCollected(order)) {
+    return {
+      title: `${coworker?.name || "同事"} 已收款，吃飯中`,
+      detail: `${store?.name || "店家"} 的款項已收齊。`,
+      status: "已收款"
+    };
+  }
+  return {
+    title: `${coworker?.name || "同事"} 正在櫃檯等待付款`,
+    detail: "尚未收款，先停在櫃檯提醒你。",
+    status: "待收款"
+  };
+}
+
+function renderStatusTheater() {
+  const target = $("#statusTheater");
+  if (!target) return;
+  const isVisible = state.activePage === "ledger";
+  target.classList.toggle("hidden", !isVisible);
+  document.body.classList.toggle("theater-visible", isVisible);
+  document.body.classList.toggle("theater-collapsed", isVisible && state.theaterCollapsed);
+  if (!isVisible) return;
+
+  const activeOrder = state.transactions.find((entry) => entry.id === state.activeTheaterTransactionId)
+    || latestMealOrder();
+  const coworker = state.coworkers.find((item) => item.id === activeOrder?.coworkerId);
+  const store = state.stores.find((item) => item.id === activeOrder?.storeId);
+  const character = getPlayerCharacter(coworker?.playerCharacter);
+  const restaurantType = getRestaurantType(store?.restaurantType);
+  const stage = theaterStageForOrder(activeOrder);
+  const copy = theaterCopy(activeOrder, coworker, store);
+  const balanceText = coworker ? `${Number(coworker.balance || 0).toLocaleString("zh-TW")} 元` : "--";
+  const collapsedLabel = state.theaterCollapsed ? "展開" : "縮小";
+
+  target.innerHTML = `
+    <button class="theater-toggle" type="button" data-action="toggle-theater" aria-expanded="${!state.theaterCollapsed}">
+      ${collapsedLabel}
+    </button>
+    <div class="theater-copy">
+      <div>
+        <p class="eyebrow">Lunch Status</p>
+        <h2>${escapeHtml(copy.title)}</h2>
+      </div>
+      <p>${escapeHtml(copy.detail)}</p>
+      <div class="pill-row">
+        <span class="pill">${escapeHtml(copy.status)}</span>
+        <span class="pill">${escapeHtml(restaurantType.name)}</span>
+        <span class="pill">餘額 ${balanceText}</span>
+      </div>
+    </div>
+    <div class="theater-stage stage-${stage}" style="--character-color:${character.color}; --character-hair:${character.hair}; --character-detail:${character.detail}; --shop-color:${restaurantType.accent};" data-sequence="${state.theaterSequence}">
+      <div class="shop-front">
+        <span class="shop-awning"></span>
+        <span>${escapeHtml(restaurantType.counter)}</span>
+        <span class="shop-window"></span>
+        <span class="shop-menu"></span>
+      </div>
+      <div class="counter-desk"></div>
+      <div class="dining-table"></div>
+      <div class="table-seat"></div>
+      <div class="table-shadow"></div>
+      <div class="food-tray"></div>
+      <div class="meal-prop">${escapeHtml(restaurantType.prop)}</div>
+      <div class="payment-flash"></div>
+      <div class="actor actor-${character.id}">
+        <span class="actor-shadow"></span>
+        <span class="actor-head"></span>
+        <span class="actor-face"></span>
+        <span class="actor-hair"></span>
+        <span class="actor-body"></span>
+        <span class="actor-arm left"></span>
+        <span class="actor-arm right"></span>
+        <span class="actor-leg left"></span>
+        <span class="actor-leg right"></span>
+      </div>
+    </div>
+  `;
 }
 
 function renderSettings() {
@@ -417,6 +594,7 @@ function setPage(page) {
   $(`#${page}Page`).classList.add("active");
   $(`#${page}Tab`).classList.add("active");
   $("#pageTitle").textContent = page === "ledger" ? "Ledger" : page === "lunch" ? "Lunch Stores" : page === "dinner" ? "Dinner Stores" : "Settings";
+  renderStatusTheater();
 }
 
 function coworkerOptions(selectedId = "") {
@@ -484,6 +662,11 @@ function openCoworkerEditor(coworker = null) {
         <datalist id="coworkerGroupOptions">${groupOptions}</datalist>
       </label>
       <label class="field">
+        <span>玩家角色</span>
+        <select name="playerCharacter">${playerCharacterOptions(coworker?.playerCharacter)}</select>
+        <span class="field-hint">小劇場會用這個角色外觀呈現該同事的訂餐狀態。</span>
+      </label>
+      <label class="field">
         <span>頭像</span>
         <input name="avatarFile" type="file" accept="image/*">
         <span class="field-hint">可上傳圖片作為同事頭像；不選檔會保留目前頭像。</span>
@@ -498,6 +681,7 @@ function openCoworkerEditor(coworker = null) {
         ...entry,
         name,
         group: formData.get("group").trim(),
+        playerCharacter: formData.get("playerCharacter") || PLAYER_CHARACTERS[0].id,
         avatarDataUrl,
         updatedAt: nowIso()
       });
@@ -589,14 +773,22 @@ function openPaymentEditor(coworkerId = null, transaction = null) {
     `,
     onSave: async (formData) => {
       const entry = transaction || { id: uid(), type: "payment", mealType: null, storeId: null, mealName: "", paymentMethod: null, createdAt: nowIso() };
+      const coworkerId = formData.get("coworkerId");
       await putItem(STORE_NAMES.transactions, {
         ...entry,
         date: formData.get("date"),
-        coworkerId: formData.get("coworkerId"),
+        coworkerId,
         amount: parseMoney(formData.get("amount")),
         note: formData.get("note").trim(),
         updatedAt: nowIso()
       });
+      const unpaidOrder = state.transactions
+        .filter((item) => item.type === "mealOrder" && item.paymentMethod === "unpaid" && item.coworkerId === coworkerId)
+        .sort((a, b) => `${b.date}${b.createdAt}`.localeCompare(`${a.date}${a.createdAt}`))[0];
+      if (unpaidOrder) {
+        state.activeTheaterTransactionId = unpaidOrder.id;
+        state.theaterSequence += 1;
+      }
     },
     onDelete: transaction ? async () => deleteItem(STORE_NAMES.transactions, transaction.id) : null
   });
@@ -611,21 +803,26 @@ function orderStoreFields(mealType, selectedStoreId = "") {
         <option value="__new" ${selectedStoreId ? "" : "selected"}>新增店家</option>
       </select>
     </label>
-    <label class="field" id="newStoreNameField">
+    <label class="field new-store-field" id="newStoreNameField">
       ${requiredLabel("新店家名稱")}
       <input name="newStoreName" maxlength="80" placeholder="例如：阿明便當">
       <span class="field-hint">選擇「新增店家」時必填。</span>
+    </label>
+    <label class="field new-store-field" id="newStoreTypeField">
+      ${requiredLabel("餐廳類型")}
+      <select name="newStoreRestaurantType">${restaurantTypeOptions()}</select>
+      <span class="field-hint">小劇場會依餐廳類型切換舞台。</span>
     </label>
   `;
 }
 
 function bindOrderStoreToggle() {
   const select = $("#orderStoreSelect");
-  const field = $("#newStoreNameField");
-  if (!select || !field) return;
-  const sync = () => field.classList.toggle("hidden", select.value !== "__new");
+  const fields = Array.from(document.querySelectorAll(".new-store-field"));
+  if (!select || !fields.length) return;
+  const sync = () => fields.forEach((field) => field.classList.toggle("hidden", select.value !== "__new"));
   const syncRequired = () => {
-    const input = field.querySelector("input");
+    const input = $("#newStoreNameField input");
     if (!input) return;
     input.required = select.value === "__new";
   };
@@ -643,7 +840,12 @@ async function ensureStoreForOrder(formData, mealType) {
   const existing = state.stores.find((store) => store.name === name);
   const availableKey = mealType === "lunch" ? "availableForLunch" : "availableForDinner";
   if (existing) {
-    await putItem(STORE_NAMES.stores, { ...existing, [availableKey]: true, updatedAt: nowIso() });
+    await putItem(STORE_NAMES.stores, {
+      ...existing,
+      restaurantType: existing.restaurantType || formData.get("newStoreRestaurantType") || RESTAURANT_TYPES[0].id,
+      [availableKey]: true,
+      updatedAt: nowIso()
+    });
     return existing.id;
   }
   const store = {
@@ -654,6 +856,7 @@ async function ensureStoreForOrder(formData, mealType) {
     review: "",
     searchUrl: googleSearchUrl(name),
     customUrl: "",
+    restaurantType: formData.get("newStoreRestaurantType") || RESTAURANT_TYPES[0].id,
     availableForLunch: mealType === "lunch",
     availableForDinner: mealType === "dinner",
     lunchUsedCount: 0,
@@ -719,6 +922,8 @@ function openOrderEditor(transaction = null) {
       const selectedMealType = formData.get("mealType");
       const storeId = await ensureStoreForOrder(formData, selectedMealType);
       const entry = transaction || { id: uid(), type: "mealOrder", createdAt: nowIso() };
+      state.activeTheaterTransactionId = entry.id;
+      state.theaterSequence += 1;
       await putItem(STORE_NAMES.transactions, {
         ...entry,
         date: formData.get("date"),
@@ -755,6 +960,11 @@ function openStoreEditor(mealType, store = null) {
         <input name="notes" maxlength="120" value="${escapeHtml(store?.notes || "")}" placeholder="例如：便當、麵、清淡">
       </label>
       <label class="field">
+        <span>餐廳類型</span>
+        <select name="restaurantType">${restaurantTypeOptions(store?.restaurantType)}</select>
+        <span class="field-hint">小劇場會依這個類型切換便當店、飲料店等舞台。</span>
+      </label>
+      <label class="field">
         <span>星星評分 1 到 5</span>
         <select name="rating">
           ${[1, 2, 3, 4, 5].map((value) => `<option value="${value}" ${Number(store?.rating || 3) === value ? "selected" : ""}>${value}</option>`).join("")}
@@ -785,6 +995,7 @@ function openStoreEditor(mealType, store = null) {
         ...entry,
         name,
         notes: formData.get("notes").trim(),
+        restaurantType: formData.get("restaurantType") || RESTAURANT_TYPES[0].id,
         rating: Number(formData.get("rating")),
         review: formData.get("review").trim(),
         searchUrl: googleSearchUrl(name),
@@ -922,6 +1133,21 @@ function bindEvents() {
     const trigger = event.target.closest("[data-action]");
     if (!trigger) return;
     const { action, id, mealType } = trigger.dataset;
+    if (action === "show-theater") {
+      state.activeTheaterTransactionId = id;
+      state.theaterSequence += 1;
+      renderStatusTheater();
+    }
+    if (action === "show-coworker-theater") {
+      const order = latestMealOrderForCoworker(id);
+      state.activeTheaterTransactionId = order?.id || "";
+      state.theaterSequence += 1;
+      renderStatusTheater();
+    }
+    if (action === "toggle-theater") {
+      state.theaterCollapsed = !state.theaterCollapsed;
+      renderStatusTheater();
+    }
     if (action === "open-payment") openPaymentEditor(id);
     if (action === "edit-coworker") openCoworkerEditor(state.coworkers.find((item) => item.id === id));
     if (action === "edit-transaction") {
@@ -976,6 +1202,7 @@ window.LaunchGoGoGoApp = {
   renderCoworkers,
   renderDailySummary,
   renderSettings,
+  renderStatusTheater,
   replaceAllData,
   setPage,
   state
