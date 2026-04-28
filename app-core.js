@@ -144,6 +144,7 @@
     if (!isNonEmptyString(item?.name)) errors.push("name 必須是非空字串。");
     if (!Number.isInteger(item?.balance)) errors.push("balance 必須是整數。");
     if (item?.group !== undefined && typeof item.group !== "string") errors.push("group 必須是字串。");
+    if (item?.playerCharacter !== undefined && typeof item.playerCharacter !== "string") errors.push("playerCharacter 必須是字串。");
     if (item?.avatarDataUrl !== undefined && typeof item.avatarDataUrl !== "string") errors.push("avatarDataUrl 必須是字串。");
     if (item?.avatarDataUrl && !item.avatarDataUrl.startsWith("data:image/")) errors.push("avatarDataUrl 必須是圖片 data URL。");
     return errors;
@@ -153,6 +154,7 @@
     const errors = validateBaseRecord(item);
     if (!isNonEmptyString(item?.name)) errors.push("name 必須是非空字串。");
     if (!Number.isInteger(item?.rating) || item.rating < 1 || item.rating > 5) errors.push("rating 必須是 1 到 5 的整數。");
+    if (item?.restaurantType !== undefined && typeof item.restaurantType !== "string") errors.push("restaurantType 必須是字串。");
     ["availableForLunch", "availableForDinner"].forEach((key) => {
       if (typeof item?.[key] !== "boolean") errors.push(`${key} 必須是 boolean。`);
     });

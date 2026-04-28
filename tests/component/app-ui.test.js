@@ -11,6 +11,9 @@ describe("app UI components", () => {
     window.LaunchGoGoGoApp.state.stores = [];
     window.LaunchGoGoGoApp.state.transactions = [];
     window.LaunchGoGoGoApp.state.theme = "default";
+    window.LaunchGoGoGoApp.state.activePage = "ledger";
+    window.LaunchGoGoGoApp.state.theaterCollapsed = false;
+    document.body.className = "";
   });
 
   it("switches the active page and tab together", () => {
@@ -39,17 +42,21 @@ describe("app UI components", () => {
     const select = document.querySelector("#orderStoreSelect");
     const field = document.querySelector("#newStoreNameField");
     const input = field.querySelector("input");
+    const typeField = document.querySelector("#newStoreTypeField");
 
     window.LaunchGoGoGoApp.bindOrderStoreToggle();
 
     expect(field.classList.contains("hidden")).toBe(false);
+    expect(typeField.classList.contains("hidden")).toBe(false);
     expect(input.required).toBe(true);
+    expect(typeField.textContent).toContain("便當店");
 
     select.insertAdjacentHTML("afterbegin", '<option value="existing">Existing</option>');
     select.value = "existing";
     select.dispatchEvent(new Event("change"));
 
     expect(field.classList.contains("hidden")).toBe(true);
+    expect(typeField.classList.contains("hidden")).toBe(true);
     expect(input.required).toBe(false);
   });
 
@@ -182,5 +189,69 @@ describe("app UI components", () => {
     expect(document.querySelector("#currentThemeName").textContent).toBe("GitHub");
     expect(document.querySelector('[data-theme-id="github"]').getAttribute("aria-pressed")).toBe("true");
     expect(document.querySelector('[data-theme-id="default"]').getAttribute("aria-pressed")).toBe("false");
+  });
+
+  it("renders the status theater as waiting until an unpaid order has a payment", () => {
+    document.body.innerHTML = `<section id="statusTheater"></section>`;
+    window.LaunchGoGoGoApp.state.coworkers = [
+      { id: "c1", name: "Amy", balance: -120, playerCharacter: "foodie", createdAt: "", updatedAt: "" }
+    ];
+    window.LaunchGoGoGoApp.state.stores = [
+      { id: "s1", name: "Tea Bar", restaurantType: "drink", rating: 3, availableForLunch: true, availableForDinner: false, createdAt: "", updatedAt: "" }
+    ];
+    window.LaunchGoGoGoApp.state.transactions = [
+      {
+        id: "o1", date: "2026-04-28", type: "mealOrder", mealType: "lunch",
+        coworkerId: "c1", storeId: "s1", mealName: "紅茶", amount: 120,
+        paymentMethod: "unpaid", createdAt: "2026-04-28T04:00:00.000Z", updatedAt: ""
+      }
+    ];
+    window.LaunchGoGoGoApp.state.activeTheaterTransactionId = "o1";
+
+    window.LaunchGoGoGoApp.renderStatusTheater();
+
+    expect(document.querySelector("#statusTheater").textContent).toContain("待收款");
+    expect(document.querySelector(".theater-stage").classList.contains("stage-waiting")).toBe(true);
+    expect(document.querySelector(".actor-arm.right")).not.toBeNull();
+    expect(document.querySelector(".meal-prop").textContent).toBe("飲料");
+
+    window.LaunchGoGoGoApp.state.transactions.push({
+      id: "p1", date: "2026-04-28", type: "payment", mealType: null,
+      coworkerId: "c1", storeId: null, mealName: "", amount: 120,
+      paymentMethod: null, createdAt: "2026-04-28T04:05:00.000Z", updatedAt: ""
+    });
+
+    window.LaunchGoGoGoApp.renderStatusTheater();
+
+    expect(document.querySelector("#statusTheater").textContent).toContain("已收款");
+    expect(document.querySelector(".theater-stage").classList.contains("stage-eating")).toBe(true);
+  });
+
+  it("shows the theater only on ledger and supports collapsing", () => {
+    document.body.innerHTML = `
+      <h1 id="pageTitle">Ledger</h1>
+      <section id="ledgerPage" class="page active"></section>
+      <section id="lunchPage" class="page"></section>
+      <section id="dinnerPage" class="page"></section>
+      <section id="settingsPage" class="page"></section>
+      <section id="statusTheater"></section>
+      <button id="ledgerTab" class="tab active"></button>
+      <button id="lunchTab" class="tab"></button>
+      <button id="dinnerTab" class="tab"></button>
+      <button id="settingsTab" class="tab"></button>
+    `;
+
+    window.LaunchGoGoGoApp.setPage("ledger");
+    expect(document.querySelector("#statusTheater").classList.contains("hidden")).toBe(false);
+    expect(document.body.classList.contains("theater-visible")).toBe(true);
+
+    window.LaunchGoGoGoApp.state.theaterCollapsed = true;
+    window.LaunchGoGoGoApp.renderStatusTheater();
+    expect(document.body.classList.contains("theater-collapsed")).toBe(true);
+    expect(document.querySelector('[data-action="toggle-theater"]').textContent).toContain("展開");
+
+    window.LaunchGoGoGoApp.setPage("lunch");
+    expect(document.querySelector("#statusTheater").classList.contains("hidden")).toBe(true);
+    expect(document.body.classList.contains("theater-visible")).toBe(false);
   });
 });
