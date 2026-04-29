@@ -162,6 +162,8 @@ const state = {
   theme: "default",
   theaterStyle: "miniature",
   theaterAssetStatus: { miniature: "ready" },
+  settingsThemeExpanded: false,
+  settingsTheaterExpanded: false,
   activeTheaterTransactionId: "",
   theaterSequence: 0,
   theaterCollapsed: false
@@ -250,6 +252,20 @@ async function syncTheaterAssetStatus() {
 
 function isTheaterStyleReady(styleId) {
   return styleId === "miniature" || state.theaterAssetStatus[styleId] === "ready";
+}
+
+function visibleSettingItems(items, selectedId, expanded, limit = 4) {
+  if (expanded || items.length <= limit) return items;
+  const selected = items.find((item) => item.id === selectedId);
+  const base = selected ? [selected, ...items.filter((item) => item.id !== selectedId)] : items;
+  return base.slice(0, limit);
+}
+
+function settingExpandButton(kind, expanded, total, visibleCount) {
+  if (total <= visibleCount) return "";
+  const label = expanded ? "收合" : "顯示更多";
+  const noun = kind === "theme" ? "主題" : "風格";
+  return `<button class="settings-expand-button" type="button" data-action="toggle-settings-${kind}">${label}${noun}</button>`;
 }
 
 async function downloadTheaterStyleAssets(styleId, assetGroup = "all") {
@@ -796,18 +812,29 @@ function renderStatusTheater() {
 function renderSettings() {
   const currentTheme = getThemeById(state.theme);
   const currentTheaterStyle = getTheaterStyleById(state.theaterStyle);
+  const visibleThemes = visibleSettingItems(THEMES, currentTheme.id, state.settingsThemeExpanded);
+  const visibleTheaterStyles = visibleSettingItems(THEATER_STYLES, currentTheaterStyle.id, state.settingsTheaterExpanded);
   $("#currentThemeName").textContent = currentTheme.name;
-  $("#themeGrid").innerHTML = THEMES.map((theme) => `
-    <button class="theme-card ${theme.id === currentTheme.id ? "active" : ""}" type="button" data-action="set-theme" data-theme-id="${theme.id}" aria-pressed="${theme.id === currentTheme.id}">
-      <span class="theme-preview" aria-hidden="true">
-        ${theme.colors.map((color) => `<span class="theme-swatch" style="background:${color}"></span>`).join("")}
+  $("#themeGrid").innerHTML = `${visibleThemes.map((theme) => `
+    <button class="theme-card ${theme.id === currentTheme.id ? "active" : ""}" type="button" data-action="set-theme" data-theme-id="${theme.id}" aria-pressed="${theme.id === currentTheme.id}" style="--preview-primary:${theme.colors[0]}; --preview-accent:${theme.colors[1]}; --preview-surface:${theme.colors[2]};">
+      <span class="theme-preview theme-ui-preview" aria-hidden="true">
+        <span class="preview-topbar"></span>
+        <span class="preview-content">
+          <span class="preview-line strong"></span>
+          <span class="preview-pill"></span>
+          <span class="preview-line"></span>
+        </span>
       </span>
       <span class="theme-name">${escapeHtml(theme.name)}</span>
       ${theme.id === currentTheme.id ? `<span class="theme-check">✓</span>` : ""}
     </button>
-  `).join("");
+  `).join("")}${settingExpandButton("theme", state.settingsThemeExpanded, THEMES.length, visibleThemes.length)}`;
   $("#currentTheaterStyleName").textContent = currentTheaterStyle.name;
-  $("#theaterStyleGrid").innerHTML = THEATER_STYLES.map((style) => `
+  $("#theaterStyleGrid").innerHTML = `${visibleTheaterStyles.map((style) => {
+    const previewStyle = style.id === "miniature"
+      ? ""
+      : ` style="--theater-preview-bg:url('${theaterStageImage(style.id, "bento")}'); --theater-preview-actor:url('${theaterCharacterImage(style.id, "runner", "female")}');"`;
+    return `
     <button class="theme-card theater-style-card ${style.id === currentTheaterStyle.id ? "active" : ""} ${isTheaterStyleReady(style.id) ? "" : "disabled"} ${state.theaterAssetStatus[style.id] === "downloading" ? "downloading" : ""}"
       type="button"
       data-action="${isTheaterStyleReady(style.id) ? "set-theater-style" : "download-theater-style"}"
@@ -815,15 +842,18 @@ function renderSettings() {
       data-asset-state="${state.theaterAssetStatus[style.id] || "pending"}"
       aria-pressed="${style.id === currentTheaterStyle.id}"
     >
-      <span class="theme-preview" aria-hidden="true">
-        ${style.colors.map((color) => `<span class="theme-swatch" style="background:${color}"></span>`).join("")}
+      <span class="theme-preview theater-visual-preview ${style.id === "miniature" ? "miniature-preview" : ""}"${previewStyle} aria-hidden="true">
+        <span class="preview-counter"></span>
+        <span class="preview-table"></span>
+        <span class="preview-actor"></span>
       </span>
       <span class="theme-name">${escapeHtml(style.name)}</span>
       <span class="theater-style-desc">${escapeHtml(style.description)}</span>
       ${isTheaterStyleReady(style.id) ? "" : `<span class="style-status">${state.theaterAssetStatus[style.id] === "downloading" ? "下載中..." : state.theaterAssetStatus[style.id] === "error" ? "下載失敗，點擊重試" : "點擊下載"}</span>`}
       ${style.id === currentTheaterStyle.id ? `<span class="theme-check">✓</span>` : ""}
     </button>
-  `).join("");
+  `;
+  }).join("")}${settingExpandButton("theater", state.settingsTheaterExpanded, THEATER_STYLES.length, visibleTheaterStyles.length)}`;
 }
 
 function setDataStatus(message, type = "info") {
@@ -1535,6 +1565,14 @@ function bindEvents() {
     if (action === "copy-store") copyStoreToMealType(id, mealType);
     if (action === "set-theme") {
       applyTheme(trigger.dataset.themeId);
+      renderSettings();
+    }
+    if (action === "toggle-settings-theme") {
+      state.settingsThemeExpanded = !state.settingsThemeExpanded;
+      renderSettings();
+    }
+    if (action === "toggle-settings-theater") {
+      state.settingsTheaterExpanded = !state.settingsTheaterExpanded;
       renderSettings();
     }
     if (action === "set-theater-style") {
