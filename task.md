@@ -58,7 +58,9 @@ Done:
 - Ship the first switchable style: Japanese anime style, using clean linework, soft cel-shaded colors, brighter expressions, and a lighter lunch-scene mood.
 - Upgrade Japanese anime style from CSS-only skin to generated raster assets: one anime lunch stage background plus three transparent coworker character cutouts.
 - Generate the full planned theater style asset set: 11 raster styles, 5 restaurant-type backgrounds per style, and 6 character cutouts per style (runner, foodie, thinker in female and male variants).
-- Wire finished raster styles into Settings so each restaurant type can show a matching generated stage; current runtime uses the female character set until gender selection is added.
+- Wire finished raster styles into Settings so each restaurant type can show a matching generated stage.
+- Add download-gated theater style cards so first app load keeps only essential files, while raster styles become selectable after their asset pack is cached.
+- Add coworker character gender selection and switch theater sprites between female and male variants.
 
 Style backlog:
 
@@ -75,7 +77,6 @@ Style backlog:
 
 Tasks:
 
-- Add a coworker character gender selector and switch runtime assets between female and male variants.
 - Add richer per-style motion polish for idle, walk, waiting, paying, and eating loops.
 - Keep style switching independent from ledger math, payment state, and stored transaction data.
 - Add component and e2e coverage for every style that becomes selectable.

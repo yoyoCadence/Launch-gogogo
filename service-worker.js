@@ -1,4 +1,5 @@
-const CACHE_NAME = "launch-gogogo-pwa-v6";
+const CACHE_NAME = "launch-gogogo-pwa-v7";
+const THEATER_ASSET_CACHE_NAME = "launch-gogogo-theater-assets-v1";
 const ASSETS = [
   "./",
   "./index.html",
@@ -21,7 +22,9 @@ self.addEventListener("install", (event) => {
 self.addEventListener("activate", (event) => {
   event.waitUntil(
     caches.keys().then((keys) =>
-      Promise.all(keys.filter((key) => key !== CACHE_NAME).map((key) => caches.delete(key)))
+      Promise.all(keys
+        .filter((key) => ![CACHE_NAME, THEATER_ASSET_CACHE_NAME].includes(key))
+        .map((key) => caches.delete(key)))
     )
   );
   self.clients.claim();

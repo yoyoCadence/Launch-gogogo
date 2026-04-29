@@ -145,6 +145,7 @@
     if (!Number.isInteger(item?.balance)) errors.push("balance 必須是整數。");
     if (item?.group !== undefined && typeof item.group !== "string") errors.push("group 必須是字串。");
     if (item?.playerCharacter !== undefined && typeof item.playerCharacter !== "string") errors.push("playerCharacter 必須是字串。");
+    if (item?.playerGender !== undefined && typeof item.playerGender !== "string") errors.push("playerGender 必須是字串。");
     if (item?.avatarDataUrl !== undefined && typeof item.avatarDataUrl !== "string") errors.push("avatarDataUrl 必須是字串。");
     if (item?.avatarDataUrl && !item.avatarDataUrl.startsWith("data:image/")) errors.push("avatarDataUrl 必須是圖片 data URL。");
     return errors;
