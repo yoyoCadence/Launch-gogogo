@@ -1,0 +1,191 @@
+{
+  "styles": {
+    "anime": {
+      "stages": {
+        "bento": "assets/theater/anime/stages/stage-bento.png",
+        "drink": "assets/theater/anime/stages/stage-drink.png",
+        "noodle": "assets/theater/anime/stages/stage-noodle.png",
+        "fastFood": "assets/theater/anime/stages/stage-fastFood.png",
+        "cafe": "assets/theater/anime/stages/stage-cafe.png"
+      },
+      "characters": [
+        "runner-female.png",
+        "foodie-female.png",
+        "thinker-female.png",
+        "runner-male.png",
+        "foodie-male.png",
+        "thinker-male.png"
+      ]
+    },
+    "cyberpunk": {
+      "stages": {
+        "bento": "assets/theater/cyberpunk/stages/stage-bento.png",
+        "drink": "assets/theater/cyberpunk/stages/stage-drink.png",
+        "noodle": "assets/theater/cyberpunk/stages/stage-noodle.png",
+        "fastFood": "assets/theater/cyberpunk/stages/stage-fastFood.png",
+        "cafe": "assets/theater/cyberpunk/stages/stage-cafe.png"
+      },
+      "characters": [
+        "runner-female.png",
+        "foodie-female.png",
+        "thinker-female.png",
+        "runner-male.png",
+        "foodie-male.png",
+        "thinker-male.png"
+      ]
+    },
+    "gothic-lolita": {
+      "stages": {
+        "bento": "assets/theater/gothic-lolita/stages/stage-bento.png",
+        "drink": "assets/theater/gothic-lolita/stages/stage-drink.png",
+        "noodle": "assets/theater/gothic-lolita/stages/stage-noodle.png",
+        "fastFood": "assets/theater/gothic-lolita/stages/stage-fastFood.png",
+        "cafe": "assets/theater/gothic-lolita/stages/stage-cafe.png"
+      },
+      "characters": [
+        "runner-female.png",
+        "foodie-female.png",
+        "thinker-female.png",
+        "runner-male.png",
+        "foodie-male.png",
+        "thinker-male.png"
+      ]
+    },
+    "pixel": {
+      "stages": {
+        "bento": "assets/theater/pixel/stages/stage-bento.png",
+        "drink": "assets/theater/pixel/stages/stage-drink.png",
+        "noodle": "assets/theater/pixel/stages/stage-noodle.png",
+        "fastFood": "assets/theater/pixel/stages/stage-fastFood.png",
+        "cafe": "assets/theater/pixel/stages/stage-cafe.png"
+      },
+      "characters": [
+        "runner-female.png",
+        "foodie-female.png",
+        "thinker-female.png",
+        "runner-male.png",
+        "foodie-male.png",
+        "thinker-male.png"
+      ]
+    },
+    "arcade": {
+      "stages": {
+        "bento": "assets/theater/arcade/stages/stage-bento.png",
+        "drink": "assets/theater/arcade/stages/stage-drink.png",
+        "noodle": "assets/theater/arcade/stages/stage-noodle.png",
+        "fastFood": "assets/theater/arcade/stages/stage-fastFood.png",
+        "cafe": "assets/theater/arcade/stages/stage-cafe.png"
+      },
+      "characters": [
+        "runner-female.png",
+        "foodie-female.png",
+        "thinker-female.png",
+        "runner-male.png",
+        "foodie-male.png",
+        "thinker-male.png"
+      ]
+    },
+    "retro-16bit": {
+      "stages": {
+        "bento": "assets/theater/retro-16bit/stages/stage-bento.png",
+        "drink": "assets/theater/retro-16bit/stages/stage-drink.png",
+        "noodle": "assets/theater/retro-16bit/stages/stage-noodle.png",
+        "fastFood": "assets/theater/retro-16bit/stages/stage-fastFood.png",
+        "cafe": "assets/theater/retro-16bit/stages/stage-cafe.png"
+      },
+      "characters": [
+        "runner-female.png",
+        "foodie-female.png",
+        "thinker-female.png",
+        "runner-male.png",
+        "foodie-male.png",
+        "thinker-male.png"
+      ]
+    },
+    "storybook": {
+      "stages": {
+        "bento": "assets/theater/storybook/stages/stage-bento.png",
+        "drink": "assets/theater/storybook/stages/stage-drink.png",
+        "noodle": "assets/theater/storybook/stages/stage-noodle.png",
+        "fastFood": "assets/theater/storybook/stages/stage-fastFood.png",
+        "cafe": "assets/theater/storybook/stages/stage-cafe.png"
+      },
+      "characters": [
+        "runner-female.png",
+        "foodie-female.png",
+        "thinker-female.png",
+        "runner-male.png",
+        "foodie-male.png",
+        "thinker-male.png"
+      ]
+    },
+    "chibi": {
+      "stages": {
+        "bento": "assets/theater/chibi/stages/stage-bento.png",
+        "drink": "assets/theater/chibi/stages/stage-drink.png",
+        "noodle": "assets/theater/chibi/stages/stage-noodle.png",
+        "fastFood": "assets/theater/chibi/stages/stage-fastFood.png",
+        "cafe": "assets/theater/chibi/stages/stage-cafe.png"
+      },
+      "characters": [
+        "runner-female.png",
+        "foodie-female.png",
+        "thinker-female.png",
+        "runner-male.png",
+        "foodie-male.png",
+        "thinker-male.png"
+      ]
+    },
+    "painted-fantasy": {
+      "stages": {
+        "bento": "assets/theater/painted-fantasy/stages/stage-bento.png",
+        "drink": "assets/theater/painted-fantasy/stages/stage-drink.png",
+        "noodle": "assets/theater/painted-fantasy/stages/stage-noodle.png",
+        "fastFood": "assets/theater/painted-fantasy/stages/stage-fastFood.png",
+        "cafe": "assets/theater/painted-fantasy/stages/stage-cafe.png"
+      },
+      "characters": [
+        "runner-female.png",
+        "foodie-female.png",
+        "thinker-female.png",
+        "runner-male.png",
+        "foodie-male.png",
+        "thinker-male.png"
+      ]
+    },
+    "muted-jp-life": {
+      "stages": {
+        "bento": "assets/theater/muted-jp-life/stages/stage-bento.png",
+        "drink": "assets/theater/muted-jp-life/stages/stage-drink.png",
+        "noodle": "assets/theater/muted-jp-life/stages/stage-noodle.png",
+        "fastFood": "assets/theater/muted-jp-life/stages/stage-fastFood.png",
+        "cafe": "assets/theater/muted-jp-life/stages/stage-cafe.png"
+      },
+      "characters": [
+        "runner-female.png",
+        "foodie-female.png",
+        "thinker-female.png",
+        "runner-male.png",
+        "foodie-male.png",
+        "thinker-male.png"
+      ]
+    },
+    "arcade-fighter-90s": {
+      "stages": {
+        "bento": "assets/theater/arcade-fighter-90s/stages/stage-bento.png",
+        "drink": "assets/theater/arcade-fighter-90s/stages/stage-drink.png",
+        "noodle": "assets/theater/arcade-fighter-90s/stages/stage-noodle.png",
+        "fastFood": "assets/theater/arcade-fighter-90s/stages/stage-fastFood.png",
+        "cafe": "assets/theater/arcade-fighter-90s/stages/stage-cafe.png"
+      },
+      "characters": [
+        "runner-female.png",
+        "foodie-female.png",
+        "thinker-female.png",
+        "runner-male.png",
+        "foodie-male.png",
+        "thinker-male.png"
+      ]
+    }
+  }
+}

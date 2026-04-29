@@ -980,22 +980,22 @@ body.theater-collapsed .theater-copy h2 {
   animation: waitingBob 1.6s ease-in-out infinite;
 }
 
-[data-theater-style="anime"] .status-theater {
+html[data-theater-style] .status-theater {
   border-color: color-mix(in srgb, #ff8ab3 38%, var(--ds-color-border));
   background:
     linear-gradient(135deg, color-mix(in srgb, #fff6fb 12%, transparent), transparent 42%),
     color-mix(in srgb, var(--ds-color-surface) 82%, transparent);
 }
 
-[data-theater-style="anime"] .theater-stage {
+html[data-theater-style] .theater-stage {
   border-color: color-mix(in srgb, #ff8ab3 58%, white);
   background:
     linear-gradient(90deg, color-mix(in srgb, var(--shop-color) 16%, transparent), transparent 34%, transparent 66%, color-mix(in srgb, #ff8ab3 12%, transparent)),
-    url("./assets/theater/anime/stages/lunch-stage.png") center / cover no-repeat;
+    var(--theater-stage-image) center / cover no-repeat;
   min-height: 172px;
 }
 
-[data-theater-style="anime"] .theater-stage::after {
+html[data-theater-style] .theater-stage::after {
   content: "";
   position: absolute;
   inset: 0;
@@ -1007,30 +1007,30 @@ body.theater-collapsed .theater-copy h2 {
   box-shadow: inset 0 0 0 1px rgba(255, 255, 255, 0.16);
 }
 
-[data-theater-style="anime"] .shop-front,
-[data-theater-style="anime"] .counter-desk,
-[data-theater-style="anime"] .dining-table,
-[data-theater-style="anime"] .table-seat,
-[data-theater-style="anime"] .table-shadow,
-[data-theater-style="anime"] .food-tray,
-[data-theater-style="anime"] .meal-prop,
-[data-theater-style="anime"] .actor-head,
-[data-theater-style="anime"] .actor-face,
-[data-theater-style="anime"] .actor-hair,
-[data-theater-style="anime"] .actor-body,
-[data-theater-style="anime"] .actor-arm,
-[data-theater-style="anime"] .actor-leg {
+html[data-theater-style] .shop-front,
+html[data-theater-style] .counter-desk,
+html[data-theater-style] .dining-table,
+html[data-theater-style] .table-seat,
+html[data-theater-style] .table-shadow,
+html[data-theater-style] .food-tray,
+html[data-theater-style] .meal-prop,
+html[data-theater-style] .actor-head,
+html[data-theater-style] .actor-face,
+html[data-theater-style] .actor-hair,
+html[data-theater-style] .actor-body,
+html[data-theater-style] .actor-arm,
+html[data-theater-style] .actor-leg {
   display: none;
 }
 
-[data-theater-style="anime"] .actor {
+html[data-theater-style] .actor {
   bottom: 20px;
   left: 28px;
   width: 96px;
   height: 128px;
 }
 
-[data-theater-style="anime"] .anime-actor-sprite {
+html[data-theater-style] .anime-actor-sprite {
   position: absolute;
   inset: 0;
   display: block;
@@ -1042,7 +1042,7 @@ body.theater-collapsed .theater-copy h2 {
     drop-shadow(0 0 4px rgba(255, 255, 255, 0.22));
 }
 
-[data-theater-style="anime"] .actor-shadow {
+html[data-theater-style] .actor-shadow {
   bottom: 8px;
   left: 22px;
   width: 54px;
@@ -1051,15 +1051,15 @@ body.theater-collapsed .theater-copy h2 {
   filter: blur(4px);
 }
 
-[data-theater-style="anime"] .stage-waiting .actor {
+html[data-theater-style] .stage-waiting .actor {
   animation: animeToCounter 1.1s ease-out both, waitingBob 1.4s ease-in-out 1.1s infinite;
 }
 
-[data-theater-style="anime"] .stage-eating .actor {
+html[data-theater-style] .stage-eating .actor {
   animation: animeToSeat 1.45s ease-out both, animeEating 1.7s ease-in-out 1.45s infinite;
 }
 
-[data-theater-style="anime"] .payment-flash {
+html[data-theater-style] .payment-flash {
   top: 58px;
   left: 118px;
   border-color: #ff8ab3;
@@ -1300,6 +1300,7 @@ body.theater-collapsed .theater-copy h2 {
   position: relative;
   display: grid;
   gap: var(--ds-space-3);
+  scroll-margin-top: 120px;
   min-height: 104px;
   border: 1px solid var(--ds-color-border);
   border-radius: var(--ds-radius-card);

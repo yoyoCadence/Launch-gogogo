@@ -48,99 +48,99 @@ const THEMES = [
 const THEATER_STYLES = [
   {
     id: "miniature",
-    name: "迷你劇場",
-    status: "可使用",
+    name: "迷你幾何風",
+    status: "已完成",
     available: true,
     colors: ["#f97316", "#6ee7b7", "#1c1c1e"],
-    description: "目前的輕量 CSS miniature，小巧穩定，適合快速讀取付款狀態。"
+    description: "輕量 CSS 小劇場，適合想保留簡潔記帳畫面的使用情境。"
   },
   {
     id: "anime",
     name: "日本動漫風格",
-    status: "可使用",
+    status: "已完成",
     available: true,
     colors: ["#ff8ab3", "#7ec8ff", "#fff6fb"],
-    description: "乾淨線稿、柔和賽璐璐上色、明亮表情與可愛生活感，適合訂餐小劇場。"
+    description: "明亮線條、柔和賽璐璐光影、熱血少年漫畫感角色與午餐店場景。"
   },
   {
     id: "cyberpunk",
     name: "科技感 / Cyberpunk",
-    status: "待製作",
-    available: false,
+    status: "已完成",
+    available: true,
     colors: ["#00ff9f", "#ff2d78", "#050508"],
-    description: "霓虹邊光、深色高對比、科幻面板與掃描線，付款狀態像任務 HUD。"
+    description: "霓虹邊光、全息面板、深色金屬表面與 sci-fi UI 狀態感。"
   },
   {
     id: "gothic-lolita",
     name: "歌德蘿莉",
-    status: "待製作",
-    available: false,
+    status: "已完成",
+    available: true,
     colors: ["#c41e3a", "#d4af37", "#14000d"],
-    description: "蕾絲、緞帶、暗紅金色、精緻茶會感，餐廳像華麗甜點沙龍。"
+    description: "蕾絲、緞帶、酒紅天鵝絨、黑漆木與精緻茶室氛圍。"
   },
   {
     id: "pixel",
     name: "像素風格",
-    status: "待製作",
-    available: false,
+    status: "已完成",
+    available: true,
     colors: ["#39ff14", "#ffff00", "#0a0a0a"],
-    description: "清楚格點、有限色盤、低解析角色與道具，重點是可讀性與懷舊感。"
+    description: "低解析輪廓、有限色盤、清楚可讀的像素塊與道具。"
   },
   {
     id: "arcade",
     name: "街機風格",
-    status: "待製作",
-    available: false,
+    status: "已完成",
+    available: true,
     colors: ["#ff005d", "#00e5ff", "#1a103d"],
-    description: "高飽和、強對比、投幣機氛圍與誇張狀態特效，適合熱鬧演出。"
+    description: "投幣機台、飽和霓虹、亮面地板與高能量用餐小舞台。"
   },
   {
     id: "retro-16bit",
     name: "復古 16-bit RPG",
-    status: "待製作",
-    available: false,
+    status: "已完成",
+    available: true,
     colors: ["#7c3f58", "#f9c22e", "#283d3b"],
-    description: "16-bit RPG 俯視角色、格狀地板、明確輪廓與短循環動畫。"
+    description: "16-bit 城鎮酒館語彙、溫暖木質櫃檯、緊湊可讀的 RPG 角色。"
   },
   {
     id: "storybook",
     name: "手繪童話風",
-    status: "待製作",
-    available: false,
+    status: "已完成",
+    available: true,
     colors: ["#8bb174", "#f4d35e", "#f7ede2"],
-    description: "溫暖紙感、手繪線條、柔和材質，讓訂餐像小繪本場景。"
+    description: "水彩暈染、鉛筆線條、圓潤家具與溫暖繪本感場景。"
   },
   {
     id: "chibi",
     name: "Q 版 Chibi",
-    status: "待製作",
-    available: false,
+    status: "已完成",
+    available: true,
     colors: ["#ffb3c7", "#bde0fe", "#fff1f2"],
-    description: "大頭小身、圓潤表情、誇張可愛動作，適合強化同事角色辨識。"
+    description: "大頭小身、圓潤表情、粉彩玩具感與可愛化午餐店。"
   },
   {
     id: "painted-fantasy",
     name: "厚塗奇幻 RPG",
-    status: "待製作",
-    available: false,
+    status: "已完成",
+    available: true,
     colors: ["#7f5539", "#ddb892", "#2f1b45"],
-    description: "厚塗光影、奇幻酒館質感、飽滿材質與較戲劇化的餐廳舞台。"
+    description: "厚塗筆觸、奇幻公會食堂、暖色魔法光與較重的材質感。"
   },
   {
     id: "muted-jp-life",
     name: "低飽和日系生活感",
-    status: "待製作",
-    available: false,
+    status: "已完成",
+    available: true,
     colors: ["#9aa38f", "#d6ccc2", "#f5ebe0"],
-    description: "低彩度、生活雜貨感、自然光與安靜午餐氣氛。"
+    description: "低彩度、自然光、安靜街角午餐店與柔和生活感背景。"
   },
   {
     id: "arcade-fighter-90s",
     name: "90 年代街機格鬥感",
-    status: "待製作",
-    available: false,
+    status: "已完成",
+    available: true,
     colors: ["#f72585", "#ffd166", "#111827"],
-    description: "粗黑輪廓、動作殘影、能量閃光與對戰遊戲式角色站姿。"
+    description: "高反差邊光、濕地反射、戲劇化舞台構圖與粗壯 sprite 輪廓。"
   }
 ];
 
@@ -184,6 +184,18 @@ function getThemeById(themeId) {
 
 function getTheaterStyleById(styleId) {
   return THEATER_STYLES.find((style) => style.id === styleId) || THEATER_STYLES[0];
+}
+
+function theaterAssetStyleId() {
+  return state.theaterStyle === "miniature" ? "anime" : state.theaterStyle;
+}
+
+function theaterStageImage(styleId, restaurantTypeId) {
+  return `./assets/theater/${styleId}/stages/stage-${restaurantTypeId}.png`;
+}
+
+function theaterCharacterImage(styleId, characterId, gender = "female") {
+  return `./assets/theater/${styleId}/characters/${characterId}-${gender}.png`;
 }
 
 function applyTheme(themeId) {
@@ -631,6 +643,9 @@ function renderStatusTheater() {
   const store = state.stores.find((item) => item.id === activeOrder?.storeId);
   const character = getPlayerCharacter(coworker?.playerCharacter);
   const restaurantType = getRestaurantType(store?.restaurantType);
+  const assetStyleId = theaterAssetStyleId();
+  const stageImage = theaterStageImage(assetStyleId, restaurantType.id);
+  const characterImage = theaterCharacterImage(assetStyleId, character.id);
   const stage = theaterStageForOrder(activeOrder);
   const copy = theaterCopy(activeOrder, coworker, store);
   const balanceText = coworker ? `${Number(coworker.balance || 0).toLocaleString("zh-TW")} 元` : "--";
@@ -652,7 +667,7 @@ function renderStatusTheater() {
         <span class="pill">餘額 ${balanceText}</span>
       </div>
     </div>
-    <div class="theater-stage stage-${stage} restaurant-${restaurantType.id}" style="--character-color:${character.color}; --character-hair:${character.hair}; --character-detail:${character.detail}; --shop-color:${restaurantType.accent};" data-sequence="${state.theaterSequence}">
+    <div class="theater-stage stage-${stage} restaurant-${restaurantType.id}" style="--character-color:${character.color}; --character-hair:${character.hair}; --character-detail:${character.detail}; --shop-color:${restaurantType.accent}; --theater-stage-image:url('${stageImage}');" data-sequence="${state.theaterSequence}">
       <div class="shop-front">
         <span class="shop-awning"></span>
         <span>${escapeHtml(restaurantType.counter)}</span>
@@ -667,7 +682,7 @@ function renderStatusTheater() {
       <div class="meal-prop">${escapeHtml(restaurantType.prop)}</div>
       <div class="payment-flash"></div>
       <div class="actor actor-${character.id}">
-        <img class="anime-actor-sprite" src="./assets/theater/anime/characters/${character.id}.png" alt="" aria-hidden="true">
+        <img class="theater-actor-sprite anime-actor-sprite" src="${characterImage}" alt="" aria-hidden="true">
         <span class="actor-shadow"></span>
         <span class="actor-head"></span>
         <span class="actor-face"></span>

@@ -196,10 +196,11 @@ describe("app UI components", () => {
     expect(document.querySelector('[data-theme-id="default"]').getAttribute("aria-pressed")).toBe("false");
     expect(document.querySelector("#currentTheaterStyleName").textContent).toBe("日本動漫風格");
     expect(document.querySelector('[data-theater-style-id="anime"]').getAttribute("aria-pressed")).toBe("true");
-    expect(document.querySelector('[data-theater-style-id="cyberpunk"]').disabled).toBe(true);
+    expect(document.querySelector('[data-theater-style-id="cyberpunk"]').disabled).toBe(false);
+    expect([...document.querySelectorAll("[data-theater-style-id]")].every((button) => !button.disabled)).toBe(true);
   });
 
-  it("applies the anime theater style and rejects unfinished styles", () => {
+  it("applies generated theater styles", () => {
     window.LaunchGoGoGoApp.applyTheaterStyle("anime");
 
     expect(window.LaunchGoGoGoApp.state.theaterStyle).toBe("anime");
@@ -207,8 +208,8 @@ describe("app UI components", () => {
 
     window.LaunchGoGoGoApp.applyTheaterStyle("cyberpunk");
 
-    expect(window.LaunchGoGoGoApp.state.theaterStyle).toBe("miniature");
-    expect(document.documentElement.hasAttribute("data-theater-style")).toBe(false);
+    expect(window.LaunchGoGoGoApp.state.theaterStyle).toBe("cyberpunk");
+    expect(document.documentElement.dataset.theaterStyle).toBe("cyberpunk");
   });
 
   it("renders the status theater as waiting until an unpaid order has a payment", () => {
@@ -233,7 +234,8 @@ describe("app UI components", () => {
     expect(document.querySelector("#statusTheater").textContent).toContain("待收款");
     expect(document.querySelector(".theater-stage").classList.contains("stage-waiting")).toBe(true);
     expect(document.querySelector(".actor-arm.right")).not.toBeNull();
-    expect(document.querySelector(".anime-actor-sprite").getAttribute("src")).toBe("./assets/theater/anime/characters/foodie.png");
+    expect(document.querySelector(".anime-actor-sprite").getAttribute("src")).toBe("./assets/theater/anime/characters/foodie-female.png");
+    expect(document.querySelector(".theater-stage").getAttribute("style")).toContain("stage-drink.png");
     expect(document.querySelector(".meal-prop").textContent).toBe("飲料");
 
     window.LaunchGoGoGoApp.state.transactions.push({
