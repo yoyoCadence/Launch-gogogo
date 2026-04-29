@@ -12,6 +12,20 @@ describe("app UI components", () => {
     window.LaunchGoGoGoApp.state.transactions = [];
     window.LaunchGoGoGoApp.state.theme = "default";
     window.LaunchGoGoGoApp.state.theaterStyle = "miniature";
+    window.LaunchGoGoGoApp.state.theaterAssetStatus = {
+      miniature: "ready",
+      anime: "ready",
+      cyberpunk: "ready",
+      "gothic-lolita": "ready",
+      pixel: "ready",
+      arcade: "ready",
+      "retro-16bit": "ready",
+      storybook: "ready",
+      chibi: "ready",
+      "painted-fantasy": "ready",
+      "muted-jp-life": "ready",
+      "arcade-fighter-90s": "ready"
+    };
     window.LaunchGoGoGoApp.state.activePage = "ledger";
     window.LaunchGoGoGoApp.state.theaterCollapsed = false;
     document.body.className = "";
@@ -196,8 +210,25 @@ describe("app UI components", () => {
     expect(document.querySelector('[data-theme-id="default"]').getAttribute("aria-pressed")).toBe("false");
     expect(document.querySelector("#currentTheaterStyleName").textContent).toBe("日本動漫風格");
     expect(document.querySelector('[data-theater-style-id="anime"]').getAttribute("aria-pressed")).toBe("true");
-    expect(document.querySelector('[data-theater-style-id="cyberpunk"]').disabled).toBe(false);
-    expect([...document.querySelectorAll("[data-theater-style-id]")].every((button) => !button.disabled)).toBe(true);
+    expect(document.querySelector('[data-theater-style-id="cyberpunk"]').dataset.assetState).toBe("ready");
+    expect([...document.querySelectorAll("[data-theater-style-id]")].every((button) => button.dataset.assetState === "ready")).toBe(true);
+  });
+
+  it("renders unloaded theater styles as download cards", () => {
+    document.body.innerHTML = `
+      <span id="currentThemeName"></span>
+      <div id="themeGrid"></div>
+      <span id="currentTheaterStyleName"></span>
+      <div id="theaterStyleGrid"></div>
+    `;
+    window.LaunchGoGoGoApp.state.theaterAssetStatus.cyberpunk = "pending";
+
+    window.LaunchGoGoGoApp.renderSettings();
+
+    const card = document.querySelector('[data-theater-style-id="cyberpunk"]');
+    expect(card.dataset.action).toBe("download-theater-style");
+    expect(card.dataset.assetState).toBe("pending");
+    expect(card.textContent).toContain("點擊下載");
   });
 
   it("applies generated theater styles", () => {
@@ -215,7 +246,7 @@ describe("app UI components", () => {
   it("renders the status theater as waiting until an unpaid order has a payment", () => {
     document.body.innerHTML = `<section id="statusTheater"></section>`;
     window.LaunchGoGoGoApp.state.coworkers = [
-      { id: "c1", name: "Amy", balance: -120, playerCharacter: "foodie", createdAt: "", updatedAt: "" }
+      { id: "c1", name: "Amy", balance: -120, playerCharacter: "foodie", playerGender: "male", createdAt: "", updatedAt: "" }
     ];
     window.LaunchGoGoGoApp.state.stores = [
       { id: "s1", name: "Tea Bar", restaurantType: "drink", rating: 3, availableForLunch: true, availableForDinner: false, createdAt: "", updatedAt: "" }
@@ -234,7 +265,7 @@ describe("app UI components", () => {
     expect(document.querySelector("#statusTheater").textContent).toContain("待收款");
     expect(document.querySelector(".theater-stage").classList.contains("stage-waiting")).toBe(true);
     expect(document.querySelector(".actor-arm.right")).not.toBeNull();
-    expect(document.querySelector(".anime-actor-sprite").getAttribute("src")).toBe("./assets/theater/anime/characters/foodie-female.png");
+    expect(document.querySelector(".anime-actor-sprite").getAttribute("src")).toBe("./assets/theater/anime/characters/foodie-male.png");
     expect(document.querySelector(".theater-stage").getAttribute("style")).toContain("stage-drink.png");
     expect(document.querySelector(".meal-prop").textContent).toBe("飲料");
 

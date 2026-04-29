@@ -11,6 +11,7 @@ const PAYMENT_LABELS = {
   cashToday: "當天現金付款",
   unpaid: "尚未付款"
 };
+const SAMPLE_DATA_PREFIX = "sample-demo";
 
 const PLAYER_CHARACTERS = [
   { id: "runner", name: "效率上班族", tone: "快步", color: "#6ee7b7", hair: "#334155", detail: "#0f766e" },
@@ -28,7 +29,12 @@ const RESTAURANT_TYPES = [
 
 const THEME_STORAGE_KEY = "launch-gogogo-theme";
 const THEATER_STYLE_STORAGE_KEY = "launch-gogogo-theater-style";
+const THEATER_ASSET_CACHE_NAME = "launch-gogogo-theater-assets-v1";
 const DEFAULT_MEAL_NAME = "未指定餐點";
+const PLAYER_GENDERS = [
+  { id: "female", icon: "./assets/theater/anime/characters/runner-female.png", label: "女生" },
+  { id: "male", icon: "./assets/theater/anime/characters/runner-male.png", label: "男生" }
+];
 const THEMES = [
   { id: "default", name: "便當綠", colors: ["#1f6f5b", "#d66b3d", "#f6f4ee"] },
   { id: "dark-purple", name: "暗夜紫", colors: ["#7c3aed", "#f59e0b", "#0d0d1a"] },
@@ -155,6 +161,7 @@ const state = {
   refreshingForUpdate: false,
   theme: "default",
   theaterStyle: "miniature",
+  theaterAssetStatus: { miniature: "ready" },
   activeTheaterTransactionId: "",
   theaterSequence: 0,
   theaterCollapsed: false
@@ -198,6 +205,79 @@ function theaterCharacterImage(styleId, characterId, gender = "female") {
   return `./assets/theater/${styleId}/characters/${characterId}-${gender}.png`;
 }
 
+function theaterStyleStageAssets(styleId) {
+  return RESTAURANT_TYPES.map((type) => theaterStageImage(styleId, type.id));
+}
+
+function theaterStyleCharacterAssets(styleId) {
+  return PLAYER_CHARACTERS.flatMap((character) =>
+    PLAYER_GENDERS.map((gender) => theaterCharacterImage(styleId, character.id, gender.id))
+  );
+}
+
+function theaterStyleAssets(styleId, assetGroup = "all") {
+  if (styleId === "miniature") return [];
+  const stages = theaterStyleStageAssets(styleId);
+  if (assetGroup === "stages") return stages;
+  return [...stages, ...theaterStyleCharacterAssets(styleId)];
+}
+
+function normalizedAssetUrl(path) {
+  return new URL(path, window.location.href).href;
+}
+
+async function cachedAssetExists(cache, path) {
+  return Boolean(await cache.match(normalizedAssetUrl(path)) || await cache.match(path));
+}
+
+async function isTheaterStyleDownloaded(styleId) {
+  if (styleId === "miniature") return true;
+  if (!("caches" in window)) return state.theaterAssetStatus[styleId] === "ready";
+  const cache = await caches.open(THEATER_ASSET_CACHE_NAME);
+  const assets = theaterStyleAssets(styleId);
+  const matches = await Promise.all(assets.map((asset) => cachedAssetExists(cache, asset)));
+  return matches.every(Boolean);
+}
+
+async function syncTheaterAssetStatus() {
+  const entries = await Promise.all(THEATER_STYLES.map(async (style) => [
+    style.id,
+    await isTheaterStyleDownloaded(style.id) ? "ready" : "pending"
+  ]));
+  state.theaterAssetStatus = Object.fromEntries(entries);
+  state.theaterAssetStatus.miniature = "ready";
+}
+
+function isTheaterStyleReady(styleId) {
+  return styleId === "miniature" || state.theaterAssetStatus[styleId] === "ready";
+}
+
+async function downloadTheaterStyleAssets(styleId, assetGroup = "all") {
+  if (styleId === "miniature") return;
+  if (state.theaterAssetStatus[styleId] === "downloading") return;
+  state.theaterAssetStatus[styleId] = "downloading";
+  renderSettings();
+  try {
+    const assets = theaterStyleAssets(styleId, assetGroup);
+    if ("caches" in window) {
+      const cache = await caches.open(THEATER_ASSET_CACHE_NAME);
+      await Promise.all(assets.map(async (asset) => {
+        const response = await fetch(asset, { cache: "reload" });
+        if (!response.ok) throw new Error(`${asset} 下載失敗`);
+        await cache.put(normalizedAssetUrl(asset), response);
+      }));
+    } else {
+      await Promise.all(assets.map((asset) => fetch(asset, { cache: "reload" })));
+    }
+    state.theaterAssetStatus[styleId] = await isTheaterStyleDownloaded(styleId) ? "ready" : "pending";
+  } catch (error) {
+    state.theaterAssetStatus[styleId] = "error";
+    throw error;
+  } finally {
+    renderSettings();
+  }
+}
+
 function applyTheme(themeId) {
   const theme = getThemeById(themeId);
   state.theme = theme.id;
@@ -212,7 +292,7 @@ function applyTheme(themeId) {
 
 function applyTheaterStyle(styleId) {
   const style = getTheaterStyleById(styleId);
-  state.theaterStyle = style.available ? style.id : THEATER_STYLES[0].id;
+  state.theaterStyle = style.available && isTheaterStyleReady(style.id) ? style.id : THEATER_STYLES[0].id;
   if (state.theaterStyle === "miniature") {
     document.documentElement.removeAttribute("data-theater-style");
   } else {
@@ -230,6 +310,20 @@ function playerCharacterOptions(selectedId = "") {
   return PLAYER_CHARACTERS.map((character) => `
     <option value="${character.id}" ${character.id === selected ? "selected" : ""}>${character.name}</option>
   `).join("");
+}
+
+function playerGenderOptions(selectedId = "female") {
+  const selected = PLAYER_GENDERS.some((gender) => gender.id === selectedId) ? selectedId : "female";
+  return `
+      <div class="gender-picker" role="radiogroup" aria-label="角色性別">
+        ${PLAYER_GENDERS.map((gender) => `
+        <label class="gender-option" aria-label="${gender.label}">
+          <input type="radio" name="playerGender" value="${gender.id}" ${gender.id === selected ? "checked" : ""}>
+          <img src="${gender.icon}" alt="" aria-hidden="true">
+        </label>
+      `).join("")}
+    </div>
+  `;
 }
 
 function restaurantTypeOptions(selectedId = "") {
@@ -351,6 +445,7 @@ function render() {
   renderStores("lunch");
   renderStores("dinner");
   renderSettings();
+  syncSampleDataToggle();
   renderStatusTheater();
 }
 
@@ -642,10 +737,11 @@ function renderStatusTheater() {
   const coworker = state.coworkers.find((item) => item.id === activeOrder?.coworkerId);
   const store = state.stores.find((item) => item.id === activeOrder?.storeId);
   const character = getPlayerCharacter(coworker?.playerCharacter);
+  const gender = coworker?.playerGender === "male" ? "male" : "female";
   const restaurantType = getRestaurantType(store?.restaurantType);
   const assetStyleId = theaterAssetStyleId();
   const stageImage = theaterStageImage(assetStyleId, restaurantType.id);
-  const characterImage = theaterCharacterImage(assetStyleId, character.id);
+  const characterImage = theaterCharacterImage(assetStyleId, character.id, gender);
   const stage = theaterStageForOrder(activeOrder);
   const copy = theaterCopy(activeOrder, coworker, store);
   const balanceText = coworker ? `${Number(coworker.balance || 0).toLocaleString("zh-TW")} 元` : "--";
@@ -712,19 +808,19 @@ function renderSettings() {
   `).join("");
   $("#currentTheaterStyleName").textContent = currentTheaterStyle.name;
   $("#theaterStyleGrid").innerHTML = THEATER_STYLES.map((style) => `
-    <button class="theme-card theater-style-card ${style.id === currentTheaterStyle.id ? "active" : ""} ${style.available ? "" : "disabled"}"
+    <button class="theme-card theater-style-card ${style.id === currentTheaterStyle.id ? "active" : ""} ${isTheaterStyleReady(style.id) ? "" : "disabled"} ${state.theaterAssetStatus[style.id] === "downloading" ? "downloading" : ""}"
       type="button"
-      data-action="set-theater-style"
+      data-action="${isTheaterStyleReady(style.id) ? "set-theater-style" : "download-theater-style"}"
       data-theater-style-id="${style.id}"
+      data-asset-state="${state.theaterAssetStatus[style.id] || "pending"}"
       aria-pressed="${style.id === currentTheaterStyle.id}"
-      ${style.available ? "" : "disabled"}
     >
       <span class="theme-preview" aria-hidden="true">
         ${style.colors.map((color) => `<span class="theme-swatch" style="background:${color}"></span>`).join("")}
       </span>
       <span class="theme-name">${escapeHtml(style.name)}</span>
       <span class="theater-style-desc">${escapeHtml(style.description)}</span>
-      <span class="style-status">${escapeHtml(style.status)}</span>
+      ${isTheaterStyleReady(style.id) ? "" : `<span class="style-status">${state.theaterAssetStatus[style.id] === "downloading" ? "下載中..." : state.theaterAssetStatus[style.id] === "error" ? "下載失敗，點擊重試" : "點擊下載"}</span>`}
       ${style.id === currentTheaterStyle.id ? `<span class="theme-check">✓</span>` : ""}
     </button>
   `).join("");
@@ -735,6 +831,111 @@ function setDataStatus(message, type = "info") {
   if (!status) return;
   status.textContent = message;
   status.dataset.status = type;
+}
+
+function sampleDataRecords(date = todayString()) {
+  const createdAt = `${date}T04:00:00.000Z`;
+  const samples = [
+    { suffix: "a", label: "A", character: "runner", gender: "female", restaurantType: "bento", amount: 110 },
+    { suffix: "b", label: "B", character: "foodie", gender: "male", restaurantType: "drink", amount: 65 },
+    { suffix: "c", label: "C", character: "thinker", gender: "female", restaurantType: "noodle", amount: 130 },
+    { suffix: "d", label: "D", character: "runner", gender: "male", restaurantType: "fastFood", amount: 95 },
+    { suffix: "e", label: "E", character: "foodie", gender: "female", restaurantType: "cafe", amount: 150 }
+  ];
+  const coworkers = samples.map((sample) => ({
+    id: `${SAMPLE_DATA_PREFIX}-coworker-${sample.suffix}`,
+    name: `範例${sample.label}同事`,
+    group: "範例資料",
+    balance: 0,
+    playerCharacter: sample.character,
+    playerGender: sample.gender,
+    avatarDataUrl: "",
+    createdAt,
+    updatedAt: nowIso()
+  }));
+  const stores = samples.map((sample) => ({
+    id: `${SAMPLE_DATA_PREFIX}-store-${sample.suffix}`,
+    name: `範例${sample.label}店家`,
+    notes: "測試用範例店家",
+    rating: 3,
+    review: "",
+    searchUrl: googleSearchUrl(`範例${sample.label}店家`),
+    customUrl: "",
+    restaurantType: sample.restaurantType,
+    availableForLunch: true,
+    availableForDinner: false,
+    lunchUsedCount: 0,
+    dinnerUsedCount: 0,
+    lunchLastUsedDate: "",
+    dinnerLastUsedDate: "",
+    createdAt,
+    updatedAt: nowIso()
+  }));
+  const transactions = samples.map((sample) => ({
+    id: `${SAMPLE_DATA_PREFIX}-order-${sample.suffix}`,
+    date,
+    type: "mealOrder",
+    mealType: "lunch",
+    coworkerId: `${SAMPLE_DATA_PREFIX}-coworker-${sample.suffix}`,
+    storeId: `${SAMPLE_DATA_PREFIX}-store-${sample.suffix}`,
+    mealName: DEFAULT_MEAL_NAME,
+    amount: sample.amount,
+    paymentMethod: "unpaid",
+    note: "測試用範例訂單",
+    createdAt,
+    updatedAt: nowIso()
+  }));
+  return { coworkers, stores, transactions };
+}
+
+function hasSampleData() {
+  return state.coworkers.some((item) => item.id.startsWith(`${SAMPLE_DATA_PREFIX}-coworker-`))
+    || state.stores.some((item) => item.id.startsWith(`${SAMPLE_DATA_PREFIX}-store-`))
+    || state.transactions.some((item) => item.id.startsWith(`${SAMPLE_DATA_PREFIX}-order-`));
+}
+
+function syncSampleDataToggle() {
+  const toggle = $("#sampleDataToggle");
+  if (!toggle) return;
+  toggle.checked = hasSampleData();
+}
+
+async function addSampleData() {
+  const records = sampleDataRecords();
+  await Promise.all([
+    ...records.coworkers.map((item) => putItem(STORE_NAMES.coworkers, item)),
+    ...records.stores.map((item) => putItem(STORE_NAMES.stores, item)),
+    ...records.transactions.map((item) => putItem(STORE_NAMES.transactions, item))
+  ]);
+  state.activeTheaterTransactionId = records.transactions[0].id;
+  state.theaterSequence += 1;
+  await refresh();
+  setDataStatus("已加入 5 位範例同事、5 間範例店家與未付款訂單。", "success");
+}
+
+async function removeSampleData() {
+  const sampleCoworkerIds = state.coworkers
+    .filter((item) => item.id.startsWith(`${SAMPLE_DATA_PREFIX}-coworker-`))
+    .map((item) => item.id);
+  const sampleStoreIds = state.stores
+    .filter((item) => item.id.startsWith(`${SAMPLE_DATA_PREFIX}-store-`))
+    .map((item) => item.id);
+  const sampleTransactionIds = state.transactions
+    .filter((item) => item.id.startsWith(`${SAMPLE_DATA_PREFIX}-order-`)
+      || sampleCoworkerIds.includes(item.coworkerId)
+      || sampleStoreIds.includes(item.storeId))
+    .map((item) => item.id);
+  await Promise.all([
+    ...sampleTransactionIds.map((id) => deleteItem(STORE_NAMES.transactions, id)),
+    ...sampleCoworkerIds.map((id) => deleteItem(STORE_NAMES.coworkers, id)),
+    ...sampleStoreIds.map((id) => deleteItem(STORE_NAMES.stores, id))
+  ]);
+  if (sampleTransactionIds.includes(state.activeTheaterTransactionId)) {
+    state.activeTheaterTransactionId = "";
+    state.theaterSequence += 1;
+  }
+  await refresh();
+  setDataStatus("已移除測試用範例資料。", "success");
 }
 
 function setPage(page) {
@@ -816,6 +1017,10 @@ function openCoworkerEditor(coworker = null) {
         <select name="playerCharacter">${playerCharacterOptions(coworker?.playerCharacter)}</select>
         <span class="field-hint">小劇場會用這個角色外觀呈現該同事的訂餐狀態。</span>
       </label>
+      <div class="field">
+        <span>角色性別</span>
+        ${playerGenderOptions(coworker?.playerGender)}
+      </div>
       <label class="field">
         <span>頭像</span>
         <input name="avatarFile" type="file" accept="image/*">
@@ -832,6 +1037,7 @@ function openCoworkerEditor(coworker = null) {
         name,
         group: formData.get("group").trim(),
         playerCharacter: formData.get("playerCharacter") || PLAYER_CHARACTERS[0].id,
+        playerGender: formData.get("playerGender") || "female",
         avatarDataUrl,
         updatedAt: nowIso()
       });
@@ -1278,6 +1484,24 @@ function bindEvents() {
     await importDataFile(event.target.files?.[0]);
     event.target.value = "";
   });
+  $("#sampleDataToggle").addEventListener("change", async (event) => {
+    const toggle = event.currentTarget;
+    toggle.disabled = true;
+    try {
+      if (toggle.checked) {
+        const ok = confirm("要加入測試用範例資料嗎？\n\n會建立 5 位範例同事、5 間範例店家，以及 5 筆尚未付款的午餐訂單。");
+        if (!ok) return;
+        await addSampleData();
+      } else {
+        const ok = confirm("要移除測試用範例資料嗎？\n\n會刪除 5 位範例同事、範例店家，以及相關範例訂單。你的其他資料不會被刪除。");
+        if (!ok) return;
+        await removeSampleData();
+      }
+    } finally {
+      toggle.disabled = false;
+      syncSampleDataToggle();
+    }
+  });
 
   document.body.addEventListener("click", (event) => {
     const trigger = event.target.closest("[data-action]");
@@ -1318,6 +1542,15 @@ function bindEvents() {
       renderSettings();
       renderStatusTheater();
     }
+    if (action === "download-theater-style") {
+      downloadTheaterStyleAssets(trigger.dataset.theaterStyleId)
+        .then(() => {
+          applyTheaterStyle(trigger.dataset.theaterStyleId);
+          renderSettings();
+          renderStatusTheater();
+        })
+        .catch((error) => alert(error.message || "素材下載失敗，請稍後再試。"));
+    }
   });
 
   window.addEventListener("beforeinstallprompt", (event) => {
@@ -1337,6 +1570,7 @@ function bindEvents() {
 
 async function init() {
   applyTheme(localStorage.getItem(THEME_STORAGE_KEY) || "default");
+  await syncTheaterAssetStatus();
   applyTheaterStyle(localStorage.getItem(THEATER_STYLE_STORAGE_KEY) || "miniature");
   $("#ledgerDate").value = todayString();
   bindEvents();
@@ -1355,13 +1589,17 @@ window.LaunchGoGoGoApp = {
   bindOrderStoreToggle,
   importDataFile,
   orderStoreFields,
+  addSampleData,
   applyTheaterStyle,
+  downloadTheaterStyleAssets,
   renderCoworkers,
   renderDailySummary,
   renderSettings,
   renderStatusTheater,
   replaceAllData,
+  removeSampleData,
   setPage,
+  syncTheaterAssetStatus,
   state
 };
 
