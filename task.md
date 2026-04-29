@@ -77,6 +77,7 @@ Style backlog:
 
 Tasks:
 
+- Build the first animated theater prototype in `anime` before generating the same contract for every style.
 - Add richer per-style motion polish for idle, walk, waiting, paying, and eating loops.
 - Keep style switching independent from ledger math, payment state, and stored transaction data.
 - Add component and e2e coverage for every style that becomes selectable.
@@ -86,6 +87,95 @@ Acceptance:
 - Users can switch theater style from Settings without affecting app theme or financial records.
 - Unfinished styles are not selectable until their visuals and tests are ready.
 - Every finished style keeps the payment state readable at mobile and desktop sizes.
+
+#### Theater Animation Asset Spec
+
+Goal: future agents should be able to generate new theater animation packs without rediscovering naming, placement, or runtime expectations.
+
+Current baseline:
+
+- Static stage backgrounds live at `assets/theater/{style}/stages/stage-{restaurantType}.png`.
+- Static character cutouts live at `assets/theater/{style}/characters/{character}-{gender}.png`.
+- `style` values: `anime`, `cyberpunk`, `gothic-lolita`, `pixel`, `arcade`, `retro-16bit`, `storybook`, `chibi`, `painted-fantasy`, `muted-jp-life`, `arcade-fighter-90s`.
+- `restaurantType` values: `bento`, `drink`, `noodle`, `fastFood`, `cafe`.
+- `character` values: `runner`, `foodie`, `thinker`.
+- `gender` values: `female`, `male`.
+
+Recommended animated folder contract:
+
+```text
+assets/theater/{style}/
+  stages/
+    stage-{restaurantType}.png
+  characters/
+    {character}-{gender}.png
+  animated/
+    {character}-{gender}/
+      idle-sheet.png
+      walk-right-sheet.png
+      paying-sheet.png
+      sit-eat-sheet.png
+      done-sheet.png
+      pipeline-meta.json
+  props/
+    food/
+      {restaurantType}-food-0.png
+      {restaurantType}-food-1.png
+      {restaurantType}-food-2.png
+  npcs/
+    server-idle-sheet.png
+  fx/
+    payment-dollar-sheet.png
+```
+
+Animation semantics:
+
+- `idle-sheet.png`: character waits near stage entry or counter; 2-4 frames.
+- `walk-right-sheet.png`: side or 3/4 side-view walk cycle moving left to right; 4 frames preferred.
+- `paying-sheet.png`: character stands at the counter and presents payment; 2-4 frames.
+- `sit-eat-sheet.png`: seated pose with eating motion; 2-4 frames.
+- `done-sheet.png`: seated relaxed / finished pose; 2-4 frames.
+- `server-idle-sheet.png`: counter server idle loop with subtle head or upper-body motion; 2-4 frames.
+- `payment-dollar-sheet.png`: short payment-confirmation effect, such as `$`, coin sparkle, or check pulse; 2-4 frames.
+- `{restaurantType}-food-0.png`: meal just served.
+- `{restaurantType}-food-1.png`: meal half eaten.
+- `{restaurantType}-food-2.png`: empty plate / finished drink.
+
+Runtime timeline target:
+
+1. `idle`: no active order; character stays in a calm loop.
+2. `walkToCounter`: unpaid order appears; character uses `walk-right-sheet.png` toward the counter.
+3. `waitingPayment`: character switches to `paying-sheet.png` or idle-at-counter; server uses `server-idle-sheet.png`.
+4. `paid`: payment transaction appears; show `payment-dollar-sheet.png`.
+5. `walkToSeat`: character walks from counter toward the dining area.
+6. `sitEating`: character uses `sit-eat-sheet.png`; food advances from `food-0` to `food-1`.
+7. `done`: food advances to `food-2`; character uses `done-sheet.png`.
+
+Generation guidance:
+
+- Use the `generate2dsprite` skill for animated character, server, prop, and FX sheets.
+- For the current theater layout, prefer `view: side` or `view: 3/4`; do not generate 4-direction topdown sheets until the app has a free-movement floor-map theater.
+- First prototype only the `anime` style. Do not generate all 11 styles until runtime sheet playback, seating positions, food states, and payment FX are validated.
+- Keep sprite identity stable against the existing static cutouts: same role silhouette, hair/costume color language, and gender presentation.
+- Use solid `#FF00FF` raw sheet backgrounds so the sprite processor can chroma-key to transparent output.
+- Keep frame scale and foot/seat anchor consistent across frames. Use bottom/feet anchors for walking characters and seat anchors for seated sheets.
+- Avoid readable text or real brand logos in generated props, backgrounds, NPCs, or FX.
+- Export transparent PNG sheets and keep `pipeline-meta.json` near the generated sheets for traceability.
+
+Suggested first prototype scope:
+
+- `assets/theater/anime/animated/{character}-{gender}/walk-right-sheet.png` for all 3 characters x 2 genders.
+- `assets/theater/anime/animated/{character}-{gender}/paying-sheet.png` for all 3 characters x 2 genders.
+- `assets/theater/anime/animated/{character}-{gender}/sit-eat-sheet.png` for all 3 characters x 2 genders.
+- `assets/theater/anime/props/food/{restaurantType}-food-{0,1,2}.png` for all 5 restaurant types.
+- `assets/theater/anime/npcs/server-idle-sheet.png`.
+- `assets/theater/anime/fx/payment-dollar-sheet.png`.
+
+Download/cache rule:
+
+- Keep first app load limited to app shell and manifests.
+- Static theater packs can stay download-gated by style.
+- Animated packs should either be included in the style download after runtime support lands, or added as a second "download animation enhancement" step if size becomes too large.
 
 ### P1 - Nearby Favorite Restaurant Recommendation
 
