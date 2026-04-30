@@ -1,0 +1,7 @@
+{
+  "source": "assets/theater/muted-jp-life/characters/thinker-female.png",
+  "generator": "scripts/generate-theater-animation-fallbacks.py",
+  "note": "Fallback animation sheets derived from existing static theater cutouts. Replace with hand/generated sheets when a style is art-directed.",
+  "frames": 4,
+  "layout": "2x2"
+}

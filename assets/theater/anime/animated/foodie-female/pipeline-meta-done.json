@@ -1,0 +1,7 @@
+{
+  "source": "assets\\theater\\anime\\raw\\generated-animated\\foodie-female\\done-sheet-raw.png",
+  "generator": "image_gen + scripts/process-theater-generated-atlas.py",
+  "style": "anime",
+  "subject": "foodie-female-done",
+  "layout": "2x2 sheet"
+}

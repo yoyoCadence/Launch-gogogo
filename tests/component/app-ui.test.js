@@ -281,6 +281,49 @@ describe("app UI components", () => {
     expect(document.querySelector(".theater-stage").classList.contains("stage-eating")).toBe(true);
   });
 
+  it("uses theater animation sheets for the waiting and eating states", () => {
+    document.body.innerHTML = `<section id="statusTheater"></section>`;
+    window.LaunchGoGoGoApp.state.theaterStyle = "anime";
+    document.documentElement.dataset.theaterStyle = "anime";
+    window.LaunchGoGoGoApp.state.coworkers = [
+      { id: "c1", name: "Amy", balance: -120, playerCharacter: "runner", playerGender: "female", createdAt: "", updatedAt: "" }
+    ];
+    window.LaunchGoGoGoApp.state.stores = [
+      { id: "s1", name: "Bento", restaurantType: "bento", rating: 3, availableForLunch: true, availableForDinner: false, createdAt: "", updatedAt: "" }
+    ];
+    window.LaunchGoGoGoApp.state.transactions = [
+      {
+        id: "o1", date: "2026-04-28", type: "mealOrder", mealType: "lunch",
+        coworkerId: "c1", storeId: "s1", mealName: "bento", amount: 120,
+        paymentMethod: "unpaid", createdAt: "2026-04-28T04:00:00.000Z", updatedAt: ""
+      }
+    ];
+    window.LaunchGoGoGoApp.state.activeTheaterTransactionId = "o1";
+
+    window.LaunchGoGoGoApp.renderStatusTheater();
+
+    expect(document.querySelector(".actor").classList.contains("has-animation-sheets")).toBe(true);
+    expect(document.querySelector(".actor-walk-sheet")).not.toBeNull();
+    expect(document.querySelector(".actor-paying-sheet")).not.toBeNull();
+    expect(document.querySelector(".theater-stage").getAttribute("style")).toContain("animated/runner-female/walk-right-sheet.png");
+    expect(document.querySelector(".theater-stage").getAttribute("style")).toContain("animated/runner-female/paying-sheet.png");
+
+    window.LaunchGoGoGoApp.state.transactions.push({
+      id: "p1", date: "2026-04-28", type: "payment", mealType: null,
+      coworkerId: "c1", storeId: null, mealName: "", amount: 120,
+      paymentMethod: null, createdAt: "2026-04-28T04:05:00.000Z", updatedAt: ""
+    });
+
+    window.LaunchGoGoGoApp.renderStatusTheater();
+
+    expect(document.querySelector(".theater-stage").classList.contains("stage-eating")).toBe(true);
+    expect(document.querySelector(".actor-eating-sheet")).not.toBeNull();
+    expect(document.querySelector(".theater-food-prop")).not.toBeNull();
+    expect(document.querySelector(".theater-payment-fx")).not.toBeNull();
+    expect(document.querySelector(".theater-stage").getAttribute("style")).toContain("animated/runner-female/sit-eat-sheet.png");
+    expect(document.querySelector(".theater-stage").getAttribute("style")).toContain("props/food/bento-food-1.png");
+  });
+
   it("shows the theater only on ledger and supports collapsing", () => {
     document.body.innerHTML = `
       <h1 id="pageTitle">Ledger</h1>

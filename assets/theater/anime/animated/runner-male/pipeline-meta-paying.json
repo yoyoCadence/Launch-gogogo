@@ -1,0 +1,7 @@
+{
+  "source": "assets\\theater\\anime\\raw\\generated-animated\\runner-male\\paying-sheet-raw.png",
+  "generator": "image_gen + scripts/process-theater-generated-atlas.py",
+  "style": "anime",
+  "subject": "runner-male-paying",
+  "layout": "2x2 sheet"
+}
