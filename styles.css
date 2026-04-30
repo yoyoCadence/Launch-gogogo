@@ -1023,11 +1023,65 @@ html[data-theater-style] .status-theater {
 }
 
 html[data-theater-style] .theater-stage {
+  --theater-server-top: 26px;
+  --theater-server-left: 116px;
+  --theater-server-size: 82px;
   border-color: color-mix(in srgb, #ff8ab3 58%, white);
   background:
     linear-gradient(90deg, color-mix(in srgb, var(--shop-color) 16%, transparent), transparent 34%, transparent 66%, color-mix(in srgb, #ff8ab3 12%, transparent)),
     var(--theater-stage-image) center / cover no-repeat;
   min-height: 172px;
+}
+
+html[data-theater-style="anime"] .theater-stage {
+  --theater-server-top: 26px;
+  --theater-server-left: 116px;
+  --theater-server-size: 84px;
+}
+
+html[data-theater-style="cyberpunk"] .theater-stage {
+  --theater-server-top: 18px;
+  --theater-server-left: 112px;
+  --theater-server-size: 82px;
+}
+
+html[data-theater-style="gothic-lolita"] .theater-stage {
+  --theater-server-top: 20px;
+  --theater-server-left: 118px;
+  --theater-server-size: 84px;
+}
+
+html[data-theater-style="pixel"] .theater-stage,
+html[data-theater-style="retro-16bit"] .theater-stage {
+  --theater-server-top: 32px;
+  --theater-server-left: 124px;
+  --theater-server-size: 68px;
+}
+
+html[data-theater-style="arcade"] .theater-stage,
+html[data-theater-style="arcade-fighter-90s"] .theater-stage {
+  --theater-server-top: 18px;
+  --theater-server-left: 112px;
+  --theater-server-size: 84px;
+}
+
+html[data-theater-style="storybook"] .theater-stage,
+html[data-theater-style="muted-jp-life"] .theater-stage {
+  --theater-server-top: 22px;
+  --theater-server-left: 116px;
+  --theater-server-size: 82px;
+}
+
+html[data-theater-style="chibi"] .theater-stage {
+  --theater-server-top: 28px;
+  --theater-server-left: 118px;
+  --theater-server-size: 78px;
+}
+
+html[data-theater-style="painted-fantasy"] .theater-stage {
+  --theater-server-top: 18px;
+  --theater-server-left: 118px;
+  --theater-server-size: 86px;
 }
 
 html[data-theater-style] .theater-stage::after {
@@ -1077,6 +1131,125 @@ html[data-theater-style] .anime-actor-sprite {
     drop-shadow(0 0 4px rgba(255, 255, 255, 0.22));
 }
 
+html[data-theater-style] .theater-actor-sheet {
+  position: absolute;
+  inset: 0;
+  display: none;
+  background-position: 0 0;
+  background-repeat: no-repeat;
+  background-size: 200% 200%;
+  filter:
+    drop-shadow(0 10px 10px rgba(0, 0, 0, 0.36))
+    drop-shadow(0 0 4px rgba(255, 255, 255, 0.22));
+}
+
+html[data-theater-style] .actor-idle-sheet {
+  background-image: var(--theater-actor-idle-sheet);
+}
+
+html[data-theater-style] .actor-walk-sheet {
+  background-image: var(--theater-actor-walk-sheet);
+}
+
+html[data-theater-style] .actor-paying-sheet {
+  background-image: var(--theater-actor-paying-sheet);
+}
+
+html[data-theater-style] .actor-eating-sheet {
+  background-image: var(--theater-actor-eating-sheet);
+}
+
+html[data-theater-style] .actor-done-sheet {
+  background-image: var(--theater-actor-done-sheet);
+}
+
+html[data-theater-style] .has-animation-sheets .anime-actor-sprite {
+  display: none;
+}
+
+html[data-theater-style] .stage-idle .actor-idle-sheet {
+  display: block;
+  animation: theaterSheetLoop 1.25s steps(1) infinite;
+}
+
+html[data-theater-style] .stage-waiting .actor-walk-sheet {
+  display: block;
+  animation: theaterSheetLoop 0.58s steps(1) infinite, theaterWalkVisibility 1.15s linear both;
+}
+
+html[data-theater-style] .stage-waiting .actor-paying-sheet {
+  display: block;
+  opacity: 0;
+  animation: theaterSheetLoop 1.15s steps(1) infinite, theaterPayingVisibility 1.15s linear both;
+}
+
+html[data-theater-style] .stage-eating .actor-walk-sheet {
+  display: block;
+  animation: theaterSheetLoop 0.58s steps(1) infinite, theaterWalkToSeatVisibility 2.9s linear both;
+}
+
+html[data-theater-style] .stage-eating .actor-eating-sheet {
+  display: block;
+  opacity: 0;
+  animation: theaterSheetLoop 1.05s steps(1) 2.9s infinite, theaterEatingVisibility 2.9s linear both;
+}
+
+html[data-theater-style] .theater-food-prop,
+html[data-theater-style] .theater-server-sprite,
+html[data-theater-style] .theater-payment-fx {
+  position: absolute;
+  display: none;
+  background-position: center;
+  background-repeat: no-repeat;
+  background-size: contain;
+  pointer-events: none;
+}
+
+html[data-theater-style] .theater-food-prop {
+  right: 40px;
+  bottom: 58px;
+  width: 76px;
+  height: 50px;
+  background-image: var(--theater-food-image);
+  filter: drop-shadow(0 8px 8px rgba(0, 0, 0, 0.32));
+}
+
+html[data-theater-style] .stage-eating .theater-food-prop {
+  display: block;
+  animation: trayAppear 0.22s ease-out 2.75s both;
+}
+
+html[data-theater-style] .theater-server-sprite {
+  top: var(--theater-server-top);
+  left: var(--theater-server-left);
+  width: var(--theater-server-size);
+  height: var(--theater-server-size);
+  background-image: var(--theater-server-sheet);
+  background-size: 200% 200%;
+  filter: drop-shadow(0 8px 8px rgba(0, 0, 0, 0.28));
+}
+
+html[data-theater-style] .stage-waiting .theater-server-sprite,
+html[data-theater-style] .stage-eating .theater-server-sprite {
+  display: block;
+  animation: theaterSheetLoop 1.4s steps(1) infinite;
+}
+
+html[data-theater-style] .theater-payment-fx {
+  top: 55px;
+  left: 123px;
+  width: 52px;
+  height: 52px;
+  background-image: var(--theater-payment-fx-sheet);
+  background-size: 200% 200%;
+  filter: drop-shadow(0 0 10px rgba(255, 214, 92, 0.55));
+}
+
+html[data-theater-style] .stage-eating .theater-payment-fx {
+  display: block;
+  animation: theaterSheetLoop 0.5s steps(1) 1 0.95s both, theaterFxVisibility 1.55s linear both;
+}
+
 html[data-theater-style] .actor-shadow {
   bottom: 8px;
   left: 22px;
@@ -1091,7 +1264,7 @@ html[data-theater-style] .stage-waiting .actor {
 }
 
 html[data-theater-style] .stage-eating .actor {
-  animation: animeToSeat 1.45s ease-out both, animeEating 1.7s ease-in-out 1.45s infinite;
+  animation: animeToSeat 2.9s ease-out both, animeEating 1.7s ease-in-out 2.9s infinite;
 }
 
 html[data-theater-style] .payment-flash {
@@ -2025,5 +2198,88 @@ dialog::backdrop {
   50% {
     translate: 0 3px;
     rotate: -2deg;
+  }
+}
+
+@keyframes theaterSheetLoop {
+  0% {
+    background-position: 0 0;
+  }
+
+  25% {
+    background-position: 100% 0;
+  }
+
+  50% {
+    background-position: 0 100%;
+  }
+
+  75%,
+  100% {
+    background-position: 100% 100%;
+  }
+}
+
+@keyframes theaterWalkVisibility {
+  0%,
+  68% {
+    opacity: 1;
+  }
+
+  69%,
+  100% {
+    opacity: 0;
+  }
+}
+
+@keyframes theaterPayingVisibility {
+  0%,
+  68% {
+    opacity: 0;
+  }
+
+  69%,
+  100% {
+    opacity: 1;
+  }
+}
+
+@keyframes theaterWalkToSeatVisibility {
+  0%,
+  98% {
+    opacity: 1;
+  }
+
+  99%,
+  100% {
+    opacity: 0;
+  }
+}
+
+@keyframes theaterEatingVisibility {
+  0%,
+  98% {
+    opacity: 0;
+  }
+
+  99%,
+  100% {
+    opacity: 1;
+  }
+}
+
+@keyframes theaterFxVisibility {
+  0%,
+  58% {
+    opacity: 0;
+  }
+
+  59%,
+  88% {
+    opacity: 1;
+  }
+
+  100% {
+    opacity: 0;
   }
 }

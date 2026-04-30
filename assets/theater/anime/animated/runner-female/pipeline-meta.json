@@ -1,0 +1,7 @@
+{
+  "source": "assets\\theater\\anime\\raw\\generated-animated\\runner-female\\action-atlas.png",
+  "generator": "image_gen + scripts/process-theater-generated-atlas.py",
+  "style": "anime",
+  "subject": "runner-female",
+  "layout": "5x4 action atlas"
+}

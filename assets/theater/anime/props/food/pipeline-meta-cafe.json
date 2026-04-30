@@ -1,0 +1,8 @@
+{
+  "source": "assets\\theater\\anime\\raw\\generated-props\\cafe-food-row-raw.png",
+  "generator": "image_gen + scripts/process-theater-generated-atlas.py",
+  "style": "anime",
+  "subject": "cafe-food",
+  "layout": "1x3 food progression sheet",
+  "restaurantType": "cafe"
+}

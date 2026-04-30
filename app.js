@@ -29,7 +29,8 @@ const RESTAURANT_TYPES = [
 
 const THEME_STORAGE_KEY = "launch-gogogo-theme";
 const THEATER_STYLE_STORAGE_KEY = "launch-gogogo-theater-style";
-const THEATER_ASSET_CACHE_NAME = "launch-gogogo-theater-assets-v1";
+const THEATER_ASSET_CACHE_NAME = "launch-gogogo-theater-assets-v2";
+const THEATER_ANIMATION_ASSET_VERSION = "anim-v2";
 const DEFAULT_MEAL_NAME = "未指定餐點";
 const PLAYER_GENDERS = [
   { id: "female", icon: "./assets/theater/anime/characters/runner-female.png", label: "女生" },
@@ -207,6 +208,26 @@ function theaterCharacterImage(styleId, characterId, gender = "female") {
   return `./assets/theater/${styleId}/characters/${characterId}-${gender}.png`;
 }
 
+function versionedTheaterAsset(path) {
+  return `${path}?v=${THEATER_ANIMATION_ASSET_VERSION}`;
+}
+
+function theaterAnimatedCharacterSheet(styleId, characterId, gender, sheetName) {
+  return versionedTheaterAsset(`./assets/theater/${styleId}/animated/${characterId}-${gender}/${sheetName}-sheet.png`);
+}
+
+function theaterFoodImage(styleId, restaurantTypeId, foodState) {
+  return versionedTheaterAsset(`./assets/theater/${styleId}/props/food/${restaurantTypeId}-food-${foodState}.png`);
+}
+
+function theaterServerSheet(styleId) {
+  return versionedTheaterAsset(`./assets/theater/${styleId}/npcs/server-idle-sheet.png`);
+}
+
+function theaterPaymentFxSheet(styleId) {
+  return versionedTheaterAsset(`./assets/theater/${styleId}/fx/payment-dollar-sheet.png`);
+}
+
 function theaterStyleStageAssets(styleId) {
   return RESTAURANT_TYPES.map((type) => theaterStageImage(styleId, type.id));
 }
@@ -217,11 +238,28 @@ function theaterStyleCharacterAssets(styleId) {
   );
 }
 
+function theaterStyleAnimatedAssets(styleId) {
+  const characterSheets = PLAYER_CHARACTERS.flatMap((character) =>
+    PLAYER_GENDERS.flatMap((gender) =>
+      ["idle", "walk-right", "paying", "sit-eat", "done"].map((sheetName) =>
+        theaterAnimatedCharacterSheet(styleId, character.id, gender.id, sheetName)
+      )
+    )
+  );
+  const foodAssets = RESTAURANT_TYPES.flatMap((type) =>
+    [0, 1, 2].map((foodState) => theaterFoodImage(styleId, type.id, foodState))
+  );
+  return [...characterSheets, ...foodAssets, theaterServerSheet(styleId), theaterPaymentFxSheet(styleId)];
+}
+
 function theaterStyleAssets(styleId, assetGroup = "all") {
   if (styleId === "miniature") return [];
   const stages = theaterStyleStageAssets(styleId);
   if (assetGroup === "stages") return stages;
-  return [...stages, ...theaterStyleCharacterAssets(styleId)];
+  const staticAssets = [...stages, ...theaterStyleCharacterAssets(styleId)];
+  if (assetGroup === "static") return staticAssets;
+  if (assetGroup === "animated") return theaterStyleAnimatedAssets(styleId);
+  return [...staticAssets, ...theaterStyleAnimatedAssets(styleId)];
 }
 
 function normalizedAssetUrl(path) {
@@ -759,6 +797,29 @@ function renderStatusTheater() {
   const stageImage = theaterStageImage(assetStyleId, restaurantType.id);
   const characterImage = theaterCharacterImage(assetStyleId, character.id, gender);
   const stage = theaterStageForOrder(activeOrder);
+  const actorSheets = {
+    idle: theaterAnimatedCharacterSheet(assetStyleId, character.id, gender, "idle"),
+    walk: theaterAnimatedCharacterSheet(assetStyleId, character.id, gender, "walk-right"),
+    paying: theaterAnimatedCharacterSheet(assetStyleId, character.id, gender, "paying"),
+    eating: theaterAnimatedCharacterSheet(assetStyleId, character.id, gender, "sit-eat"),
+    done: theaterAnimatedCharacterSheet(assetStyleId, character.id, gender, "done")
+  };
+  const foodState = stage === "eating" ? 1 : 0;
+  const theaterAssetStyles = [
+    `--character-color:${character.color}`,
+    `--character-hair:${character.hair}`,
+    `--character-detail:${character.detail}`,
+    `--shop-color:${restaurantType.accent}`,
+    `--theater-stage-image:url('${stageImage}')`,
+    `--theater-actor-idle-sheet:url('${actorSheets.idle}')`,
+    `--theater-actor-walk-sheet:url('${actorSheets.walk}')`,
+    `--theater-actor-paying-sheet:url('${actorSheets.paying}')`,
+    `--theater-actor-eating-sheet:url('${actorSheets.eating}')`,
+    `--theater-actor-done-sheet:url('${actorSheets.done}')`,
+    `--theater-food-image:url('${theaterFoodImage(assetStyleId, restaurantType.id, foodState)}')`,
+    `--theater-server-sheet:url('${theaterServerSheet(assetStyleId)}')`,
+    `--theater-payment-fx-sheet:url('${theaterPaymentFxSheet(assetStyleId)}')`
+  ].join("; ");
   const copy = theaterCopy(activeOrder, coworker, store);
   const balanceText = coworker ? `${Number(coworker.balance || 0).toLocaleString("zh-TW")} 元` : "--";
   const collapsedLabel = state.theaterCollapsed ? "展開" : "縮小";
@@ -779,7 +840,7 @@ function renderStatusTheater() {
         <span class="pill">餘額 ${balanceText}</span>
       </div>
     </div>
-    <div class="theater-stage stage-${stage} restaurant-${restaurantType.id}" style="--character-color:${character.color}; --character-hair:${character.hair}; --character-detail:${character.detail}; --shop-color:${restaurantType.accent}; --theater-stage-image:url('${stageImage}');" data-sequence="${state.theaterSequence}">
+    <div class="theater-stage stage-${stage} restaurant-${restaurantType.id}" style="${theaterAssetStyles};" data-sequence="${state.theaterSequence}">
       <div class="shop-front">
         <span class="shop-awning"></span>
         <span>${escapeHtml(restaurantType.counter)}</span>
@@ -791,9 +852,17 @@ function renderStatusTheater() {
       <div class="table-seat"></div>
       <div class="table-shadow"></div>
       <div class="food-tray"></div>
+      <div class="theater-food-prop" aria-hidden="true"></div>
+      <div class="theater-server-sprite" aria-hidden="true"></div>
       <div class="meal-prop">${escapeHtml(restaurantType.prop)}</div>
       <div class="payment-flash"></div>
-      <div class="actor actor-${character.id}">
+      <div class="theater-payment-fx" aria-hidden="true"></div>
+      <div class="actor actor-${character.id} has-animation-sheets">
+        <span class="theater-actor-sheet actor-idle-sheet" aria-hidden="true"></span>
+        <span class="theater-actor-sheet actor-walk-sheet" aria-hidden="true"></span>
+        <span class="theater-actor-sheet actor-paying-sheet" aria-hidden="true"></span>
+        <span class="theater-actor-sheet actor-eating-sheet" aria-hidden="true"></span>
+        <span class="theater-actor-sheet actor-done-sheet" aria-hidden="true"></span>
         <img class="theater-actor-sprite anime-actor-sprite" src="${characterImage}" alt="" aria-hidden="true">
         <span class="actor-shadow"></span>
         <span class="actor-head"></span>
