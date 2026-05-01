@@ -172,6 +172,69 @@ assets/theater/{style}/
 
 動畫素材優先從 `anime` 風格做原型。確認 runtime 支援走路、付款、入座、吃飯、食物狀態與服務生 idle 後，再擴展到其他風格。產出角色、服務生、食物或特效 sprite sheet 時，建議使用 `generate2dsprite` skill，保持 solid `#FF00FF` raw background、透明 PNG sheet 輸出與穩定 frame anchor。
 
+### Theater Animation Generation Workflow
+
+The runtime now supports a complete animated theater contract for every style. Existing non-anime themes may contain generated fallback sheets derived from their static cutouts; production-quality theme upgrades should replace those files in place.
+
+Use this workflow when continuing with the next theater theme:
+
+1. Pick one style folder, for example `assets/theater/cyberpunk/`.
+2. For each `{character}-{gender}` pair, generate five separate 2x2 sheets:
+   - `idle-sheet.png`
+   - `walk-right-sheet.png`
+   - `paying-sheet.png`
+   - `sit-eat-sheet.png`
+   - `done-sheet.png`
+3. Use solid `#FF00FF` backgrounds in raw generations.
+4. Process each raw 2x2 sheet with:
+
+```powershell
+py scripts\process-theater-generated-atlas.py sheet2x2 `
+  --input assets\theater\<style>\raw\generated-animated\<character-gender>\<sheet>-raw.png `
+  --output assets\theater\<style>\animated\<character-gender>\<sheet>.png `
+  --meta assets\theater\<style>\animated\<character-gender>\pipeline-meta-<sheet>.json `
+  --style <style> `
+  --subject <character-gender>-<action>
+```
+
+5. Generate food props as one 1x3 progression sheet per restaurant type, then process with:
+
+```powershell
+py scripts\process-theater-generated-atlas.py foodrow `
+  --input assets\theater\<style>\raw\generated-props\<restaurantType>-food-row-raw.png `
+  --output-dir assets\theater\<style>\props\food `
+  --restaurant-type <restaurantType> `
+  --style <style> `
+  --subject <restaurantType>-food
+```
+
+6. Generate `npcs/server-idle-sheet.png` and `fx/payment-dollar-sheet.png` as 2x2 sheets and process them with `sheet2x2`.
+7. Keep raw generation files under `assets/theater/<style>/raw/`, but do not commit raw experiment folders unless explicitly needed for review.
+8. QC every generated sheet before committing:
+   - four frames are complete and not clipped
+   - background is transparent after processing
+   - character identity stays stable across actions
+   - feet anchors are stable for standing/walking sheets
+   - seated/table anchors are stable for eating/done sheets
+   - no readable text or real logos appear
+
+Current production-quality generated pack:
+
+- `anime`: complete production generated character/action, food, server, and FX pack.
+
+Styles still needing production replacement after fallback generation:
+
+- `cyberpunk`
+- `gothic-lolita`
+- `pixel`
+- `arcade`
+- `retro-16bit`
+- `storybook`
+- `chibi`
+- `painted-fantasy`
+- `muted-jp-life`
+- `arcade-fighter-90s`
+
 ## Design System
 
 Launch-GoGoGo 的 UI 採用 mobile-first、iOS dark productivity 風格。後續新增畫面或元件時，請沿用這套設計語彙，不要為單一功能新增一次性的視覺規則。
