@@ -61,6 +61,9 @@ Done:
 - Wire finished raster styles into Settings so each restaurant type can show a matching generated stage.
 - Add download-gated theater style cards so first app load keeps only essential files, while raster styles become selectable after their asset pack is cached.
 - Add coworker character gender selection and switch theater sprites between female and male variants.
+- Add animated theater runtime support for character sheets, server NPCs, food props, and payment FX.
+- Add complete fallback animation contract folders for every theater style.
+- Replace `anime` fallback sheets with production generated sheets for all character actions, food states, server idle, and payment FX.
 
 Style backlog:
 
@@ -77,8 +80,8 @@ Style backlog:
 
 Tasks:
 
-- Build the first animated theater prototype in `anime` before generating the same contract for every style.
-- Add richer per-style motion polish for idle, walk, waiting, paying, and eating loops.
+- Replace fallback animation sheets with production generated sheets one style at a time. Next style: `cyberpunk`.
+- Add richer per-style motion polish for idle, walk, waiting, paying, eating, and done loops.
 - Keep style switching independent from ledger math, payment state, and stored transaction data.
 - Add component and e2e coverage for every style that becomes selectable.
 
@@ -155,12 +158,47 @@ Generation guidance:
 
 - Use the `generate2dsprite` skill for animated character, server, prop, and FX sheets.
 - For the current theater layout, prefer `view: side` or `view: 3/4`; do not generate 4-direction topdown sheets until the app has a free-movement floor-map theater.
-- First prototype only the `anime` style. Do not generate all 11 styles until runtime sheet playback, seating positions, food states, and payment FX are validated.
+- The runtime sheet playback, seating positions, food states, and payment FX are validated. `anime` is the first complete production generated pack. Continue replacing fallback packs style by style, starting with `cyberpunk`.
 - Keep sprite identity stable against the existing static cutouts: same role silhouette, hair/costume color language, and gender presentation.
 - Use solid `#FF00FF` raw sheet backgrounds so the sprite processor can chroma-key to transparent output.
 - Keep frame scale and foot/seat anchor consistent across frames. Use bottom/feet anchors for walking characters and seat anchors for seated sheets.
 - Avoid readable text or real brand logos in generated props, backgrounds, NPCs, or FX.
 - Export transparent PNG sheets and keep `pipeline-meta.json` near the generated sheets for traceability.
+
+Production generation workflow:
+
+1. Generate one 2x2 raw sheet per action instead of large multi-action atlases. Large 5x4 action atlases failed QC because cell boundaries drifted and frames were clipped.
+2. Use this command for each character action sheet:
+
+```powershell
+py scripts\process-theater-generated-atlas.py sheet2x2 `
+  --input assets\theater\<style>\raw\generated-animated\<character-gender>\<sheet>-raw.png `
+  --output assets\theater\<style>\animated\<character-gender>\<sheet>.png `
+  --meta assets\theater\<style>\animated\<character-gender>\pipeline-meta-<sheet>.json `
+  --style <style> `
+  --subject <character-gender>-<action>
+```
+
+3. Use this command for each food progression sheet:
+
+```powershell
+py scripts\process-theater-generated-atlas.py foodrow `
+  --input assets\theater\<style>\raw\generated-props\<restaurantType>-food-row-raw.png `
+  --output-dir assets\theater\<style>\props\food `
+  --restaurant-type <restaurantType> `
+  --style <style> `
+  --subject <restaurantType>-food
+```
+
+4. Use `sheet2x2` for `npcs/server-idle-sheet.png` and `fx/payment-dollar-sheet.png`.
+5. Raw generated files may live under `assets/theater/<style>/raw/` locally, but keep raw experiment folders out of normal PRs unless a review explicitly needs them.
+6. QC every sheet before marking the style as production generated: no clipping, transparent background, stable identity, stable anchors, no readable text, no logos.
+
+Current animation asset status:
+
+- `anime`: production generated pack complete.
+- `cyberpunk`: fallback pack exists; production replacement in progress next.
+- `gothic-lolita`, `pixel`, `arcade`, `retro-16bit`, `storybook`, `chibi`, `painted-fantasy`, `muted-jp-life`, `arcade-fighter-90s`: fallback packs exist; production replacement pending.
 
 Suggested first prototype scope:
 
