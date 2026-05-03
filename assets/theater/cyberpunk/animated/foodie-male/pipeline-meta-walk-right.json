@@ -1,0 +1,8 @@
+{
+  "source": "assets\\theater\\cyberpunk\\raw\\generated-animated\\foodie-male\\walk-right-sheet-raw.png",
+  "generator": "image_gen + scripts/process-theater-generated-atlas.py",
+  "style": "cyberpunk",
+  "subject": "foodie-male-walk-right",
+  "layout": "2x2 sheet",
+  "cellInset": "14"
+}

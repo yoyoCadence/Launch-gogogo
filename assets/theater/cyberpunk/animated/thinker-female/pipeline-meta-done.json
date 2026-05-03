@@ -1,0 +1,8 @@
+{
+  "source": "assets\\theater\\cyberpunk\\raw\\generated-animated\\thinker-female\\done-sheet-raw.png",
+  "generator": "image_gen + scripts/process-theater-generated-atlas.py",
+  "style": "cyberpunk",
+  "subject": "thinker-female-done",
+  "layout": "2x2 sheet",
+  "cellInset": "14"
+}

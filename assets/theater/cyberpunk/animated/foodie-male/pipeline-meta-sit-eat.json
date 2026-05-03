@@ -1,0 +1,8 @@
+{
+  "source": "assets\\theater\\cyberpunk\\raw\\generated-animated\\foodie-male\\sit-eat-sheet-raw.png",
+  "generator": "image_gen + scripts/process-theater-generated-atlas.py",
+  "style": "cyberpunk",
+  "subject": "foodie-male-sit-eat",
+  "layout": "2x2 sheet",
+  "cellInset": "14"
+}

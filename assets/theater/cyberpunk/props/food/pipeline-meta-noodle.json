@@ -1,0 +1,8 @@
+{
+  "source": "assets\\theater\\cyberpunk\\raw\\generated-props\\noodle-food-row-raw.png",
+  "generator": "image_gen + scripts/process-theater-generated-atlas.py",
+  "style": "cyberpunk",
+  "subject": "noodle-food",
+  "layout": "1x3 food progression sheet",
+  "restaurantType": "noodle"
+}

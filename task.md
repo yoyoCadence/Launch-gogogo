@@ -64,10 +64,10 @@ Done:
 - Add animated theater runtime support for character sheets, server NPCs, food props, and payment FX.
 - Add complete fallback animation contract folders for every theater style.
 - Replace `anime` fallback sheets with production generated sheets for all character actions, food states, server idle, and payment FX.
+- Replace `cyberpunk` fallback sheets with production generated sheets for all character actions, food states, server idle, and payment FX.
 
 Style backlog:
 
-- Technology / cyberpunk / sci-fi UI: neon rim light, dark high-contrast surfaces, scan-line accents, holographic payment pulse, status-HUD feel.
 - Gothic lolita: lace, ribbons, deep red and gold, ornate dessert-salon mood, elegant tea-table staging.
 - Pixel style: visible pixel grid, limited palette, low-resolution silhouettes, crisp readable props and short looping animations.
 - Arcade style: saturated colors, coin-op cabinet mood, high-energy flashes, bold status transitions.
@@ -80,7 +80,7 @@ Style backlog:
 
 Tasks:
 
-- Replace fallback animation sheets with production generated sheets one style at a time. Next style: `cyberpunk`.
+- Replace fallback animation sheets with production generated sheets one style at a time. Next style: `gothic-lolita`.
 - Add richer per-style motion polish for idle, walk, waiting, paying, eating, and done loops.
 - Keep style switching independent from ledger math, payment state, and stored transaction data.
 - Add component and e2e coverage for every style that becomes selectable.
@@ -158,7 +158,7 @@ Generation guidance:
 
 - Use the `generate2dsprite` skill for animated character, server, prop, and FX sheets.
 - For the current theater layout, prefer `view: side` or `view: 3/4`; do not generate 4-direction topdown sheets until the app has a free-movement floor-map theater.
-- The runtime sheet playback, seating positions, food states, and payment FX are validated. `anime` is the first complete production generated pack. Continue replacing fallback packs style by style, starting with `cyberpunk`.
+- The runtime sheet playback, seating positions, food states, and payment FX are validated. `anime` and `cyberpunk` are complete production generated packs. Continue replacing fallback packs style by style, starting with `gothic-lolita`.
 - Keep sprite identity stable against the existing static cutouts: same role silhouette, hair/costume color language, and gender presentation.
 - Use solid `#FF00FF` raw sheet backgrounds so the sprite processor can chroma-key to transparent output.
 - Keep frame scale and foot/seat anchor consistent across frames. Use bottom/feet anchors for walking characters and seat anchors for seated sheets.
@@ -197,7 +197,7 @@ py scripts\process-theater-generated-atlas.py foodrow `
 Current animation asset status:
 
 - `anime`: production generated pack complete.
-- `cyberpunk`: fallback pack exists; production replacement in progress next.
+- `cyberpunk`: production generated pack complete.
 - `gothic-lolita`, `pixel`, `arcade`, `retro-16bit`, `storybook`, `chibi`, `painted-fantasy`, `muted-jp-life`, `arcade-fighter-90s`: fallback packs exist; production replacement pending.
 
 Suggested first prototype scope:
