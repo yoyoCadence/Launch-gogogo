@@ -51,10 +51,18 @@ def fit_to_cell(src: Image.Image, size: tuple[int, int], align: str = "bottom") 
     return canvas
 
 
-def crop_cell(atlas: Image.Image, row: int, col: int, rows: int, cols: int) -> Image.Image:
+def crop_cell(atlas: Image.Image, row: int, col: int, rows: int, cols: int, inset: int = 0) -> Image.Image:
     width = atlas.width // cols
     height = atlas.height // rows
-    return atlas.crop((col * width, row * height, (col + 1) * width, (row + 1) * height))
+    inset = max(0, min(inset, (width // 2) - 1, (height // 2) - 1))
+    return atlas.crop(
+        (
+            col * width + inset,
+            row * height + inset,
+            (col + 1) * width - inset,
+            (row + 1) * height - inset,
+        )
+    )
 
 
 def process_character_atlas(input_path: Path, output_dir: Path, meta: dict[str, str]) -> None:
@@ -90,16 +98,16 @@ def process_food_row(input_path: Path, output_dir: Path, restaurant_type: str, m
     write_meta(output_dir / f"pipeline-meta-{restaurant_type}.json", input_path, meta | {"layout": "1x3 food progression sheet", "restaurantType": restaurant_type})
 
 
-def process_sheet_2x2(input_path: Path, output_path: Path, meta_path: Path, meta: dict[str, str]) -> None:
+def process_sheet_2x2(input_path: Path, output_path: Path, meta_path: Path, meta: dict[str, str], cell_inset: int = 0) -> None:
     atlas = Image.open(input_path)
     output_path.parent.mkdir(parents=True, exist_ok=True)
     sheet = Image.new("RGBA", (256, 256), (0, 0, 0, 0))
     for frame in range(4):
-        cell = crop_cell(atlas, frame // 2, frame % 2, 2, 2)
+        cell = crop_cell(atlas, frame // 2, frame % 2, 2, 2, inset=cell_inset)
         frame_img = fit_to_cell(cell, (128, 128), align="center")
         sheet.alpha_composite(frame_img, ((frame % 2) * 128, (frame // 2) * 128))
     sheet.save(output_path)
-    write_meta(meta_path, input_path, meta | {"layout": "2x2 sheet"})
+    write_meta(meta_path, input_path, meta | {"layout": "2x2 sheet", "cellInset": str(cell_inset)})
 
 
 def write_meta(path: Path, input_path: Path, meta: dict[str, str]) -> None:
@@ -126,6 +134,7 @@ def main() -> None:
     parser.add_argument("--style", required=True)
     parser.add_argument("--subject", required=True)
     parser.add_argument("--restaurant-type")
+    parser.add_argument("--cell-inset", type=int, default=0)
     args = parser.parse_args()
 
     meta = {"style": args.style, "subject": args.subject}
@@ -144,7 +153,7 @@ def main() -> None:
     else:
         if not args.output or not args.meta:
             raise SystemExit("--output and --meta are required for sheet2x2 mode")
-        process_sheet_2x2(args.input, args.output, args.meta, meta)
+        process_sheet_2x2(args.input, args.output, args.meta, meta, cell_inset=args.cell_inset)
 
 
 if __name__ == "__main__":
