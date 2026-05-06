@@ -1,7 +1,13 @@
-{
-  "source": "assets/theater/gothic-lolita/characters/thinker-male.png",
-  "generator": "scripts/generate-theater-animation-fallbacks.py",
-  "note": "Fallback animation sheets derived from existing static theater cutouts. Replace with hand/generated sheets when a style is art-directed.",
-  "frames": 4,
-  "layout": "2x2"
+﻿{
+    "style":  "gothic-lolita",
+    "subject":  "thinker-male",
+    "generator":  "image_gen + scripts/process-theater-generated-atlas.py",
+    "layout":  "production 2x2 per action sheets",
+    "actions":  [
+                    "idle",
+                    "walk-right",
+                    "paying",
+                    "sit-eat",
+                    "done"
+                ]
 }

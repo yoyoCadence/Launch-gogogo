@@ -1,0 +1,9 @@
+{
+  "source": "assets\\theater\\gothic-lolita\\raw\\generated-animated\\runner-female\\sit-eat-sheet-raw.png",
+  "generator": "image_gen + scripts/process-theater-generated-atlas.py",
+  "style": "gothic-lolita",
+  "subject": "runner-female-sit-eat",
+  "layout": "2x2 sheet",
+  "cellInset": "0",
+  "align": "center"
+}

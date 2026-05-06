@@ -1,0 +1,8 @@
+﻿{
+    "source":  "assets/theater/gothic-lolita/raw/generated-props/food-atlas-raw.png",
+    "generator":  "image_gen + scripts/process-theater-generated-atlas.py",
+    "style":  "gothic-lolita",
+    "subject":  "bento-food",
+    "layout":  "5x3 food progression atlas",
+    "restaurantType":  "bento"
+}
