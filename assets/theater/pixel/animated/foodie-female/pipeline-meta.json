@@ -1,7 +1,8 @@
 {
-  "source": "assets/theater/pixel/characters/foodie-female.png",
-  "generator": "scripts/generate-theater-animation-fallbacks.py",
-  "note": "Fallback animation sheets derived from existing static theater cutouts. Replace with hand/generated sheets when a style is art-directed.",
-  "frames": 4,
-  "layout": "2x2"
+  "source": "assets/theater/pixel/raw/generated-animated/foodie-female",
+  "generator": "image_gen + scripts/process-theater-generated-atlas.py",
+  "style": "pixel",
+  "subject": "foodie-female-production-pack",
+  "layout": "per-action 2x2 sheets",
+  "actions": 5
 }
