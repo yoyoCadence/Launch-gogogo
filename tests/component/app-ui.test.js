@@ -241,6 +241,11 @@ describe("app UI components", () => {
 
     expect(window.LaunchGoGoGoApp.state.theaterStyle).toBe("cyberpunk");
     expect(document.documentElement.dataset.theaterStyle).toBe("cyberpunk");
+
+    window.LaunchGoGoGoApp.applyTheaterStyle("gothic-lolita");
+
+    expect(window.LaunchGoGoGoApp.state.theaterStyle).toBe("gothic-lolita");
+    expect(document.documentElement.dataset.theaterStyle).toBe("gothic-lolita");
   });
 
   it("renders the status theater as waiting until an unpaid order has a payment", () => {
@@ -322,6 +327,40 @@ describe("app UI components", () => {
     expect(document.querySelector(".theater-payment-fx")).not.toBeNull();
     expect(document.querySelector(".theater-stage").getAttribute("style")).toContain("animated/runner-female/sit-eat-sheet.png");
     expect(document.querySelector(".theater-stage").getAttribute("style")).toContain("props/food/bento-food-1.png");
+  });
+
+  it("uses pixel production theater assets when selected", () => {
+    document.body.innerHTML = `<section id="statusTheater"></section>`;
+    window.LaunchGoGoGoApp.state.theaterStyle = "pixel";
+    document.documentElement.dataset.theaterStyle = "pixel";
+    window.LaunchGoGoGoApp.state.coworkers = [
+      { id: "c1", name: "Amy", balance: -120, playerCharacter: "foodie", playerGender: "male", createdAt: "", updatedAt: "" }
+    ];
+    window.LaunchGoGoGoApp.state.stores = [
+      { id: "s1", name: "Cafe", restaurantType: "cafe", rating: 3, availableForLunch: true, availableForDinner: false, createdAt: "", updatedAt: "" }
+    ];
+    window.LaunchGoGoGoApp.state.transactions = [
+      {
+        id: "o1", date: "2026-04-28", type: "mealOrder", mealType: "lunch",
+        coworkerId: "c1", storeId: "s1", mealName: "cake", amount: 120,
+        paymentMethod: "unpaid", createdAt: "2026-04-28T04:00:00.000Z", updatedAt: ""
+      },
+      {
+        id: "p1", date: "2026-04-28", type: "payment", mealType: null,
+        coworkerId: "c1", storeId: null, mealName: "", amount: 120,
+        paymentMethod: null, createdAt: "2026-04-28T04:05:00.000Z", updatedAt: ""
+      }
+    ];
+    window.LaunchGoGoGoApp.state.activeTheaterTransactionId = "o1";
+
+    window.LaunchGoGoGoApp.renderStatusTheater();
+
+    const style = document.querySelector(".theater-stage").getAttribute("style");
+    expect(style).toContain("assets/theater/pixel/stages/stage-cafe.png");
+    expect(style).toContain("assets/theater/pixel/animated/foodie-male/sit-eat-sheet.png");
+    expect(style).toContain("assets/theater/pixel/props/food/cafe-food-1.png");
+    expect(style).toContain("assets/theater/pixel/npcs/server-idle-sheet.png");
+    expect(style).toContain("assets/theater/pixel/fx/payment-dollar-sheet.png");
   });
 
   it("shows the theater only on ledger and supports collapsing", () => {

@@ -1,0 +1,9 @@
+{
+  "source": "assets\\theater\\pixel\\raw\\generated-animated\\thinker-male\\walk-right-sheet-raw.png",
+  "generator": "image_gen + scripts/process-theater-generated-atlas.py",
+  "style": "pixel",
+  "subject": "thinker-male-walk-right",
+  "layout": "2x2 sheet",
+  "cellInset": "0",
+  "align": "bottom"
+}
