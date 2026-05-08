@@ -40,7 +40,23 @@ If improvement is detected outside scope:
 
 - Propose it instead of implementing it
 
-## 4. Current Technical State (updated 2026-04-27)
+## 4. Branch / PR Hygiene
+
+At the start of every task:
+
+- Check the current branch and worktree status first.
+- If the task should start from product baseline, switch to `main`, fetch, and fast-forward from `origin/main` before creating a new branch.
+- If already on a feature branch, confirm it is the intended branch for the current task. Do not continue new work on a stale or unrelated branch from a previous task.
+
+Before opening/updating a PR:
+
+- Fetch and fast-forward the local `main` from `origin/main`.
+- Branch from the current `main`, not from an older local checkout.
+- Before pushing a PR, check the branch against `origin/main` again. If `main` moved, rebase or merge latest `origin/main` before pushing.
+- For asset-heavy work, inspect whether the same target paths already landed on `main`; do not re-submit duplicate generated assets or older runtime code under the same filenames.
+- If a PR becomes stale after related work merges, prefer rebasing it into the smallest remaining change instead of resolving a large conflict by overwriting newer `main` files.
+
+## 5. Current Technical State (updated 2026-04-27)
 
 ### Transaction types
 | type | balance effect | has editor UI |
