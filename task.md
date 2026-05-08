@@ -97,6 +97,8 @@ Acceptance:
 
 Goal: future agents should be able to generate new theater animation packs without rediscovering naming, placement, or runtime expectations.
 
+Implementation handoff notes: keep [`assets/theater/generation-notes.md`](./assets/theater/generation-notes.md) updated with runtime lessons learned, especially raw intake, per-restaurant placement, checkout direction, food-state timing, cache/version bump rules, and screenshot QA.
+
 Current baseline:
 
 - Static stage backgrounds live at `assets/theater/{style}/stages/stage-{restaurantType}.png`.
@@ -121,7 +123,7 @@ assets/theater/{style}/
       paying-sheet.png
       sit-eat-sheet.png
       done-sheet.png
-      pipeline-meta.json
+      pipeline-meta-{action}.json
   props/
     food/
       {restaurantType}-food-0.png
