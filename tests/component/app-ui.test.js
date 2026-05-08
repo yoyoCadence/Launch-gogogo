@@ -323,10 +323,12 @@ describe("app UI components", () => {
 
     expect(document.querySelector(".theater-stage").classList.contains("stage-eating")).toBe(true);
     expect(document.querySelector(".actor-eating-sheet")).not.toBeNull();
-    expect(document.querySelector(".theater-food-prop")).not.toBeNull();
+    expect(document.querySelectorAll(".theater-food-prop")).toHaveLength(3);
     expect(document.querySelector(".theater-payment-fx")).not.toBeNull();
     expect(document.querySelector(".theater-stage").getAttribute("style")).toContain("animated/runner-female/sit-eat-sheet.png");
+    expect(document.querySelector(".theater-stage").getAttribute("style")).toContain("props/food/bento-food-0.png");
     expect(document.querySelector(".theater-stage").getAttribute("style")).toContain("props/food/bento-food-1.png");
+    expect(document.querySelector(".theater-stage").getAttribute("style")).toContain("props/food/bento-food-2.png");
   });
 
   it("uses pixel production theater assets when selected", () => {
@@ -358,7 +360,9 @@ describe("app UI components", () => {
     const style = document.querySelector(".theater-stage").getAttribute("style");
     expect(style).toContain("assets/theater/pixel/stages/stage-cafe.png");
     expect(style).toContain("assets/theater/pixel/animated/foodie-male/sit-eat-sheet.png");
+    expect(style).toContain("assets/theater/pixel/props/food/cafe-food-0.png");
     expect(style).toContain("assets/theater/pixel/props/food/cafe-food-1.png");
+    expect(style).toContain("assets/theater/pixel/props/food/cafe-food-2.png");
     expect(style).toContain("assets/theater/pixel/npcs/server-idle-sheet.png");
     expect(style).toContain("assets/theater/pixel/fx/payment-dollar-sheet.png");
   });

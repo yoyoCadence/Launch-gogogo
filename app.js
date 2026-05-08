@@ -30,7 +30,7 @@ const RESTAURANT_TYPES = [
 const THEME_STORAGE_KEY = "launch-gogogo-theme";
 const THEATER_STYLE_STORAGE_KEY = "launch-gogogo-theater-style";
 const THEATER_ASSET_CACHE_NAME = "launch-gogogo-theater-assets-v2";
-const THEATER_ANIMATION_ASSET_VERSION = "anim-v2";
+const THEATER_ANIMATION_ASSET_VERSION = "anim-v3";
 const DEFAULT_MEAL_NAME = "未指定餐點";
 const PLAYER_GENDERS = [
   { id: "female", icon: "./assets/theater/anime/characters/runner-female.png", label: "女生" },
@@ -804,7 +804,6 @@ function renderStatusTheater() {
     eating: theaterAnimatedCharacterSheet(assetStyleId, character.id, gender, "sit-eat"),
     done: theaterAnimatedCharacterSheet(assetStyleId, character.id, gender, "done")
   };
-  const foodState = stage === "eating" ? 1 : 0;
   const theaterAssetStyles = [
     `--character-color:${character.color}`,
     `--character-hair:${character.hair}`,
@@ -816,7 +815,9 @@ function renderStatusTheater() {
     `--theater-actor-paying-sheet:url('${actorSheets.paying}')`,
     `--theater-actor-eating-sheet:url('${actorSheets.eating}')`,
     `--theater-actor-done-sheet:url('${actorSheets.done}')`,
-    `--theater-food-image:url('${theaterFoodImage(assetStyleId, restaurantType.id, foodState)}')`,
+    `--theater-food-image-0:url('${theaterFoodImage(assetStyleId, restaurantType.id, 0)}')`,
+    `--theater-food-image-1:url('${theaterFoodImage(assetStyleId, restaurantType.id, 1)}')`,
+    `--theater-food-image-2:url('${theaterFoodImage(assetStyleId, restaurantType.id, 2)}')`,
     `--theater-server-sheet:url('${theaterServerSheet(assetStyleId)}')`,
     `--theater-payment-fx-sheet:url('${theaterPaymentFxSheet(assetStyleId)}')`
   ].join("; ");
@@ -852,7 +853,9 @@ function renderStatusTheater() {
       <div class="table-seat"></div>
       <div class="table-shadow"></div>
       <div class="food-tray"></div>
-      <div class="theater-food-prop" aria-hidden="true"></div>
+      <div class="theater-food-prop food-state-0" aria-hidden="true"></div>
+      <div class="theater-food-prop food-state-1" aria-hidden="true"></div>
+      <div class="theater-food-prop food-state-2" aria-hidden="true"></div>
       <div class="theater-server-sprite" aria-hidden="true"></div>
       <div class="meal-prop">${escapeHtml(restaurantType.prop)}</div>
       <div class="payment-flash"></div>
