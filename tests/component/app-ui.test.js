@@ -367,6 +367,222 @@ describe("app UI components", () => {
     expect(style).toContain("assets/theater/pixel/fx/payment-dollar-sheet.png");
   });
 
+  it("uses retro 16-bit production theater assets when selected", () => {
+    document.body.innerHTML = `<section id="statusTheater"></section>`;
+    window.LaunchGoGoGoApp.state.theaterStyle = "retro-16bit";
+    document.documentElement.dataset.theaterStyle = "retro-16bit";
+    window.LaunchGoGoGoApp.state.coworkers = [
+      { id: "c1", name: "Kai", balance: -95, playerCharacter: "thinker", playerGender: "female", createdAt: "", updatedAt: "" }
+    ];
+    window.LaunchGoGoGoApp.state.stores = [
+      { id: "s1", name: "Noodle", restaurantType: "noodle", rating: 3, availableForLunch: true, availableForDinner: false, createdAt: "", updatedAt: "" }
+    ];
+    window.LaunchGoGoGoApp.state.transactions = [
+      {
+        id: "o1", date: "2026-04-28", type: "mealOrder", mealType: "lunch",
+        coworkerId: "c1", storeId: "s1", mealName: "ramen", amount: 95,
+        paymentMethod: "unpaid", createdAt: "2026-04-28T04:00:00.000Z", updatedAt: ""
+      },
+      {
+        id: "p1", date: "2026-04-28", type: "payment", mealType: null,
+        coworkerId: "c1", storeId: null, mealName: "", amount: 95,
+        paymentMethod: null, createdAt: "2026-04-28T04:05:00.000Z", updatedAt: ""
+      }
+    ];
+    window.LaunchGoGoGoApp.state.activeTheaterTransactionId = "o1";
+
+    window.LaunchGoGoGoApp.renderStatusTheater();
+
+    const style = document.querySelector(".theater-stage").getAttribute("style");
+    expect(style).toContain("assets/theater/retro-16bit/stages/stage-noodle.png");
+    expect(style).toContain("assets/theater/retro-16bit/animated/thinker-female/sit-eat-sheet.png");
+    expect(style).toContain("assets/theater/retro-16bit/props/food/noodle-food-0.png");
+    expect(style).toContain("assets/theater/retro-16bit/props/food/noodle-food-1.png");
+    expect(style).toContain("assets/theater/retro-16bit/props/food/noodle-food-2.png");
+    expect(style).toContain("assets/theater/retro-16bit/npcs/server-idle-sheet.png");
+    expect(style).toContain("assets/theater/retro-16bit/fx/payment-dollar-sheet.png");
+  });
+
+  it("uses storybook production theater assets when selected", () => {
+    document.body.innerHTML = `<section id="statusTheater"></section>`;
+    window.LaunchGoGoGoApp.state.theaterStyle = "storybook";
+    document.documentElement.dataset.theaterStyle = "storybook";
+    window.LaunchGoGoGoApp.state.coworkers = [
+      { id: "c1", name: "Mina", balance: -80, playerCharacter: "runner", playerGender: "female", createdAt: "", updatedAt: "" }
+    ];
+    window.LaunchGoGoGoApp.state.stores = [
+      { id: "s1", name: "Bento", restaurantType: "bento", rating: 3, availableForLunch: true, availableForDinner: false, createdAt: "", updatedAt: "" }
+    ];
+    window.LaunchGoGoGoApp.state.transactions = [
+      {
+        id: "o1", date: "2026-04-28", type: "mealOrder", mealType: "lunch",
+        coworkerId: "c1", storeId: "s1", mealName: "bento", amount: 80,
+        paymentMethod: "unpaid", createdAt: "2026-04-28T04:00:00.000Z", updatedAt: ""
+      },
+      {
+        id: "p1", date: "2026-04-28", type: "payment", mealType: null,
+        coworkerId: "c1", storeId: null, mealName: "", amount: 80,
+        paymentMethod: null, createdAt: "2026-04-28T04:05:00.000Z", updatedAt: ""
+      }
+    ];
+    window.LaunchGoGoGoApp.state.activeTheaterTransactionId = "o1";
+
+    window.LaunchGoGoGoApp.renderStatusTheater();
+
+    const style = document.querySelector(".theater-stage").getAttribute("style");
+    expect(style).toContain("assets/theater/storybook/stages/stage-bento.png");
+    expect(style).toContain("assets/theater/storybook/animated/runner-female/sit-eat-sheet.png");
+    expect(style).toContain("assets/theater/storybook/props/food/bento-food-0.png");
+    expect(style).toContain("assets/theater/storybook/props/food/bento-food-1.png");
+    expect(style).toContain("assets/theater/storybook/props/food/bento-food-2.png");
+    expect(style).toContain("assets/theater/storybook/npcs/server-idle-sheet.png");
+    expect(style).toContain("assets/theater/storybook/fx/payment-dollar-sheet.png");
+  });
+
+  it("uses chibi production theater assets when selected", () => {
+    document.body.innerHTML = `<section id="statusTheater"></section>`;
+    window.LaunchGoGoGoApp.state.theaterStyle = "chibi";
+    document.documentElement.dataset.theaterStyle = "chibi";
+    window.LaunchGoGoGoApp.state.coworkers = [
+      { id: "c1", name: "Nori", balance: -70, playerCharacter: "foodie", playerGender: "male", createdAt: "", updatedAt: "" }
+    ];
+    window.LaunchGoGoGoApp.state.stores = [
+      { id: "s1", name: "Cafe", restaurantType: "cafe", rating: 3, availableForLunch: true, availableForDinner: false, createdAt: "", updatedAt: "" }
+    ];
+    window.LaunchGoGoGoApp.state.transactions = [
+      {
+        id: "o1", date: "2026-04-28", type: "mealOrder", mealType: "lunch",
+        coworkerId: "c1", storeId: "s1", mealName: "cake", amount: 70,
+        paymentMethod: "unpaid", createdAt: "2026-04-28T04:00:00.000Z", updatedAt: ""
+      },
+      {
+        id: "p1", date: "2026-04-28", type: "payment", mealType: null,
+        coworkerId: "c1", storeId: null, mealName: "", amount: 70,
+        paymentMethod: null, createdAt: "2026-04-28T04:05:00.000Z", updatedAt: ""
+      }
+    ];
+    window.LaunchGoGoGoApp.state.activeTheaterTransactionId = "o1";
+
+    window.LaunchGoGoGoApp.renderStatusTheater();
+
+    const style = document.querySelector(".theater-stage").getAttribute("style");
+    expect(style).toContain("assets/theater/chibi/stages/stage-cafe.png");
+    expect(style).toContain("assets/theater/chibi/animated/foodie-male/sit-eat-sheet.png");
+    expect(style).toContain("assets/theater/chibi/props/food/cafe-food-0.png");
+    expect(style).toContain("assets/theater/chibi/props/food/cafe-food-1.png");
+    expect(style).toContain("assets/theater/chibi/props/food/cafe-food-2.png");
+    expect(style).toContain("assets/theater/chibi/npcs/server-idle-sheet.png");
+    expect(style).toContain("assets/theater/chibi/fx/payment-dollar-sheet.png");
+  });
+
+  it("uses painted fantasy production theater assets when selected", () => {
+    document.body.innerHTML = `<section id="statusTheater"></section>`;
+    window.LaunchGoGoGoApp.state.theaterStyle = "painted-fantasy";
+    document.documentElement.dataset.theaterStyle = "painted-fantasy";
+    window.LaunchGoGoGoApp.state.coworkers = [
+      { id: "c1", name: "Iris", balance: -140, playerCharacter: "thinker", playerGender: "female", createdAt: "", updatedAt: "" }
+    ];
+    window.LaunchGoGoGoApp.state.stores = [
+      { id: "s1", name: "Guild Hall", restaurantType: "fastFood", rating: 3, availableForLunch: true, availableForDinner: false, createdAt: "", updatedAt: "" }
+    ];
+    window.LaunchGoGoGoApp.state.transactions = [
+      {
+        id: "o1", date: "2026-04-28", type: "mealOrder", mealType: "lunch",
+        coworkerId: "c1", storeId: "s1", mealName: "burger", amount: 140,
+        paymentMethod: "unpaid", createdAt: "2026-04-28T04:00:00.000Z", updatedAt: ""
+      },
+      {
+        id: "p1", date: "2026-04-28", type: "payment", mealType: null,
+        coworkerId: "c1", storeId: null, mealName: "", amount: 140,
+        paymentMethod: null, createdAt: "2026-04-28T04:05:00.000Z", updatedAt: ""
+      }
+    ];
+    window.LaunchGoGoGoApp.state.activeTheaterTransactionId = "o1";
+
+    window.LaunchGoGoGoApp.renderStatusTheater();
+
+    const style = document.querySelector(".theater-stage").getAttribute("style");
+    expect(style).toContain("assets/theater/painted-fantasy/stages/stage-fastFood.png");
+    expect(style).toContain("assets/theater/painted-fantasy/animated/thinker-female/sit-eat-sheet.png");
+    expect(style).toContain("assets/theater/painted-fantasy/props/food/fastFood-food-0.png");
+    expect(style).toContain("assets/theater/painted-fantasy/props/food/fastFood-food-1.png");
+    expect(style).toContain("assets/theater/painted-fantasy/props/food/fastFood-food-2.png");
+    expect(style).toContain("assets/theater/painted-fantasy/npcs/server-idle-sheet.png");
+    expect(style).toContain("assets/theater/painted-fantasy/fx/payment-dollar-sheet.png");
+  });
+
+  it("uses muted Japanese daily-life production theater assets when selected", () => {
+    document.body.innerHTML = `<section id="statusTheater"></section>`;
+    window.LaunchGoGoGoApp.state.theaterStyle = "muted-jp-life";
+    document.documentElement.dataset.theaterStyle = "muted-jp-life";
+    window.LaunchGoGoGoApp.state.coworkers = [
+      { id: "c1", name: "Sora", balance: -110, playerCharacter: "runner", playerGender: "female", createdAt: "", updatedAt: "" }
+    ];
+    window.LaunchGoGoGoApp.state.stores = [
+      { id: "s1", name: "Quiet Bento", restaurantType: "bento", rating: 3, availableForLunch: true, availableForDinner: false, createdAt: "", updatedAt: "" }
+    ];
+    window.LaunchGoGoGoApp.state.transactions = [
+      {
+        id: "o1", date: "2026-04-28", type: "mealOrder", mealType: "lunch",
+        coworkerId: "c1", storeId: "s1", mealName: "bento", amount: 110,
+        paymentMethod: "unpaid", createdAt: "2026-04-28T04:00:00.000Z", updatedAt: ""
+      },
+      {
+        id: "p1", date: "2026-04-28", type: "payment", mealType: null,
+        coworkerId: "c1", storeId: null, mealName: "", amount: 110,
+        paymentMethod: null, createdAt: "2026-04-28T04:05:00.000Z", updatedAt: ""
+      }
+    ];
+    window.LaunchGoGoGoApp.state.activeTheaterTransactionId = "o1";
+
+    window.LaunchGoGoGoApp.renderStatusTheater();
+
+    const style = document.querySelector(".theater-stage").getAttribute("style");
+    expect(style).toContain("assets/theater/muted-jp-life/stages/stage-bento.png");
+    expect(style).toContain("assets/theater/muted-jp-life/animated/runner-female/sit-eat-sheet.png");
+    expect(style).toContain("assets/theater/muted-jp-life/props/food/bento-food-0.png");
+    expect(style).toContain("assets/theater/muted-jp-life/props/food/bento-food-1.png");
+    expect(style).toContain("assets/theater/muted-jp-life/props/food/bento-food-2.png");
+    expect(style).toContain("assets/theater/muted-jp-life/npcs/server-idle-sheet.png");
+    expect(style).toContain("assets/theater/muted-jp-life/fx/payment-dollar-sheet.png");
+  });
+
+  it("uses 90s arcade fighter production theater assets when selected", () => {
+    document.body.innerHTML = `<section id="statusTheater"></section>`;
+    window.LaunchGoGoGoApp.state.theaterStyle = "arcade-fighter-90s";
+    document.documentElement.dataset.theaterStyle = "arcade-fighter-90s";
+    window.LaunchGoGoGoApp.state.coworkers = [
+      { id: "c1", name: "Ryo", balance: -160, playerCharacter: "thinker", playerGender: "male", createdAt: "", updatedAt: "" }
+    ];
+    window.LaunchGoGoGoApp.state.stores = [
+      { id: "s1", name: "Fight Cafe", restaurantType: "cafe", rating: 3, availableForLunch: true, availableForDinner: false, createdAt: "", updatedAt: "" }
+    ];
+    window.LaunchGoGoGoApp.state.transactions = [
+      {
+        id: "o1", date: "2026-04-28", type: "mealOrder", mealType: "lunch",
+        coworkerId: "c1", storeId: "s1", mealName: "coffee set", amount: 160,
+        paymentMethod: "unpaid", createdAt: "2026-04-28T04:00:00.000Z", updatedAt: ""
+      },
+      {
+        id: "p1", date: "2026-04-28", type: "payment", mealType: null,
+        coworkerId: "c1", storeId: null, mealName: "", amount: 160,
+        paymentMethod: null, createdAt: "2026-04-28T04:05:00.000Z", updatedAt: ""
+      }
+    ];
+    window.LaunchGoGoGoApp.state.activeTheaterTransactionId = "o1";
+
+    window.LaunchGoGoGoApp.renderStatusTheater();
+
+    const style = document.querySelector(".theater-stage").getAttribute("style");
+    expect(style).toContain("assets/theater/arcade-fighter-90s/stages/stage-cafe.png");
+    expect(style).toContain("assets/theater/arcade-fighter-90s/animated/thinker-male/sit-eat-sheet.png");
+    expect(style).toContain("assets/theater/arcade-fighter-90s/props/food/cafe-food-0.png");
+    expect(style).toContain("assets/theater/arcade-fighter-90s/props/food/cafe-food-1.png");
+    expect(style).toContain("assets/theater/arcade-fighter-90s/props/food/cafe-food-2.png");
+    expect(style).toContain("assets/theater/arcade-fighter-90s/npcs/server-idle-sheet.png");
+    expect(style).toContain("assets/theater/arcade-fighter-90s/fx/payment-dollar-sheet.png");
+  });
+
   it("shows the theater only on ledger and supports collapsing", () => {
     document.body.innerHTML = `
       <h1 id="pageTitle">Ledger</h1>

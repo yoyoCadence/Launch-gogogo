@@ -67,6 +67,12 @@ Done:
 - Replace `cyberpunk` fallback sheets with production generated sheets for all character actions, food states, server idle, and payment FX.
 - Replace `gothic-lolita` procedural placeholder sheets with true image-generated production sheets for all character actions, food states, server idle, and payment FX.
 - Replace `pixel` fallback sheets with production generated sheets for all character actions, food states, server idle, and payment FX.
+- Replace `retro-16bit` fallback sheets with production generated sheets for all character actions, food states, server idle, and payment FX.
+- Replace `storybook` fallback sheets with production generated sheets for all character actions, food states, server idle, and payment FX.
+- Replace `chibi` fallback sheets with production generated sheets for all character actions, food states, server idle, and payment FX.
+- Replace `painted-fantasy` fallback sheets with production generated sheets for all character actions, food states, server idle, and payment FX.
+- Replace `muted-jp-life` fallback sheets with production generated sheets for all character actions, food states, server idle, and payment FX.
+- Replace `arcade-fighter-90s` fallback sheets with production generated sheets for all character actions, food states, server idle, and payment FX.
 
 Style backlog:
 
@@ -82,7 +88,7 @@ Style backlog:
 
 Tasks:
 
-- Replace fallback animation sheets with production generated sheets one style at a time. Next style: `retro-16bit`.
+- Completed production replacement for all planned fallback animation sheet packs.
 - Add richer per-style motion polish for idle, walk, waiting, paying, eating, and done loops.
 - Keep style switching independent from ledger math, payment state, and stored transaction data.
 - Add component and e2e coverage for every style that becomes selectable.
@@ -162,7 +168,7 @@ Generation guidance:
 
 - Use the `generate2dsprite` skill for animated character, server, prop, and FX sheets.
 - For the current theater layout, prefer `view: side` or `view: 3/4`; do not generate 4-direction topdown sheets until the app has a free-movement floor-map theater.
-- The runtime sheet playback, seating positions, food states, and payment FX are validated. `anime`, `cyberpunk`, `gothic-lolita`, `pixel`, and `arcade` are complete production generated packs. Continue replacing fallback packs style by style, starting with `retro-16bit`.
+- The runtime sheet playback, seating positions, food states, and payment FX are validated. All 11 planned theater styles are complete production generated packs.
 - Keep sprite identity stable against the existing static cutouts: same role silhouette, hair/costume color language, and gender presentation.
 - Use solid `#FF00FF` raw sheet backgrounds so the sprite processor can chroma-key to transparent output.
 - Keep frame scale and foot/seat anchor consistent across frames. Use bottom/feet anchors for walking characters and seat anchors for seated sheets.
@@ -314,7 +320,12 @@ Current animation asset status:
 - `gothic-lolita`: production generated pack complete.
 - `pixel`: production generated pack complete.
 - `arcade`: production generated pack complete.
-- `retro-16bit`, `storybook`, `chibi`, `painted-fantasy`, `muted-jp-life`, `arcade-fighter-90s`: fallback packs exist; production replacement pending.
+- `retro-16bit`: production generated pack complete.
+- `storybook`: production generated pack complete.
+- `chibi`: production generated pack complete.
+- `painted-fantasy`: production generated pack complete.
+- `muted-jp-life`: production generated pack complete.
+- `arcade-fighter-90s`: production generated pack complete.
 
 Download/cache rule:
 

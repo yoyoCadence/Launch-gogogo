@@ -34,10 +34,22 @@ test("records a coworker topup and a prepaid lunch order", async ({ page }) => {
   await page.locator('[data-action="toggle-settings-theater"]').click();
   await page.locator('[data-theater-style-id="pixel"]').click();
   await expect(page.locator("html")).toHaveAttribute("data-theater-style", "pixel");
+  await page.locator('[data-theater-style-id="retro-16bit"]').click();
+  await expect(page.locator("html")).toHaveAttribute("data-theater-style", "retro-16bit");
+  await page.locator('[data-theater-style-id="storybook"]').click();
+  await expect(page.locator("html")).toHaveAttribute("data-theater-style", "storybook");
+  await page.locator('[data-theater-style-id="chibi"]').click();
+  await expect(page.locator("html")).toHaveAttribute("data-theater-style", "chibi");
+  await page.locator('[data-theater-style-id="painted-fantasy"]').click();
+  await expect(page.locator("html")).toHaveAttribute("data-theater-style", "painted-fantasy");
+  await page.locator('[data-theater-style-id="muted-jp-life"]').click();
+  await expect(page.locator("html")).toHaveAttribute("data-theater-style", "muted-jp-life");
+  await page.locator('[data-theater-style-id="arcade-fighter-90s"]').click();
+  await expect(page.locator("html")).toHaveAttribute("data-theater-style", "arcade-fighter-90s");
 
   await page.getByRole("button", { name: "Ledger" }).click();
   await expect(page.locator("#statusTheater .anime-actor-sprite")).toHaveJSProperty("naturalWidth", 128);
-  await expect(page.locator("#statusTheater .theater-stage")).toHaveAttribute("style", /assets\/theater\/pixel\/animated\//);
+  await expect(page.locator("#statusTheater .theater-stage")).toHaveAttribute("style", /assets\/theater\/arcade-fighter-90s\/animated\//);
 
   await page.getByRole("button", { name: "Dinner" }).click();
   await expect(page.locator("#statusTheater")).toBeHidden();
