@@ -1,0 +1,9 @@
+{
+  "source": "assets\\theater\\chibi\\raw\\generated-animated\\runner-female\\paying-sheet-raw.png",
+  "generator": "image_gen + scripts/process-theater-generated-atlas.py",
+  "style": "chibi",
+  "subject": "runner-female-paying",
+  "layout": "2x2 sheet",
+  "cellInset": "14",
+  "align": "bottom"
+}

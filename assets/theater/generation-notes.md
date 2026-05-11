@@ -5,6 +5,7 @@ The generated theater pack uses a consistent runtime contract:
 - 11 raster theater styles: anime, cyberpunk, gothic-lolita, pixel, arcade, retro-16bit, storybook, chibi, painted-fantasy, muted-jp-life, arcade-fighter-90s.
 - 5 restaurant stages per style: bento, drink, noodle, fastFood, cafe.
 - 6 character cutouts per style: runner, foodie, thinker, each with female and male variants.
+- All 11 planned animated style packs are production generated as of 2026-05-11.
 - Current runtime supports female and male character variants through coworker profile settings.
 
 Prompt principles:
@@ -65,6 +66,8 @@ Promotion rules:
 - Do not use simple geometric crops or temporary helpers as final art when polished generated food or character sources exist.
 - Runtime folders contain transparent, cropped, size-normalized app assets; raw folders contain selected originals or review-needed sources.
 - If a food row is derived from a larger atlas, record the crop mapping in pipeline metadata or notes.
+- For single-restaurant food rows, say `1x3 horizontal grid`, `three side-by-side cells`, and `wide landscape canvas` in the prompt. The model may otherwise return a square 2x2-like sheet or a vertical 3-cell sheet, which does not match `foodrow` processing.
+- Production folders should keep per-action/per-prop metadata only (`pipeline-meta-{action}.json`, `pipeline-meta-{restaurantType}.json`, `pipeline-meta-server-idle.json`, `pipeline-meta-payment-dollar.json`). Remove old generic fallback `pipeline-meta.json` files after replacing a fallback pack so audits do not report a production style as fallback-generated.
 
 ## Food Progression
 

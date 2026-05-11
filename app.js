@@ -30,7 +30,7 @@ const RESTAURANT_TYPES = [
 const THEME_STORAGE_KEY = "launch-gogogo-theme";
 const THEATER_STYLE_STORAGE_KEY = "launch-gogogo-theater-style";
 const THEATER_ASSET_CACHE_NAME = "launch-gogogo-theater-assets-v2";
-const THEATER_ANIMATION_ASSET_VERSION = "anim-v3";
+const THEATER_ANIMATION_ASSET_VERSION = "anim-v9";
 const DEFAULT_MEAL_NAME = "未指定餐點";
 const PLAYER_GENDERS = [
   { id: "female", icon: "./assets/theater/anime/characters/runner-female.png", label: "女生" },

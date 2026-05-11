@@ -1,0 +1,9 @@
+{
+  "source": "assets\\theater\\chibi\\raw\\generated-animated\\runner-male\\sit-eat-sheet-raw.png",
+  "generator": "image_gen + scripts/process-theater-generated-atlas.py",
+  "style": "chibi",
+  "subject": "runner-male-sit-eat",
+  "layout": "2x2 sheet",
+  "cellInset": "14",
+  "align": "center"
+}

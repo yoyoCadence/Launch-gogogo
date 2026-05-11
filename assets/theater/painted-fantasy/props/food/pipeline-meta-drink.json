@@ -1,0 +1,8 @@
+{
+  "source": "assets\\theater\\painted-fantasy\\raw\\generated-props\\drink-food-row-raw.png",
+  "generator": "image_gen + scripts/process-theater-generated-atlas.py",
+  "style": "painted-fantasy",
+  "subject": "drink-food",
+  "layout": "1x3 food progression sheet",
+  "restaurantType": "drink"
+}
