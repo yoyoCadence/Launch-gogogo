@@ -332,6 +332,10 @@ body.theater-visible.theater-collapsed .app-shell {
   padding-bottom: calc(176px + env(safe-area-inset-bottom));
 }
 
+.account-overview {
+  display: none;
+}
+
 .topbar {
   position: sticky;
   top: 0;
@@ -1577,6 +1581,65 @@ html[data-theater-style] .payment-flash {
   background: color-mix(in srgb, var(--preview-surface) 72%, var(--ds-color-surface));
 }
 
+.interface-preview {
+  position: relative;
+  display: block;
+  overflow: hidden;
+  min-height: 92px;
+  border: 1px solid color-mix(in srgb, var(--preview-primary) 34%, var(--ds-color-border));
+  border-radius: 7px;
+  background:
+    linear-gradient(140deg, color-mix(in srgb, var(--preview-primary) 22%, transparent), transparent 52%),
+    color-mix(in srgb, var(--preview-surface) 76%, var(--ds-color-surface));
+}
+
+.interface-preview .preview-stage,
+.interface-preview .preview-summary,
+.interface-preview .preview-row {
+  position: absolute;
+  border-radius: 7px;
+  background: var(--preview-primary);
+}
+
+.interface-preview .preview-stage {
+  top: 9px;
+  right: 10px;
+  left: 10px;
+  height: 36px;
+  background:
+    radial-gradient(circle at 72% 45%, var(--preview-accent) 0 9px, transparent 10px),
+    linear-gradient(90deg, var(--preview-primary), color-mix(in srgb, var(--preview-primary) 46%, #ffffff));
+}
+
+.interface-preview .preview-summary {
+  bottom: 28px;
+  left: 10px;
+  width: 42px;
+  height: 18px;
+  opacity: 0.9;
+}
+
+.interface-preview .preview-row {
+  right: 10px;
+  bottom: 10px;
+  left: 10px;
+  height: 10px;
+  opacity: 0.55;
+}
+
+.simple-preview .preview-stage {
+  right: auto;
+  width: 44px;
+  height: 22px;
+}
+
+.simple-preview .preview-summary {
+  right: 10px;
+  bottom: 16px;
+  left: auto;
+  width: 58px;
+}
+
 .preview-topbar {
   display: block;
   height: 18px;
@@ -1912,6 +1975,196 @@ dialog::backdrop {
   flex: 0 0 auto;
   min-height: 40px;
   padding-inline: var(--ds-space-5);
+}
+
+html[data-interface-design="theater-account"] {
+  --ds-radius-card: 8px;
+  --ds-radius-sheet: 12px;
+  --ds-font-page: 1.62rem;
+  --ds-font-section: 1.05rem;
+  --ds-row-min: 64px;
+}
+
+html[data-interface-design="theater-account"] body.theater-visible .app-shell {
+  padding-bottom: calc(330px + env(safe-area-inset-bottom));
+}
+
+html[data-interface-design="theater-account"] body.theater-visible.theater-collapsed .app-shell {
+  padding-bottom: calc(176px + env(safe-area-inset-bottom));
+}
+
+html[data-interface-design="theater-account"] .app-shell {
+  width: min(100%, 620px);
+  padding-inline: var(--ds-space-4);
+}
+
+html[data-interface-design="theater-account"] .topbar {
+  padding: var(--ds-space-5) 0 var(--ds-space-4);
+}
+
+html[data-interface-design="theater-account"] #ledgerPage.active {
+  display: flex;
+  flex-direction: column;
+}
+
+html[data-interface-design="theater-account"] #ledgerPage .account-overview {
+  order: 1;
+}
+
+html[data-interface-design="theater-account"] #ledgerPage .toolbar {
+  order: 2;
+}
+
+html[data-interface-design="theater-account"] #ledgerPage .action-grid {
+  order: 3;
+}
+
+html[data-interface-design="theater-account"] #ledgerPage .panel:nth-of-type(2) {
+  order: 4;
+}
+
+html[data-interface-design="theater-account"] #ledgerPage .panel:nth-of-type(3) {
+  order: 5;
+}
+
+html[data-interface-design="theater-account"] #ledgerPage .panel:nth-of-type(4) {
+  order: 6;
+}
+
+html[data-interface-design="theater-account"] .status-theater {
+  position: fixed;
+  grid-template-columns: 1fr;
+  gap: var(--ds-space-3);
+  width: min(620px, calc(100% - 32px));
+  min-height: 0;
+  padding: var(--ds-space-3);
+  border-radius: 8px;
+  background: color-mix(in srgb, var(--ds-color-surface) 92%, transparent);
+  box-shadow: var(--ds-shadow-float);
+  backdrop-filter: blur(24px) saturate(1.18);
+}
+
+html[data-interface-design="theater-account"] body.theater-collapsed .status-theater {
+  grid-template-columns: minmax(0, 1fr) auto;
+  min-height: 70px;
+}
+
+html[data-interface-design="theater-account"] .theater-toggle {
+  top: var(--ds-space-3);
+  right: var(--ds-space-3);
+  border-radius: 999px;
+}
+
+html[data-interface-design="theater-account"] .theater-copy {
+  padding-right: 74px;
+}
+
+html[data-interface-design="theater-account"] .theater-copy .eyebrow {
+  letter-spacing: 0;
+}
+
+html[data-interface-design="theater-account"] .theater-copy h2 {
+  font-size: 1.08rem;
+}
+
+html[data-interface-design="theater-account"] .theater-stage {
+  min-height: 178px;
+  border-radius: 8px;
+}
+
+html[data-interface-design="theater-account"] .account-overview {
+  display: grid;
+  grid-template-columns: repeat(3, minmax(0, 1fr));
+  gap: var(--ds-space-2);
+  margin-bottom: var(--ds-space-4);
+}
+
+html[data-interface-design="theater-account"] .overview-card {
+  display: grid;
+  gap: 4px;
+  min-height: 72px;
+  border: 1px solid var(--ds-color-border);
+  border-radius: 8px;
+  padding: var(--ds-space-3);
+  background: var(--ds-color-surface);
+}
+
+html[data-interface-design="theater-account"] .overview-card span {
+  color: var(--ds-color-text-secondary);
+  font-size: var(--ds-font-caption);
+  font-weight: 800;
+}
+
+html[data-interface-design="theater-account"] .overview-card strong {
+  color: var(--ds-color-text);
+  font-size: 1.12rem;
+  line-height: 1;
+}
+
+html[data-interface-design="theater-account"] .balance-debt strong,
+html[data-interface-design="theater-account"] .coworker-item[data-balance-state="debt"] .money {
+  color: var(--ds-color-danger);
+}
+
+html[data-interface-design="theater-account"] .balance-low strong,
+html[data-interface-design="theater-account"] .coworker-item[data-balance-state="low"] .money {
+  color: #b7791f;
+}
+
+html[data-interface-design="theater-account"] .coworker-item[data-balance-state="funded"] .money {
+  color: #2f6b4f;
+}
+
+html[data-interface-design="theater-account"] .toolbar {
+  margin-bottom: var(--ds-space-3);
+}
+
+html[data-interface-design="theater-account"] .action-grid {
+  grid-template-columns: 1fr 1fr;
+  margin-bottom: var(--ds-space-5);
+}
+
+html[data-interface-design="theater-account"] .panel {
+  margin: var(--ds-space-5) 0;
+}
+
+html[data-interface-design="theater-account"] .section-heading {
+  margin-bottom: var(--ds-space-3);
+}
+
+html[data-interface-design="theater-account"] .item,
+html[data-interface-design="theater-account"] .store-card {
+  min-height: 0;
+  border-bottom-color: var(--ds-color-border);
+  padding: var(--ds-space-4) 0;
+}
+
+html[data-interface-design="theater-account"] .coworker-item {
+  grid-template-columns: 44px minmax(0, 1fr);
+}
+
+html[data-interface-design="theater-account"] .card-actions {
+  display: flex;
+  flex-wrap: wrap;
+  gap: var(--ds-space-2);
+}
+
+html[data-interface-design="theater-account"] .card-actions button,
+html[data-interface-design="theater-account"] .card-actions a {
+  min-height: 34px;
+  border-radius: 999px;
+  padding: 7px 12px;
+  font-size: var(--ds-font-caption);
+}
+
+html[data-interface-design="theater-account"] .bottom-tabs {
+  border-radius: 18px;
+  padding: 5px;
+}
+
+html[data-interface-design="theater-account"] .tab {
+  min-height: 48px;
+  border-radius: 14px;
 }
 
 @media (min-width: 760px) {

@@ -33,29 +33,46 @@ https://yoyocadence.github.io/Launch-gogogo/
 
 ## 本機啟動
 
-PWA 與 Service Worker 需要透過 HTTP/HTTPS 來源執行，不建議直接用 `file://` 開啟。
+建議用專案測試同一套靜態伺服器，並關閉快取，改 CSS / JS / PWA 時比較不會看到舊檔：
 
-Windows 建議使用 Python Launcher：
+```powershell
+npm exec http-server -- -p 4173 -c-1
+```
+
+啟動後開啟：
+
+```text
+http://127.0.0.1:4173
+```
+
+Playwright e2e 也使用 `http://127.0.0.1:4173`，設定在 `playwright.config.js`。
+
+如果只是臨時快速開靜態檔，也可以用 Python：
 
 ```powershell
 py -m http.server 8080
 ```
 
-macOS / Linux 或 Python 指令正常指向 Python 3 時，也可以使用：
+macOS / Linux：
 
 ```bash
 python -m http.server 8080
 ```
 
-啟動後打開：
+Python 伺服器網址是：
 
 ```text
 http://127.0.0.1:8080
 ```
 
-如果 Windows 執行 `python -m http.server 8080` 後立刻回到提示符，通常是 `python` 指到 WindowsApps alias，請改用 `py -m http.server 8080`。
+若要用手機實機測試，可以搭配 ngrok：
 
-也可以用任何靜態檔案伺服器，例如 VS Code Live Server、`npx serve`、`http-server`。
+```powershell
+npm exec http-server -- -p 4173 -c-1
+ngrok http 4173
+```
+
+手機開啟 ngrok 提供的 HTTPS 網址即可。測 PWA / Service Worker 時建議使用 HTTPS；如果手機仍看到舊版，請清除該網站資料或換新的 ngrok URL。
 
 ## 自動化測試
 
