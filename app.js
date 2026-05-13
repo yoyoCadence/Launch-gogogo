@@ -29,6 +29,7 @@ const RESTAURANT_TYPES = [
 
 const THEME_STORAGE_KEY = "launch-gogogo-theme";
 const THEATER_STYLE_STORAGE_KEY = "launch-gogogo-theater-style";
+const INTERFACE_DESIGN_STORAGE_KEY = "launch-gogogo-interface-design";
 const THEATER_ASSET_CACHE_NAME = "launch-gogogo-theater-assets-v2";
 const THEATER_ANIMATION_ASSET_VERSION = "anim-v9";
 const DEFAULT_MEAL_NAME = "未指定餐點";
@@ -51,6 +52,20 @@ const THEMES = [
   { id: "anime", name: "動漫", colors: ["#ff6b9d", "#7ec8e3", "#fff5f8"] },
   { id: "gothic", name: "哥德蘿莉", colors: ["#c41e3a", "#d4af37", "#0d0009"] },
   { id: "github", name: "GitHub", colors: ["#1f6feb", "#2da44e", "#0d1117"] }
+];
+const INTERFACE_DESIGNS = [
+  {
+    id: "simple",
+    name: "陽春設計",
+    description: "保留目前的固定底部小劇場與原本頁面排列。",
+    colors: ["#1f6f5b", "#d66b3d", "#f6f4ee"]
+  },
+  {
+    id: "theater-account",
+    name: "劇場帳戶",
+    description: "手機優先，把小劇場放回首頁，並以同事儲值金帳戶為主。",
+    colors: ["#2f6b4f", "#d99a3d", "#f7f8f5"]
+  }
 ];
 const THEATER_STYLES = [
   {
@@ -161,6 +176,7 @@ const state = {
   pendingServiceWorker: null,
   refreshingForUpdate: false,
   theme: "default",
+  interfaceDesign: "simple",
   theaterStyle: "miniature",
   theaterAssetStatus: { miniature: "ready" },
   settingsThemeExpanded: false,
@@ -190,6 +206,10 @@ const uid = () => `${Date.now().toString(36)}-${crypto.getRandomValues(new Uint3
 
 function getThemeById(themeId) {
   return THEMES.find((theme) => theme.id === themeId) || THEMES[0];
+}
+
+function getInterfaceDesignById(designId) {
+  return INTERFACE_DESIGNS.find((design) => design.id === designId) || INTERFACE_DESIGNS[0];
 }
 
 function getTheaterStyleById(styleId) {
@@ -344,6 +364,18 @@ function applyTheme(themeId) {
   localStorage.setItem(THEME_STORAGE_KEY, theme.id);
 }
 
+function applyInterfaceDesign(designId) {
+  const design = getInterfaceDesignById(designId);
+  state.interfaceDesign = design.id;
+  if (design.id === "simple") {
+    document.documentElement.removeAttribute("data-interface-design");
+  } else {
+    document.documentElement.dataset.interfaceDesign = design.id;
+  }
+  localStorage.setItem(INTERFACE_DESIGN_STORAGE_KEY, design.id);
+  updatePageTitle();
+}
+
 function applyTheaterStyle(styleId) {
   const style = getTheaterStyleById(styleId);
   state.theaterStyle = style.available && isTheaterStyleReady(style.id) ? style.id : THEATER_STYLES[0].id;
@@ -492,6 +524,7 @@ async function refresh() {
 }
 
 function render() {
+  renderAccountOverview();
   renderCoworkerOptions();
   renderCoworkers();
   renderDailySummary();
@@ -501,6 +534,48 @@ function render() {
   renderSettings();
   syncSampleDataToggle();
   renderStatusTheater();
+}
+
+function balanceState(coworker) {
+  const balance = Number(coworker?.balance || 0);
+  if (balance < 0) return { id: "debt", label: "待收款" };
+  if (balance === 0) return { id: "zero", label: "已歸零" };
+  if (balance < 100) return { id: "low", label: "低餘額" };
+  return { id: "funded", label: "儲值中" };
+}
+
+function renderAccountOverview() {
+  const target = $("#accountOverview");
+  if (!target) return;
+  if (state.interfaceDesign !== "theater-account") {
+    target.innerHTML = "";
+    return;
+  }
+  const prepaidTotal = state.coworkers
+    .filter((coworker) => Number(coworker.balance || 0) > 0)
+    .reduce((sum, coworker) => sum + Number(coworker.balance || 0), 0);
+  const debtTotal = state.coworkers
+    .filter((coworker) => Number(coworker.balance || 0) < 0)
+    .reduce((sum, coworker) => sum + Math.abs(Number(coworker.balance || 0)), 0);
+  const lowCount = state.coworkers.filter((coworker) => {
+    const balance = Number(coworker.balance || 0);
+    return balance > 0 && balance < 100;
+  }).length;
+
+  target.innerHTML = `
+    <div class="overview-card balance-total">
+      <span>總儲值金</span>
+      <strong>${money(prepaidTotal)}</strong>
+    </div>
+    <div class="overview-card balance-debt">
+      <span>待收款</span>
+      <strong>${money(debtTotal)}</strong>
+    </div>
+    <div class="overview-card balance-low">
+      <span>低餘額</span>
+      <strong>${lowCount} 人</strong>
+    </div>
+  `;
 }
 
 function renderCoworkerOptions() {
@@ -546,15 +621,16 @@ function groupCoworkers(coworkers) {
 function renderCoworkerItem(coworker) {
   const className = coworker.balance >= 0 ? "positive" : "negative";
   const character = getPlayerCharacter(coworker.playerCharacter);
+  const status = balanceState(coworker);
   return `
-    <article class="item coworker-item">
+    <article class="item coworker-item" data-balance-state="${status.id}">
       ${renderCoworkerAvatar(coworker)}
       <div class="coworker-main">
         <div class="item-title">
           <strong>${escapeHtml(coworker.name)}</strong>
           <span class="money ${className}">${signedMoney(coworker.balance)}</span>
         </div>
-        <div class="muted">${coworker.balance < 0 ? "目前欠款" : "目前餘額"}</div>
+        <div class="muted account-status">${coworker.balance < 0 ? "目前欠款" : "目前餘額"} · ${escapeHtml(coworker.group?.trim() || "未分組")} · ${status.label}</div>
         <div class="pill-row">
           <span class="pill">${escapeHtml(character.name)}</span>
         </div>
@@ -882,10 +958,26 @@ function renderStatusTheater() {
 }
 
 function renderSettings() {
+  const currentInterfaceDesign = getInterfaceDesignById(state.interfaceDesign);
   const currentTheme = getThemeById(state.theme);
   const currentTheaterStyle = getTheaterStyleById(state.theaterStyle);
   const visibleThemes = visibleSettingItems(THEMES, currentTheme.id, state.settingsThemeExpanded);
   const visibleTheaterStyles = visibleSettingItems(THEATER_STYLES, currentTheaterStyle.id, state.settingsTheaterExpanded);
+  if ($("#interfaceDesignGrid")) {
+    $("#currentInterfaceDesignName").textContent = currentInterfaceDesign.name;
+    $("#interfaceDesignGrid").innerHTML = INTERFACE_DESIGNS.map((design) => `
+      <button class="theme-card interface-design-card ${design.id === currentInterfaceDesign.id ? "active" : ""}" type="button" data-action="set-interface-design" data-interface-design-id="${design.id}" aria-pressed="${design.id === currentInterfaceDesign.id}" style="--preview-primary:${design.colors[0]}; --preview-accent:${design.colors[1]}; --preview-surface:${design.colors[2]};">
+        <span class="theme-preview interface-preview ${design.id === "theater-account" ? "theater-account-preview" : "simple-preview"}" aria-hidden="true">
+          <span class="preview-stage"></span>
+          <span class="preview-summary"></span>
+          <span class="preview-row"></span>
+        </span>
+        <span class="theme-name">${escapeHtml(design.name)}</span>
+        <span class="theater-style-desc">${escapeHtml(design.description)}</span>
+        ${design.id === currentInterfaceDesign.id ? `<span class="theme-check">✓</span>` : ""}
+      </button>
+    `).join("");
+  }
   $("#currentThemeName").textContent = currentTheme.name;
   $("#themeGrid").innerHTML = `${visibleThemes.map((theme) => `
     <button class="theme-card ${theme.id === currentTheme.id ? "active" : ""}" type="button" data-action="set-theme" data-theme-id="${theme.id}" aria-pressed="${theme.id === currentTheme.id}" style="--preview-primary:${theme.colors[0]}; --preview-accent:${theme.colors[1]}; --preview-surface:${theme.colors[2]};">
@@ -1040,13 +1132,25 @@ async function removeSampleData() {
   setDataStatus("已移除測試用範例資料。", "success");
 }
 
+function pageTitle(page = state.activePage) {
+  if (state.interfaceDesign === "theater-account") {
+    return page === "ledger" ? "同事帳戶" : page === "lunch" ? "午餐訂餐" : page === "dinner" ? "晚餐訂餐" : "設定";
+  }
+  return page === "ledger" ? "Ledger" : page === "lunch" ? "Lunch Stores" : page === "dinner" ? "Dinner Stores" : "Settings";
+}
+
+function updatePageTitle() {
+  const title = $("#pageTitle");
+  if (title) title.textContent = pageTitle();
+}
+
 function setPage(page) {
   state.activePage = page;
   $(".page.active")?.classList.remove("active");
   $(".tab.active")?.classList.remove("active");
   $(`#${page}Page`).classList.add("active");
   $(`#${page}Tab`).classList.add("active");
-  $("#pageTitle").textContent = page === "ledger" ? "Ledger" : page === "lunch" ? "Lunch Stores" : page === "dinner" ? "Dinner Stores" : "Settings";
+  updatePageTitle();
   renderStatusTheater();
 }
 
@@ -1532,8 +1636,21 @@ function ensureUpdateToast() {
   `;
   document.body.appendChild(toast);
   $("#updateNowButton").addEventListener("click", () => {
-    if (!state.pendingServiceWorker) return;
+    const button = $("#updateNowButton");
+    state.refreshingForUpdate = true;
+    toast.classList.add("hidden");
+    if (button) {
+      button.disabled = true;
+      button.textContent = "更新中...";
+    }
+    if (!state.pendingServiceWorker) {
+      window.location.reload();
+      return;
+    }
     state.pendingServiceWorker.postMessage({ type: "SKIP_WAITING" });
+    window.setTimeout(() => {
+      if (state.refreshingForUpdate) window.location.reload();
+    }, 1500);
   });
   return toast;
 }
@@ -1559,8 +1676,7 @@ function watchServiceWorkerUpdate(registration) {
   });
 
   navigator.serviceWorker.addEventListener("controllerchange", () => {
-    if (state.refreshingForUpdate) return;
-    state.refreshingForUpdate = true;
+    if (!state.refreshingForUpdate) return;
     window.location.reload();
   });
 }
@@ -1639,6 +1755,12 @@ function bindEvents() {
       applyTheme(trigger.dataset.themeId);
       renderSettings();
     }
+    if (action === "set-interface-design") {
+      applyInterfaceDesign(trigger.dataset.interfaceDesignId);
+      renderAccountOverview();
+      renderSettings();
+      renderStatusTheater();
+    }
     if (action === "toggle-settings-theme") {
       state.settingsThemeExpanded = !state.settingsThemeExpanded;
       renderSettings();
@@ -1680,6 +1802,7 @@ function bindEvents() {
 
 async function init() {
   applyTheme(localStorage.getItem(THEME_STORAGE_KEY) || "default");
+  applyInterfaceDesign(localStorage.getItem(INTERFACE_DESIGN_STORAGE_KEY) || "simple");
   await syncTheaterAssetStatus();
   applyTheaterStyle(localStorage.getItem(THEATER_STYLE_STORAGE_KEY) || "miniature");
   $("#ledgerDate").value = todayString();
@@ -1700,8 +1823,10 @@ window.LaunchGoGoGoApp = {
   importDataFile,
   orderStoreFields,
   addSampleData,
+  applyInterfaceDesign,
   applyTheaterStyle,
   downloadTheaterStyleAssets,
+  renderAccountOverview,
   renderCoworkers,
   renderDailySummary,
   renderSettings,
