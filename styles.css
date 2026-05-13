@@ -1040,6 +1040,13 @@ html[data-theater-style] .theater-stage {
   min-height: 172px;
 }
 
+html[data-theater-style] .theater-stage.restaurant-cafe,
+html[data-theater-style] .theater-stage.restaurant-fastFood {
+  --theater-server-left: 54px;
+  --theater-counter-x: clamp(90px, 19vw, 124px);
+  --theater-payment-left: calc(var(--theater-server-left) + 52px);
+}
+
 html[data-theater-style="anime"] .theater-stage {
   --theater-server-top: 26px;
   --theater-server-left: 148px;
