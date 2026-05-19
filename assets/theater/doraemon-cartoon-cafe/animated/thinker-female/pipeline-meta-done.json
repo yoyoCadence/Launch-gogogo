@@ -1,0 +1,9 @@
+{
+  "source": "assets\\theater\\doraemon-cartoon-cafe\\raw\\generated-animated\\shizuka-cartoon\\done-raw.png",
+  "generator": "image_gen + scripts/process-theater-generated-atlas.py",
+  "style": "doraemon-cartoon-cafe",
+  "subject": "thinker-female-done",
+  "layout": "2x2 sheet",
+  "cellInset": "12",
+  "align": "center"
+}

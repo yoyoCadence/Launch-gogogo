@@ -1,0 +1,9 @@
+{
+  "source": "assets\\theater\\mecha-spy-race\\raw\\generated-animated\\anya-racer\\paying-sheet-raw.png",
+  "generator": "image_gen + scripts/process-theater-generated-atlas.py",
+  "style": "mecha-spy-race",
+  "subject": "runner-female-paying",
+  "layout": "2x2 sheet",
+  "cellInset": "12",
+  "align": "bottom"
+}

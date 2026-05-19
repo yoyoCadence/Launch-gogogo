@@ -24,7 +24,11 @@ describe("app UI components", () => {
       chibi: "ready",
       "painted-fantasy": "ready",
       "muted-jp-life": "ready",
-      "arcade-fighter-90s": "ready"
+      "arcade-fighter-90s": "ready",
+      "mecha-spy-race": "ready",
+      "geass-mecha-race": "ready",
+      "doraemon-cartoon-cafe": "ready",
+      "shinchan-yakiniku-road": "ready"
     };
     window.LaunchGoGoGoApp.state.activePage = "ledger";
     window.LaunchGoGoGoApp.state.theaterCollapsed = false;
@@ -246,6 +250,26 @@ describe("app UI components", () => {
 
     expect(window.LaunchGoGoGoApp.state.theaterStyle).toBe("gothic-lolita");
     expect(document.documentElement.dataset.theaterStyle).toBe("gothic-lolita");
+
+    window.LaunchGoGoGoApp.applyTheaterStyle("mecha-spy-race");
+
+    expect(window.LaunchGoGoGoApp.state.theaterStyle).toBe("mecha-spy-race");
+    expect(document.documentElement.dataset.theaterStyle).toBe("mecha-spy-race");
+
+    window.LaunchGoGoGoApp.applyTheaterStyle("geass-mecha-race");
+
+    expect(window.LaunchGoGoGoApp.state.theaterStyle).toBe("geass-mecha-race");
+    expect(document.documentElement.dataset.theaterStyle).toBe("geass-mecha-race");
+
+    window.LaunchGoGoGoApp.applyTheaterStyle("doraemon-cartoon-cafe");
+
+    expect(window.LaunchGoGoGoApp.state.theaterStyle).toBe("doraemon-cartoon-cafe");
+    expect(document.documentElement.dataset.theaterStyle).toBe("doraemon-cartoon-cafe");
+
+    window.LaunchGoGoGoApp.applyTheaterStyle("shinchan-yakiniku-road");
+
+    expect(window.LaunchGoGoGoApp.state.theaterStyle).toBe("shinchan-yakiniku-road");
+    expect(document.documentElement.dataset.theaterStyle).toBe("shinchan-yakiniku-road");
   });
 
   it("renders the status theater as waiting until an unpaid order has a payment", () => {
@@ -581,6 +605,192 @@ describe("app UI components", () => {
     expect(style).toContain("assets/theater/arcade-fighter-90s/props/food/cafe-food-2.png");
     expect(style).toContain("assets/theater/arcade-fighter-90s/npcs/server-idle-sheet.png");
     expect(style).toContain("assets/theater/arcade-fighter-90s/fx/payment-dollar-sheet.png");
+  });
+
+  it("uses mecha spy race theater assets when selected", () => {
+    document.body.innerHTML = `<section id="statusTheater"></section>`;
+    window.LaunchGoGoGoApp.state.theaterStyle = "mecha-spy-race";
+    document.documentElement.dataset.theaterStyle = "mecha-spy-race";
+    window.LaunchGoGoGoApp.state.coworkers = [
+      { id: "c1", name: "Anya", balance: -180, playerCharacter: "runner", playerGender: "female", createdAt: "", updatedAt: "" }
+    ];
+    window.LaunchGoGoGoApp.state.stores = [
+      { id: "s1", name: "Mecha Race Cafe", restaurantType: "cafe", rating: 3, availableForLunch: true, availableForDinner: false, createdAt: "", updatedAt: "" }
+    ];
+    window.LaunchGoGoGoApp.state.transactions = [
+      {
+        id: "o1", date: "2026-05-17", type: "mealOrder", mealType: "lunch",
+        coworkerId: "c1", storeId: "s1", mealName: "spy bento", amount: 180,
+        paymentMethod: "unpaid", createdAt: "2026-05-17T04:00:00.000Z", updatedAt: ""
+      },
+      {
+        id: "p1", date: "2026-05-17", type: "payment", mealType: null,
+        coworkerId: "c1", storeId: null, mealName: "", amount: 180,
+        paymentMethod: null, createdAt: "2026-05-17T04:05:00.000Z", updatedAt: ""
+      }
+    ];
+    window.LaunchGoGoGoApp.state.activeTheaterTransactionId = "o1";
+
+    window.LaunchGoGoGoApp.renderStatusTheater();
+
+    const style = document.querySelector(".theater-stage").getAttribute("style");
+    expect(style).toContain("assets/theater/mecha-spy-race/stages/stage-cafe.png");
+    expect(style).toContain("assets/theater/mecha-spy-race/animated/runner-female/sit-eat-sheet.png");
+    expect(style).toContain("assets/theater/mecha-spy-race/props/food/cafe-food-0.png");
+    expect(style).toContain("assets/theater/mecha-spy-race/props/food/cafe-food-1.png");
+    expect(style).toContain("assets/theater/mecha-spy-race/props/food/cafe-food-2.png");
+    expect(style).toContain("assets/theater/mecha-spy-race/npcs/server-idle-sheet.png");
+    expect(style).toContain("assets/theater/mecha-spy-race/fx/payment-dollar-sheet.png");
+  });
+
+  it("uses distinct mecha spy race stages and male racer assets", () => {
+    document.body.innerHTML = `<section id="statusTheater"></section>`;
+    window.LaunchGoGoGoApp.state.theaterStyle = "mecha-spy-race";
+    document.documentElement.dataset.theaterStyle = "mecha-spy-race";
+    window.LaunchGoGoGoApp.state.coworkers = [
+      { id: "c1", name: "Loid", balance: -150, playerCharacter: "thinker", playerGender: "male", createdAt: "", updatedAt: "" }
+    ];
+    window.LaunchGoGoGoApp.state.transactions = [
+      {
+        id: "o1", date: "2026-05-17", type: "mealOrder", mealType: "lunch",
+        coworkerId: "c1", storeId: "s1", mealName: "spy lunch", amount: 150,
+        paymentMethod: "unpaid", createdAt: "2026-05-17T04:00:00.000Z", updatedAt: ""
+      }
+    ];
+    window.LaunchGoGoGoApp.state.activeTheaterTransactionId = "o1";
+
+    for (const restaurantType of ["bento", "drink", "noodle", "fastFood", "cafe"]) {
+      window.LaunchGoGoGoApp.state.stores = [
+        { id: "s1", name: restaurantType, restaurantType, rating: 3, availableForLunch: true, availableForDinner: false, createdAt: "", updatedAt: "" }
+      ];
+
+      window.LaunchGoGoGoApp.renderStatusTheater();
+
+      const style = document.querySelector(".theater-stage").getAttribute("style");
+      expect(style).toContain(`assets/theater/mecha-spy-race/stages/stage-${restaurantType}.png`);
+      expect(style).toContain("assets/theater/mecha-spy-race/animated/thinker-male/walk-right-sheet.png");
+      expect(document.querySelector(".anime-actor-sprite").getAttribute("src")).toBe("./assets/theater/mecha-spy-race/characters/thinker-male.png");
+    }
+  });
+
+  it("uses Code Geass mecha race theater assets and restaurant-specific stages", () => {
+    document.body.innerHTML = `<section id="statusTheater"></section>`;
+    window.LaunchGoGoGoApp.state.theaterStyle = "geass-mecha-race";
+    document.documentElement.dataset.theaterStyle = "geass-mecha-race";
+    window.LaunchGoGoGoApp.state.coworkers = [
+      { id: "c1", name: "Lelouch", balance: -210, playerCharacter: "thinker", playerGender: "male", createdAt: "", updatedAt: "" }
+    ];
+    window.LaunchGoGoGoApp.state.transactions = [
+      {
+        id: "o1", date: "2026-05-17", type: "mealOrder", mealType: "lunch",
+        coworkerId: "c1", storeId: "s1", mealName: "royal lunch", amount: 210,
+        paymentMethod: "unpaid", createdAt: "2026-05-17T04:00:00.000Z", updatedAt: ""
+      },
+      {
+        id: "p1", date: "2026-05-17", type: "payment", mealType: null,
+        coworkerId: "c1", storeId: null, mealName: "", amount: 210,
+        paymentMethod: null, createdAt: "2026-05-17T04:05:00.000Z", updatedAt: ""
+      }
+    ];
+    window.LaunchGoGoGoApp.state.activeTheaterTransactionId = "o1";
+
+    for (const restaurantType of ["bento", "drink", "noodle", "fastFood", "cafe"]) {
+      window.LaunchGoGoGoApp.state.stores = [
+        { id: "s1", name: restaurantType, restaurantType, rating: 3, availableForLunch: true, availableForDinner: false, createdAt: "", updatedAt: "" }
+      ];
+
+      window.LaunchGoGoGoApp.renderStatusTheater();
+
+      const style = document.querySelector(".theater-stage").getAttribute("style");
+      expect(style).toContain(`assets/theater/geass-mecha-race/stages/stage-${restaurantType}.png`);
+      expect(style).toContain("assets/theater/geass-mecha-race/animated/thinker-male/sit-eat-sheet.png");
+      expect(style).toContain(`assets/theater/geass-mecha-race/props/food/${restaurantType}-food-0.png`);
+      expect(style).toContain(`assets/theater/geass-mecha-race/props/food/${restaurantType}-food-1.png`);
+      expect(style).toContain(`assets/theater/geass-mecha-race/props/food/${restaurantType}-food-2.png`);
+      expect(style).toContain("assets/theater/geass-mecha-race/npcs/server-idle-sheet.png");
+      expect(style).toContain("assets/theater/geass-mecha-race/fx/payment-dollar-sheet.png");
+      expect(document.querySelector(".anime-actor-sprite").getAttribute("src")).toBe("./assets/theater/geass-mecha-race/characters/thinker-male.png");
+    }
+  });
+
+  it("uses Doraemon cartoon cafe theater assets and restaurant-specific stages", () => {
+    document.body.innerHTML = `<section id="statusTheater"></section>`;
+    window.LaunchGoGoGoApp.state.theaterStyle = "doraemon-cartoon-cafe";
+    document.documentElement.dataset.theaterStyle = "doraemon-cartoon-cafe";
+    window.LaunchGoGoGoApp.state.coworkers = [
+      { id: "c1", name: "Nobita", balance: -120, playerCharacter: "foodie", playerGender: "male", createdAt: "", updatedAt: "" }
+    ];
+    window.LaunchGoGoGoApp.state.transactions = [
+      {
+        id: "o1", date: "2026-05-18", type: "mealOrder", mealType: "lunch",
+        coworkerId: "c1", storeId: "s1", mealName: "dorayaki lunch", amount: 120,
+        paymentMethod: "unpaid", createdAt: "2026-05-18T04:00:00.000Z", updatedAt: ""
+      },
+      {
+        id: "p1", date: "2026-05-18", type: "payment", mealType: null,
+        coworkerId: "c1", storeId: null, mealName: "", amount: 120,
+        paymentMethod: null, createdAt: "2026-05-18T04:05:00.000Z", updatedAt: ""
+      }
+    ];
+    window.LaunchGoGoGoApp.state.activeTheaterTransactionId = "o1";
+
+    for (const restaurantType of ["bento", "drink", "noodle", "fastFood", "cafe"]) {
+      window.LaunchGoGoGoApp.state.stores = [
+        { id: "s1", name: restaurantType, restaurantType, rating: 3, availableForLunch: true, availableForDinner: false, createdAt: "", updatedAt: "" }
+      ];
+
+      window.LaunchGoGoGoApp.renderStatusTheater();
+
+      const style = document.querySelector(".theater-stage").getAttribute("style");
+      expect(style).toContain(`assets/theater/doraemon-cartoon-cafe/stages/stage-${restaurantType}.png`);
+      expect(style).toContain("assets/theater/doraemon-cartoon-cafe/animated/foodie-male/sit-eat-sheet.png");
+      expect(style).toContain(`assets/theater/doraemon-cartoon-cafe/props/food/${restaurantType}-food-0.png`);
+      expect(style).toContain(`assets/theater/doraemon-cartoon-cafe/props/food/${restaurantType}-food-1.png`);
+      expect(style).toContain(`assets/theater/doraemon-cartoon-cafe/props/food/${restaurantType}-food-2.png`);
+      expect(style).toContain("assets/theater/doraemon-cartoon-cafe/npcs/server-idle-sheet.png");
+      expect(style).toContain("assets/theater/doraemon-cartoon-cafe/fx/payment-dollar-sheet.png");
+      expect(document.querySelector(".anime-actor-sprite").getAttribute("src")).toBe("./assets/theater/doraemon-cartoon-cafe/characters/foodie-male.png");
+    }
+  });
+
+  it("uses Shin-chan yakiniku road theater assets and restaurant-specific stages", () => {
+    document.body.innerHTML = `<section id="statusTheater"></section>`;
+    window.LaunchGoGoGoApp.state.theaterStyle = "shinchan-yakiniku-road";
+    document.documentElement.dataset.theaterStyle = "shinchan-yakiniku-road";
+    window.LaunchGoGoGoApp.state.coworkers = [
+      { id: "c1", name: "Shinnosuke", balance: -180, playerCharacter: "foodie", playerGender: "male", createdAt: "", updatedAt: "" }
+    ];
+    window.LaunchGoGoGoApp.state.transactions = [
+      {
+        id: "o1", date: "2026-05-19", type: "mealOrder", mealType: "lunch",
+        coworkerId: "c1", storeId: "s1", mealName: "yakiniku lunch", amount: 180,
+        paymentMethod: "unpaid", createdAt: "2026-05-19T04:00:00.000Z", updatedAt: ""
+      },
+      {
+        id: "p1", date: "2026-05-19", type: "payment", mealType: null,
+        coworkerId: "c1", storeId: null, mealName: "", amount: 180,
+        paymentMethod: null, createdAt: "2026-05-19T04:05:00.000Z", updatedAt: ""
+      }
+    ];
+    window.LaunchGoGoGoApp.state.activeTheaterTransactionId = "o1";
+
+    for (const restaurantType of ["bento", "drink", "noodle", "fastFood", "cafe"]) {
+      window.LaunchGoGoGoApp.state.stores = [
+        { id: "s1", name: restaurantType, restaurantType, rating: 3, availableForLunch: true, availableForDinner: false, createdAt: "", updatedAt: "" }
+      ];
+
+      window.LaunchGoGoGoApp.renderStatusTheater();
+
+      const style = document.querySelector(".theater-stage").getAttribute("style");
+      expect(style).toContain(`assets/theater/shinchan-yakiniku-road/stages/stage-${restaurantType}.png`);
+      expect(style).toContain("assets/theater/shinchan-yakiniku-road/animated/foodie-male/sit-eat-sheet.png");
+      expect(style).toContain(`assets/theater/shinchan-yakiniku-road/props/food/${restaurantType}-food-0.png`);
+      expect(style).toContain(`assets/theater/shinchan-yakiniku-road/props/food/${restaurantType}-food-1.png`);
+      expect(style).toContain(`assets/theater/shinchan-yakiniku-road/props/food/${restaurantType}-food-2.png`);
+      expect(style).toContain("assets/theater/shinchan-yakiniku-road/npcs/server-idle-sheet.png");
+      expect(style).toContain("assets/theater/shinchan-yakiniku-road/fx/payment-dollar-sheet.png");
+      expect(document.querySelector(".anime-actor-sprite").getAttribute("src")).toBe("./assets/theater/shinchan-yakiniku-road/characters/foodie-male.png");
+    }
   });
 
   it("shows the theater only on ledger and supports collapsing", () => {

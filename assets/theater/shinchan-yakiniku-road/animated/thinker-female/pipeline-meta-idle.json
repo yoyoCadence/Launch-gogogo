@@ -1,0 +1,9 @@
+{
+  "source": "assets\\theater\\shinchan-yakiniku-road\\raw\\generated-animated\\himawari-cartoon\\idle-raw.png",
+  "generator": "image_gen + scripts/process-theater-generated-atlas.py",
+  "style": "shinchan-yakiniku-road",
+  "subject": "thinker-female-idle",
+  "layout": "2x2 sheet",
+  "cellInset": "12",
+  "align": "bottom"
+}

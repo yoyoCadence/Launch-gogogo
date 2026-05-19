@@ -186,6 +186,74 @@
         "foodie-male.png",
         "thinker-male.png"
       ]
+    },
+    "mecha-spy-race": {
+      "stages": {
+        "bento": "assets/theater/mecha-spy-race/stages/stage-bento.png",
+        "drink": "assets/theater/mecha-spy-race/stages/stage-drink.png",
+        "noodle": "assets/theater/mecha-spy-race/stages/stage-noodle.png",
+        "fastFood": "assets/theater/mecha-spy-race/stages/stage-fastFood.png",
+        "cafe": "assets/theater/mecha-spy-race/stages/stage-cafe.png"
+      },
+      "characters": [
+        "runner-female.png",
+        "foodie-female.png",
+        "thinker-female.png",
+        "runner-male.png",
+        "foodie-male.png",
+        "thinker-male.png"
+      ]
+    },
+    "geass-mecha-race": {
+      "stages": {
+        "bento": "assets/theater/geass-mecha-race/stages/stage-bento.png",
+        "drink": "assets/theater/geass-mecha-race/stages/stage-drink.png",
+        "noodle": "assets/theater/geass-mecha-race/stages/stage-noodle.png",
+        "fastFood": "assets/theater/geass-mecha-race/stages/stage-fastFood.png",
+        "cafe": "assets/theater/geass-mecha-race/stages/stage-cafe.png"
+      },
+      "characters": [
+        "runner-female.png",
+        "foodie-female.png",
+        "thinker-female.png",
+        "runner-male.png",
+        "foodie-male.png",
+        "thinker-male.png"
+      ]
+    },
+    "doraemon-cartoon-cafe": {
+      "stages": {
+        "bento": "assets/theater/doraemon-cartoon-cafe/stages/stage-bento.png",
+        "drink": "assets/theater/doraemon-cartoon-cafe/stages/stage-drink.png",
+        "noodle": "assets/theater/doraemon-cartoon-cafe/stages/stage-noodle.png",
+        "fastFood": "assets/theater/doraemon-cartoon-cafe/stages/stage-fastFood.png",
+        "cafe": "assets/theater/doraemon-cartoon-cafe/stages/stage-cafe.png"
+      },
+      "characters": [
+        "runner-female.png",
+        "foodie-female.png",
+        "thinker-female.png",
+        "runner-male.png",
+        "foodie-male.png",
+        "thinker-male.png"
+      ]
+    },
+    "shinchan-yakiniku-road": {
+      "stages": {
+        "bento": "assets/theater/shinchan-yakiniku-road/stages/stage-bento.png",
+        "drink": "assets/theater/shinchan-yakiniku-road/stages/stage-drink.png",
+        "noodle": "assets/theater/shinchan-yakiniku-road/stages/stage-noodle.png",
+        "fastFood": "assets/theater/shinchan-yakiniku-road/stages/stage-fastFood.png",
+        "cafe": "assets/theater/shinchan-yakiniku-road/stages/stage-cafe.png"
+      },
+      "characters": [
+        "runner-female.png",
+        "foodie-female.png",
+        "thinker-female.png",
+        "runner-male.png",
+        "foodie-male.png",
+        "thinker-male.png"
+      ]
     }
   }
 }

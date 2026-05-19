@@ -1,0 +1,9 @@
+{
+  "source": "assets\\theater\\doraemon-cartoon-cafe\\raw\\generated-animated\\shizuka-cartoon\\paying-raw.png",
+  "generator": "image_gen + scripts/process-theater-generated-atlas.py",
+  "style": "doraemon-cartoon-cafe",
+  "subject": "runner-female-paying",
+  "layout": "2x2 sheet",
+  "cellInset": "12",
+  "align": "bottom"
+}

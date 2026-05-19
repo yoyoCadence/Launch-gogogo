@@ -1,0 +1,9 @@
+{
+  "source": "assets\\theater\\doraemon-cartoon-cafe\\raw\\generated-animated\\nobita-cartoon\\walk-right-raw.png",
+  "generator": "image_gen + scripts/process-theater-generated-atlas.py",
+  "style": "doraemon-cartoon-cafe",
+  "subject": "thinker-male-walk-right",
+  "layout": "2x2 sheet",
+  "cellInset": "12",
+  "align": "bottom"
+}

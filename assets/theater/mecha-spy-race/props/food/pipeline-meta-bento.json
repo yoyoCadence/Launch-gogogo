@@ -1,0 +1,8 @@
+{
+  "source": "assets\\theater\\mecha-spy-race\\raw\\generated-props\\bento-food-row-raw.png",
+  "generator": "image_gen + scripts/process-theater-generated-atlas.py",
+  "style": "mecha-spy-race",
+  "subject": "bento-food",
+  "layout": "1x3 food progression sheet",
+  "restaurantType": "bento"
+}
