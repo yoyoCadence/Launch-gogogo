@@ -32,6 +32,7 @@ const THEATER_STYLE_STORAGE_KEY = "launch-gogogo-theater-style";
 const INTERFACE_DESIGN_STORAGE_KEY = "launch-gogogo-interface-design";
 const THEATER_ASSET_CACHE_NAME = "launch-gogogo-theater-assets-v6";
 const THEATER_ANIMATION_ASSET_VERSION = "anim-v11";
+const SERVICE_WORKER_UPDATE_INTERVAL_MS = 30 * 60 * 1000;
 const DEFAULT_MEAL_NAME = "未指定餐點";
 const PLAYER_GENDERS = [
   { id: "female", icon: "./assets/theater/anime/characters/runner-female.png", label: "女生" },
@@ -1692,6 +1693,13 @@ function showUpdateToast(worker) {
   ensureUpdateToast().classList.remove("hidden");
 }
 
+function requestServiceWorkerUpdate(registration) {
+  if (!registration?.update) return;
+  registration.update().catch((error) => {
+    console.warn("Service worker update check failed.", error);
+  });
+}
+
 function watchServiceWorkerUpdate(registration) {
   if (registration.waiting && navigator.serviceWorker.controller) {
     showUpdateToast(registration.waiting);
@@ -1844,9 +1852,14 @@ async function init() {
   if ("serviceWorker" in navigator) {
     const registration = await navigator.serviceWorker.register("./service-worker.js");
     watchServiceWorkerUpdate(registration);
+    requestServiceWorkerUpdate(registration);
     document.addEventListener("visibilitychange", () => {
-      if (document.visibilityState === "visible") registration.update();
+      if (document.visibilityState === "visible") requestServiceWorkerUpdate(registration);
     });
+    window.addEventListener("focus", () => requestServiceWorkerUpdate(registration));
+    window.addEventListener("pageshow", () => requestServiceWorkerUpdate(registration));
+    window.addEventListener("online", () => requestServiceWorkerUpdate(registration));
+    window.setInterval(() => requestServiceWorkerUpdate(registration), SERVICE_WORKER_UPDATE_INTERVAL_MS);
   }
 }
 
