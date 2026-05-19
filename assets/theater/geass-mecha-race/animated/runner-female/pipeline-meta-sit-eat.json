@@ -1,0 +1,9 @@
+{
+  "source": "assets\\theater\\geass-mecha-race\\raw\\generated-animated\\cc-racer\\sit-eat-sheet-raw.png",
+  "generator": "image_gen + scripts/process-theater-generated-atlas.py",
+  "style": "geass-mecha-race",
+  "subject": "runner-female-sit-eat",
+  "layout": "2x2 sheet",
+  "cellInset": "12",
+  "align": "center"
+}

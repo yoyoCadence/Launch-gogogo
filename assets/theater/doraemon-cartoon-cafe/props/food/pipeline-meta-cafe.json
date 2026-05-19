@@ -1,0 +1,8 @@
+{
+  "source": "assets\\theater\\doraemon-cartoon-cafe\\raw\\generated-props\\cafe-food-row-raw.png",
+  "generator": "image_gen + scripts/process-theater-generated-atlas.py",
+  "style": "doraemon-cartoon-cafe",
+  "subject": "cafe generated food progression",
+  "layout": "1x3 food progression sheet",
+  "restaurantType": "cafe"
+}

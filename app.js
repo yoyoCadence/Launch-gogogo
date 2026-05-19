@@ -30,8 +30,8 @@ const RESTAURANT_TYPES = [
 const THEME_STORAGE_KEY = "launch-gogogo-theme";
 const THEATER_STYLE_STORAGE_KEY = "launch-gogogo-theater-style";
 const INTERFACE_DESIGN_STORAGE_KEY = "launch-gogogo-interface-design";
-const THEATER_ASSET_CACHE_NAME = "launch-gogogo-theater-assets-v2";
-const THEATER_ANIMATION_ASSET_VERSION = "anim-v9";
+const THEATER_ASSET_CACHE_NAME = "launch-gogogo-theater-assets-v6";
+const THEATER_ANIMATION_ASSET_VERSION = "anim-v11";
 const DEFAULT_MEAL_NAME = "未指定餐點";
 const PLAYER_GENDERS = [
   { id: "female", icon: "./assets/theater/anime/characters/runner-female.png", label: "女生" },
@@ -163,6 +163,38 @@ const THEATER_STYLES = [
     available: true,
     colors: ["#f72585", "#ffd166", "#111827"],
     description: "高反差邊光、濕地反射、戲劇化舞台構圖與粗壯 sprite 輪廓。"
+  },
+  {
+    id: "mecha-spy-race",
+    name: "間諜家家",
+    status: "ready",
+    available: true,
+    colors: ["#ff7ab8", "#d4af37", "#071013"],
+    description: "Spy-family inspired mecha motorcycle race cafe with editorial lighting, umbrella-pit styling, and high-tech food props."
+  },
+  {
+    id: "geass-mecha-race",
+    name: "反叛機車賽",
+    status: "ready",
+    available: true,
+    colors: ["#6d28d9", "#d4af37", "#06120c"],
+    description: "Code Geass inspired mecha motorcycle race cafe with royal rebellion lighting, chess motifs, and emerald-violet food props."
+  },
+  {
+    id: "doraemon-cartoon-cafe",
+    name: "多拉A夢餐廳",
+    status: "ready",
+    available: true,
+    colors: ["#2ca7e0", "#f5d547", "#ef4444"],
+    description: "Doraemon inspired colorful cartoon restaurant theater with Shizuka and Nobita style actors, robot-cat waiter, dorayaki snacks, and gadget cafe stages."
+  },
+  {
+    id: "shinchan-yakiniku-road",
+    name: "蠟筆小新燒肉路",
+    status: "ready",
+    available: true,
+    colors: ["#ef4444", "#facc15", "#38bdf8"],
+    description: "Crayon Shin-chan inspired colorful cartoon restaurant theater with Himawari and Shinnosuke style actors, Misae and Hiroshi waiters, and Yakiniku Road food props."
   }
 ];
 

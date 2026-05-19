@@ -73,6 +73,10 @@ Done:
 - Replace `painted-fantasy` fallback sheets with production generated sheets for all character actions, food states, server idle, and payment FX.
 - Replace `muted-jp-life` fallback sheets with production generated sheets for all character actions, food states, server idle, and payment FX.
 - Replace `arcade-fighter-90s` fallback sheets with production generated sheets for all character actions, food states, server idle, and payment FX.
+- Add `mecha-spy-race` as a production generated spy-family inspired mecha motorcycle race cafe pack with stage, character cutouts, animation sheets, food props, server idle, and payment FX.
+- Add `geass-mecha-race` as a production generated Code Geass inspired mecha motorcycle race cafe pack with stage, character cutouts, animation sheets, restaurant-specific food props, server idle, and payment FX.
+- Add `doraemon-cartoon-cafe` as a production generated Doraemon inspired cartoon restaurant pack with stage, Shizuka/Nobita style character cutouts, robot-cat waiter, restaurant-specific food props, server idle, and payment FX.
+- Add `shinchan-yakiniku-road` as a production generated Crayon Shin-chan inspired cartoon restaurant pack with stage, Himawari/Shinnosuke style character cutouts, Misae/Hiroshi waiter pair, restaurant-specific generated food props, server idle, and payment FX.
 
 Style backlog:
 
@@ -109,7 +113,7 @@ Current baseline:
 
 - Static stage backgrounds live at `assets/theater/{style}/stages/stage-{restaurantType}.png`.
 - Static character cutouts live at `assets/theater/{style}/characters/{character}-{gender}.png`.
-- `style` values: `anime`, `cyberpunk`, `gothic-lolita`, `pixel`, `arcade`, `retro-16bit`, `storybook`, `chibi`, `painted-fantasy`, `muted-jp-life`, `arcade-fighter-90s`.
+- `style` values: `anime`, `cyberpunk`, `gothic-lolita`, `pixel`, `arcade`, `retro-16bit`, `storybook`, `chibi`, `painted-fantasy`, `muted-jp-life`, `arcade-fighter-90s`, `mecha-spy-race`, `geass-mecha-race`, `doraemon-cartoon-cafe`, `shinchan-yakiniku-road`.
 - `restaurantType` values: `bento`, `drink`, `noodle`, `fastFood`, `cafe`.
 - `character` values: `runner`, `foodie`, `thinker`.
 - `gender` values: `female`, `male`.
@@ -326,6 +330,10 @@ Current animation asset status:
 - `painted-fantasy`: production generated pack complete.
 - `muted-jp-life`: production generated pack complete.
 - `arcade-fighter-90s`: production generated pack complete.
+- `mecha-spy-race`: production generated pack complete.
+- `geass-mecha-race`: production generated pack complete.
+- `doraemon-cartoon-cafe`: production generated pack complete.
+- `shinchan-yakiniku-road`: production generated pack complete.
 
 Download/cache rule:
 

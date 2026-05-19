@@ -2,7 +2,7 @@
 
 The generated theater pack uses a consistent runtime contract:
 
-- 11 raster theater styles: anime, cyberpunk, gothic-lolita, pixel, arcade, retro-16bit, storybook, chibi, painted-fantasy, muted-jp-life, arcade-fighter-90s.
+- 15 raster theater styles: anime, cyberpunk, gothic-lolita, pixel, arcade, retro-16bit, storybook, chibi, painted-fantasy, muted-jp-life, arcade-fighter-90s, mecha-spy-race, geass-mecha-race, doraemon-cartoon-cafe, shinchan-yakiniku-road.
 - 5 restaurant stages per style: bento, drink, noodle, fastFood, cafe.
 - 6 character cutouts per style: runner, foodie, thinker, each with female and male variants.
 - All 11 planned animated style packs are production generated as of 2026-05-11.
@@ -120,3 +120,7 @@ Style references used for prompt wording:
 - Painted fantasy RPG: thick brushwork, tavern/guild materials, warm magical lighting.
 - Muted Japanese daily-life: low saturation, soft daylight, simple neighborhood lunch-shop mood.
 - 90s arcade fighting: high-contrast rim light, wet pavement, dramatic stage composition, bold sprite-era silhouettes.
+- Mecha spy race: pink/black/white/gold/emerald mecha motorcycle pit-lounge, spy-family mascot motifs, modest umbrella-pit racing suit, cinematic editorial realism.
+- Geass mecha race: black/violet/gold/emerald royal rebellion motorcycle pit-lounge, chess motifs, green immortal-witch and strategist racer silhouettes, cinematic editorial realism.
+- Doraemon cartoon cafe: sky-blue/red/yellow family-anime restaurant stages, Shizuka and Nobita style actors, blue robot-cat waiter, dorayaki and future-gadget food props, colorful theatrical movie polish.
+- Shinchan yakiniku road: red/yellow/sky-blue Kasukabe family-comedy restaurant stages, Himawari and Shinnosuke style actors, Misae and Hiroshi waiter pair, exaggerated Yakiniku Road eating faces, fully generated food props.
