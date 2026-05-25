@@ -1,0 +1,9 @@
+{
+  "source": "assets\\theater\\hunter-nen-restaurant\\raw\\generated-npcs-fx\\payment-dollar-sheet-raw.png",
+  "generator": "image_gen + scripts/process-theater-generated-atlas.py",
+  "style": "hunter-nen-restaurant",
+  "subject": "hunter-license-payment-fx",
+  "layout": "2x2 sheet",
+  "cellInset": "0",
+  "align": "center"
+}

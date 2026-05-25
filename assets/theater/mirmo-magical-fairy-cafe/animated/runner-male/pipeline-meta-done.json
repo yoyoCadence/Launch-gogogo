@@ -1,0 +1,9 @@
+{
+  "source": "assets\\theater\\mirmo-magical-fairy-cafe\\raw\\generated-animated\\runner-male\\done-sheet-raw.png",
+  "generator": "image_gen + scripts/process-theater-generated-atlas.py",
+  "style": "mirmo-magical-fairy-cafe",
+  "subject": "runner-male-done",
+  "layout": "2x2 sheet",
+  "cellInset": "0",
+  "align": "center"
+}

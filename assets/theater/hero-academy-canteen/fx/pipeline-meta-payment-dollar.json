@@ -1,0 +1,9 @@
+{
+  "source": "assets\\theater\\hero-academy-canteen\\raw\\generated-npcs-fx\\payment-dollar-sheet-raw.png",
+  "generator": "image_gen + scripts/process-theater-generated-atlas.py",
+  "style": "hero-academy-canteen",
+  "subject": "hero-academy-payment-fx",
+  "layout": "2x2 sheet",
+  "cellInset": "0",
+  "align": "center"
+}

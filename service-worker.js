@@ -1,5 +1,5 @@
-const CACHE_NAME = "launch-gogogo-pwa-v14";
-const THEATER_ASSET_CACHE_NAME = "launch-gogogo-theater-assets-v2";
+const CACHE_NAME = "launch-gogogo-pwa-v16";
+const THEATER_ASSET_CACHE_NAME = "launch-gogogo-theater-assets-v8";
 const ASSETS = [
   "./",
   "./index.html",
