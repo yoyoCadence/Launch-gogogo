@@ -1,0 +1,9 @@
+{
+  "source": "assets\\theater\\hero-academy-canteen\\raw\\generated-animated\\foodie-male\\done-sheet-raw.png",
+  "generator": "image_gen + scripts/process-theater-generated-atlas.py",
+  "style": "hero-academy-canteen",
+  "subject": "foodie-male-done",
+  "layout": "2x2 sheet",
+  "cellInset": "0",
+  "align": "center"
+}

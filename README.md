@@ -159,7 +159,7 @@ assets/theater/{style}/
 
 允許值：
 
-- `style`: `anime`, `cyberpunk`, `gothic-lolita`, `pixel`, `arcade`, `retro-16bit`, `storybook`, `chibi`, `painted-fantasy`, `muted-jp-life`, `arcade-fighter-90s`
+- `style`: `anime`, `cyberpunk`, `gothic-lolita`, `pixel`, `arcade`, `retro-16bit`, `storybook`, `chibi`, `painted-fantasy`, `muted-jp-life`, `arcade-fighter-90s`, `mecha-spy-race`, `geass-mecha-race`, `doraemon-cartoon-cafe`, `shinchan-yakiniku-road`, `hunter-nen-restaurant`, `hero-academy-canteen`, `gundam-mobile-suit-canteen`, `mirmo-magical-fairy-cafe`
 - `restaurantType`: `bento`, `drink`, `noodle`, `fastFood`, `cafe`
 - `character`: `runner`, `foodie`, `thinker`
 - `gender`: `female`, `male`

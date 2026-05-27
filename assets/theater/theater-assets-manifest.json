@@ -254,6 +254,74 @@
         "foodie-male.png",
         "thinker-male.png"
       ]
+    },
+    "hunter-nen-restaurant": {
+      "stages": {
+        "bento": "assets/theater/hunter-nen-restaurant/stages/stage-bento.png",
+        "drink": "assets/theater/hunter-nen-restaurant/stages/stage-drink.png",
+        "noodle": "assets/theater/hunter-nen-restaurant/stages/stage-noodle.png",
+        "fastFood": "assets/theater/hunter-nen-restaurant/stages/stage-fastFood.png",
+        "cafe": "assets/theater/hunter-nen-restaurant/stages/stage-cafe.png"
+      },
+      "characters": [
+        "runner-female.png",
+        "foodie-female.png",
+        "thinker-female.png",
+        "runner-male.png",
+        "foodie-male.png",
+        "thinker-male.png"
+      ]
+    },
+    "hero-academy-canteen": {
+      "stages": {
+        "bento": "assets/theater/hero-academy-canteen/stages/stage-bento.png",
+        "drink": "assets/theater/hero-academy-canteen/stages/stage-drink.png",
+        "noodle": "assets/theater/hero-academy-canteen/stages/stage-noodle.png",
+        "fastFood": "assets/theater/hero-academy-canteen/stages/stage-fastFood.png",
+        "cafe": "assets/theater/hero-academy-canteen/stages/stage-cafe.png"
+      },
+      "characters": [
+        "runner-female.png",
+        "foodie-female.png",
+        "thinker-female.png",
+        "runner-male.png",
+        "foodie-male.png",
+        "thinker-male.png"
+      ]
+    },
+    "gundam-mobile-suit-canteen": {
+      "stages": {
+        "bento": "assets/theater/gundam-mobile-suit-canteen/stages/stage-bento.png",
+        "drink": "assets/theater/gundam-mobile-suit-canteen/stages/stage-drink.png",
+        "noodle": "assets/theater/gundam-mobile-suit-canteen/stages/stage-noodle.png",
+        "fastFood": "assets/theater/gundam-mobile-suit-canteen/stages/stage-fastFood.png",
+        "cafe": "assets/theater/gundam-mobile-suit-canteen/stages/stage-cafe.png"
+      },
+      "characters": [
+        "runner-female.png",
+        "foodie-female.png",
+        "thinker-female.png",
+        "runner-male.png",
+        "foodie-male.png",
+        "thinker-male.png"
+      ]
+    },
+    "mirmo-magical-fairy-cafe": {
+      "stages": {
+        "bento": "assets/theater/mirmo-magical-fairy-cafe/stages/stage-bento.png",
+        "drink": "assets/theater/mirmo-magical-fairy-cafe/stages/stage-drink.png",
+        "noodle": "assets/theater/mirmo-magical-fairy-cafe/stages/stage-noodle.png",
+        "fastFood": "assets/theater/mirmo-magical-fairy-cafe/stages/stage-fastFood.png",
+        "cafe": "assets/theater/mirmo-magical-fairy-cafe/stages/stage-cafe.png"
+      },
+      "characters": [
+        "runner-female.png",
+        "foodie-female.png",
+        "thinker-female.png",
+        "runner-male.png",
+        "foodie-male.png",
+        "thinker-male.png"
+      ]
     }
   }
 }

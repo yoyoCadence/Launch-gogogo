@@ -1,0 +1,9 @@
+{
+  "source": "assets\\theater\\hunter-nen-restaurant\\raw\\generated-animated\\biscuit-chibi\\walk-right-sheet-raw.png",
+  "generator": "image_gen + scripts/process-theater-generated-atlas.py",
+  "style": "hunter-nen-restaurant",
+  "subject": "runner-female-walk-right-biscuit-chibi",
+  "layout": "2x2 sheet",
+  "cellInset": "0",
+  "align": "bottom"
+}

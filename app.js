@@ -30,8 +30,8 @@ const RESTAURANT_TYPES = [
 const THEME_STORAGE_KEY = "launch-gogogo-theme";
 const THEATER_STYLE_STORAGE_KEY = "launch-gogogo-theater-style";
 const INTERFACE_DESIGN_STORAGE_KEY = "launch-gogogo-interface-design";
-const THEATER_ASSET_CACHE_NAME = "launch-gogogo-theater-assets-v6";
-const THEATER_ANIMATION_ASSET_VERSION = "anim-v11";
+const THEATER_ASSET_CACHE_NAME = "launch-gogogo-theater-assets-v8";
+const THEATER_ANIMATION_ASSET_VERSION = "anim-v13";
 const SERVICE_WORKER_UPDATE_INTERVAL_MS = 30 * 60 * 1000;
 const DEFAULT_MEAL_NAME = "未指定餐點";
 const PLAYER_GENDERS = [
@@ -196,6 +196,38 @@ const THEATER_STYLES = [
     available: true,
     colors: ["#ef4444", "#facc15", "#38bdf8"],
     description: "Crayon Shin-chan inspired colorful cartoon restaurant theater with Himawari and Shinnosuke style actors, Misae and Hiroshi waiters, and Yakiniku Road food props."
+  },
+  {
+    id: "hunter-nen-restaurant",
+    name: "Hunter Nen Restaurant",
+    status: "ready",
+    available: true,
+    colors: ["#16a34a", "#f472b6", "#facc15"],
+    description: "Hunter x Hunter inspired chibi restaurant theater with Biscuit and Gon style actors, Hisoka style waiter, Nen aura stages, card food props, and Hunter Exam / Greed Island / Heaven's Arena / Yorknew visual motifs."
+  },
+  {
+    id: "hero-academy-canteen",
+    name: "Hero Academy Canteen",
+    status: "ready",
+    available: true,
+    colors: ["#22c55e", "#fb7185", "#facc15"],
+    description: "Fan-made chibi superhero academy restaurant theater with a pink gravity heroine, green underdog hero student, golden hero-teacher waiter, colorful canteen stages, academy lunch props, and heroic payment FX."
+  },
+  {
+    id: "gundam-mobile-suit-canteen",
+    name: "Gundam Mobile Suit Canteen",
+    status: "ready",
+    available: true,
+    colors: ["#2563eb", "#ef4444", "#facc15"],
+    description: "Gundam inspired colorful mobile-suit canteen theater with red Zaku female actors, RX-78-2 male actors, Freedom Gundam waiter, colony cafeteria stages, and mecha-themed food props."
+  },
+  {
+    id: "mirmo-magical-fairy-cafe",
+    name: "Mirmo Magical Fairy Cafe",
+    status: "ready",
+    available: true,
+    colors: ["#f472b6", "#60a5fa", "#facc15"],
+    description: "Mirmo de Pon inspired colorful magical fairy cafe theater with Rirumu-style female actors, Mirumo-style male actors, Yashichi waiter, pastel fairy stages, and sweet magical food props."
   }
 ];
 

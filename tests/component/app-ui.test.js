@@ -28,7 +28,11 @@ describe("app UI components", () => {
       "mecha-spy-race": "ready",
       "geass-mecha-race": "ready",
       "doraemon-cartoon-cafe": "ready",
-      "shinchan-yakiniku-road": "ready"
+      "shinchan-yakiniku-road": "ready",
+      "hunter-nen-restaurant": "ready",
+      "hero-academy-canteen": "ready",
+      "gundam-mobile-suit-canteen": "ready",
+      "mirmo-magical-fairy-cafe": "ready"
     };
     window.LaunchGoGoGoApp.state.activePage = "ledger";
     window.LaunchGoGoGoApp.state.theaterCollapsed = false;
@@ -270,6 +274,26 @@ describe("app UI components", () => {
 
     expect(window.LaunchGoGoGoApp.state.theaterStyle).toBe("shinchan-yakiniku-road");
     expect(document.documentElement.dataset.theaterStyle).toBe("shinchan-yakiniku-road");
+
+    window.LaunchGoGoGoApp.applyTheaterStyle("hunter-nen-restaurant");
+
+    expect(window.LaunchGoGoGoApp.state.theaterStyle).toBe("hunter-nen-restaurant");
+    expect(document.documentElement.dataset.theaterStyle).toBe("hunter-nen-restaurant");
+
+    window.LaunchGoGoGoApp.applyTheaterStyle("hero-academy-canteen");
+
+    expect(window.LaunchGoGoGoApp.state.theaterStyle).toBe("hero-academy-canteen");
+    expect(document.documentElement.dataset.theaterStyle).toBe("hero-academy-canteen");
+
+    window.LaunchGoGoGoApp.applyTheaterStyle("gundam-mobile-suit-canteen");
+
+    expect(window.LaunchGoGoGoApp.state.theaterStyle).toBe("gundam-mobile-suit-canteen");
+    expect(document.documentElement.dataset.theaterStyle).toBe("gundam-mobile-suit-canteen");
+
+    window.LaunchGoGoGoApp.applyTheaterStyle("mirmo-magical-fairy-cafe");
+
+    expect(window.LaunchGoGoGoApp.state.theaterStyle).toBe("mirmo-magical-fairy-cafe");
+    expect(document.documentElement.dataset.theaterStyle).toBe("mirmo-magical-fairy-cafe");
   });
 
   it("renders the status theater as waiting until an unpaid order has a payment", () => {
@@ -790,6 +814,55 @@ describe("app UI components", () => {
       expect(style).toContain("assets/theater/shinchan-yakiniku-road/npcs/server-idle-sheet.png");
       expect(style).toContain("assets/theater/shinchan-yakiniku-road/fx/payment-dollar-sheet.png");
       expect(document.querySelector(".anime-actor-sprite").getAttribute("src")).toBe("./assets/theater/shinchan-yakiniku-road/characters/foodie-male.png");
+    }
+  });
+
+  it("uses bundled theater assets and restaurant-specific stages for new packs", () => {
+    const cases = [
+      { styleId: "hunter-nen-restaurant", coworker: "Gon", mealName: "hunter lunch" },
+      { styleId: "hero-academy-canteen", coworker: "Hero Student", mealName: "academy lunch" },
+      { styleId: "gundam-mobile-suit-canteen", coworker: "Amuro", mealName: "colony lunch" },
+      { styleId: "mirmo-magical-fairy-cafe", coworker: "Mirumo", mealName: "magical sweets" }
+    ];
+
+    for (const themeCase of cases) {
+      document.body.innerHTML = `<section id="statusTheater"></section>`;
+      window.LaunchGoGoGoApp.state.theaterStyle = themeCase.styleId;
+      document.documentElement.dataset.theaterStyle = themeCase.styleId;
+      window.LaunchGoGoGoApp.state.coworkers = [
+        { id: "c1", name: themeCase.coworker, balance: -180, playerCharacter: "foodie", playerGender: "male", createdAt: "", updatedAt: "" }
+      ];
+      window.LaunchGoGoGoApp.state.transactions = [
+        {
+          id: "o1", date: "2026-05-19", type: "mealOrder", mealType: "lunch",
+          coworkerId: "c1", storeId: "s1", mealName: themeCase.mealName, amount: 180,
+          paymentMethod: "unpaid", createdAt: "2026-05-19T04:00:00.000Z", updatedAt: ""
+        },
+        {
+          id: "p1", date: "2026-05-19", type: "payment", mealType: null,
+          coworkerId: "c1", storeId: null, mealName: "", amount: 180,
+          paymentMethod: null, createdAt: "2026-05-19T04:05:00.000Z", updatedAt: ""
+        }
+      ];
+      window.LaunchGoGoGoApp.state.activeTheaterTransactionId = "o1";
+
+      for (const restaurantType of ["bento", "drink", "noodle", "fastFood", "cafe"]) {
+        window.LaunchGoGoGoApp.state.stores = [
+          { id: "s1", name: restaurantType, restaurantType, rating: 3, availableForLunch: true, availableForDinner: false, createdAt: "", updatedAt: "" }
+        ];
+
+        window.LaunchGoGoGoApp.renderStatusTheater();
+
+        const style = document.querySelector(".theater-stage").getAttribute("style");
+        expect(style).toContain(`assets/theater/${themeCase.styleId}/stages/stage-${restaurantType}.png`);
+        expect(style).toContain(`assets/theater/${themeCase.styleId}/animated/foodie-male/sit-eat-sheet.png`);
+        expect(style).toContain(`assets/theater/${themeCase.styleId}/props/food/${restaurantType}-food-0.png`);
+        expect(style).toContain(`assets/theater/${themeCase.styleId}/props/food/${restaurantType}-food-1.png`);
+        expect(style).toContain(`assets/theater/${themeCase.styleId}/props/food/${restaurantType}-food-2.png`);
+        expect(style).toContain(`assets/theater/${themeCase.styleId}/npcs/server-idle-sheet.png`);
+        expect(style).toContain(`assets/theater/${themeCase.styleId}/fx/payment-dollar-sheet.png`);
+        expect(document.querySelector(".anime-actor-sprite").getAttribute("src")).toBe(`./assets/theater/${themeCase.styleId}/characters/foodie-male.png`);
+      }
     }
   });
 

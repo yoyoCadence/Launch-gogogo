@@ -1367,6 +1367,102 @@ html[data-theater-style="shinchan-yakiniku-road"] .theater-server-sprite {
   clip-path: var(--theater-server-clip);
 }
 
+html[data-theater-style="gundam-mobile-suit-canteen"] .theater-stage.restaurant-bento {
+  --theater-server-top: 36px;
+  --theater-server-left: 66px;
+  --theater-server-size: 86px;
+  --theater-payment-left: 116px;
+  --theater-server-clip: inset(0 0 30% 0);
+}
+
+html[data-theater-style="gundam-mobile-suit-canteen"] .theater-stage.restaurant-drink {
+  --theater-server-top: 36px;
+  --theater-server-left: 66px;
+  --theater-server-size: 86px;
+  --theater-payment-left: 116px;
+  --theater-server-clip: inset(0 0 30% 0);
+}
+
+html[data-theater-style="gundam-mobile-suit-canteen"] .theater-stage.restaurant-noodle {
+  --theater-server-top: 36px;
+  --theater-server-left: 66px;
+  --theater-server-size: 86px;
+  --theater-payment-left: 116px;
+  --theater-server-clip: inset(0 0 32% 0);
+  --theater-food-right: 12px;
+  --theater-food-bottom: 34px;
+  --theater-food-width: 152px;
+  --theater-food-height: 100px;
+}
+
+html[data-theater-style="gundam-mobile-suit-canteen"] .theater-stage.restaurant-fastFood {
+  --theater-server-top: 36px;
+  --theater-server-left: 66px;
+  --theater-server-size: 86px;
+  --theater-payment-left: 116px;
+  --theater-server-clip: inset(0 0 30% 0);
+}
+
+html[data-theater-style="gundam-mobile-suit-canteen"] .theater-stage.restaurant-cafe {
+  --theater-server-top: 36px;
+  --theater-server-left: 66px;
+  --theater-server-size: 86px;
+  --theater-payment-left: 116px;
+  --theater-server-clip: inset(0 0 30% 0);
+}
+
+html[data-theater-style="gundam-mobile-suit-canteen"] .theater-server-sprite {
+  clip-path: var(--theater-server-clip);
+}
+
+html[data-theater-style="mirmo-magical-fairy-cafe"] .theater-stage.restaurant-bento {
+  --theater-server-top: 40px;
+  --theater-server-left: 76px;
+  --theater-server-size: 76px;
+  --theater-payment-left: 112px;
+  --theater-server-clip: inset(0 0 28% 0);
+}
+
+html[data-theater-style="mirmo-magical-fairy-cafe"] .theater-stage.restaurant-drink {
+  --theater-server-top: 40px;
+  --theater-server-left: 76px;
+  --theater-server-size: 76px;
+  --theater-payment-left: 112px;
+  --theater-server-clip: inset(0 0 28% 0);
+}
+
+html[data-theater-style="mirmo-magical-fairy-cafe"] .theater-stage.restaurant-noodle {
+  --theater-server-top: 40px;
+  --theater-server-left: 76px;
+  --theater-server-size: 76px;
+  --theater-payment-left: 112px;
+  --theater-server-clip: inset(0 0 30% 0);
+  --theater-food-right: 12px;
+  --theater-food-bottom: 34px;
+  --theater-food-width: 152px;
+  --theater-food-height: 100px;
+}
+
+html[data-theater-style="mirmo-magical-fairy-cafe"] .theater-stage.restaurant-fastFood {
+  --theater-server-top: 40px;
+  --theater-server-left: 76px;
+  --theater-server-size: 76px;
+  --theater-payment-left: 112px;
+  --theater-server-clip: inset(0 0 28% 0);
+}
+
+html[data-theater-style="mirmo-magical-fairy-cafe"] .theater-stage.restaurant-cafe {
+  --theater-server-top: 40px;
+  --theater-server-left: 76px;
+  --theater-server-size: 76px;
+  --theater-payment-left: 112px;
+  --theater-server-clip: inset(0 0 28% 0);
+}
+
+html[data-theater-style="mirmo-magical-fairy-cafe"] .theater-server-sprite {
+  clip-path: var(--theater-server-clip);
+}
+
 html[data-theater-style="anime"] .theater-server-sprite,
 html[data-theater-style="cyberpunk"] .theater-server-sprite,
 html[data-theater-style="gothic-lolita"] .theater-server-sprite,

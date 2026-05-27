@@ -77,6 +77,10 @@ Done:
 - Add `geass-mecha-race` as a production generated Code Geass inspired mecha motorcycle race cafe pack with stage, character cutouts, animation sheets, restaurant-specific food props, server idle, and payment FX.
 - Add `doraemon-cartoon-cafe` as a production generated Doraemon inspired cartoon restaurant pack with stage, Shizuka/Nobita style character cutouts, robot-cat waiter, restaurant-specific food props, server idle, and payment FX.
 - Add `shinchan-yakiniku-road` as a production generated Crayon Shin-chan inspired cartoon restaurant pack with stage, Himawari/Shinnosuke style character cutouts, Misae/Hiroshi waiter pair, restaurant-specific generated food props, server idle, and payment FX.
+- Add `hunter-nen-restaurant` as a production generated Hunter x Hunter inspired cartoon restaurant pack with stage, Biscuit/Gon style character cutouts, Hisoka waiter, restaurant-specific generated food props, server idle, and payment FX.
+- Add `hero-academy-canteen` as a production generated fan-made superhero academy cartoon restaurant pack with stage, pink gravity heroine and green underdog hero student cutouts, golden hero-teacher waiter, academy lunch props, server idle, and payment FX.
+- Add `gundam-mobile-suit-canteen` as a production generated Gundam inspired cartoon restaurant pack with colony canteen stages, red Zaku female actor cutouts, RX-78-2 male actor cutouts, Freedom Gundam waiter, restaurant-specific mecha food props, server idle, and payment FX.
+- Add `mirmo-magical-fairy-cafe` as a production generated Mirmo de Pon inspired magical fairy cafe pack with stage, Rirumu-style female fairy cutouts, Mirumo-style male fairy cutouts, Yashichi waiter, restaurant-specific magical food props, server idle, and payment FX.
 
 Style backlog:
 
@@ -113,7 +117,7 @@ Current baseline:
 
 - Static stage backgrounds live at `assets/theater/{style}/stages/stage-{restaurantType}.png`.
 - Static character cutouts live at `assets/theater/{style}/characters/{character}-{gender}.png`.
-- `style` values: `anime`, `cyberpunk`, `gothic-lolita`, `pixel`, `arcade`, `retro-16bit`, `storybook`, `chibi`, `painted-fantasy`, `muted-jp-life`, `arcade-fighter-90s`, `mecha-spy-race`, `geass-mecha-race`, `doraemon-cartoon-cafe`, `shinchan-yakiniku-road`.
+- `style` values: `anime`, `cyberpunk`, `gothic-lolita`, `pixel`, `arcade`, `retro-16bit`, `storybook`, `chibi`, `painted-fantasy`, `muted-jp-life`, `arcade-fighter-90s`, `mecha-spy-race`, `geass-mecha-race`, `doraemon-cartoon-cafe`, `shinchan-yakiniku-road`, `hunter-nen-restaurant`, `hero-academy-canteen`, `gundam-mobile-suit-canteen`, `mirmo-magical-fairy-cafe`.
 - `restaurantType` values: `bento`, `drink`, `noodle`, `fastFood`, `cafe`.
 - `character` values: `runner`, `foodie`, `thinker`.
 - `gender` values: `female`, `male`.
@@ -334,6 +338,10 @@ Current animation asset status:
 - `geass-mecha-race`: production generated pack complete.
 - `doraemon-cartoon-cafe`: production generated pack complete.
 - `shinchan-yakiniku-road`: production generated pack complete.
+- `hunter-nen-restaurant`: production generated pack complete.
+- `hero-academy-canteen`: production generated pack complete.
+- `gundam-mobile-suit-canteen`: production generated pack complete.
+- `mirmo-magical-fairy-cafe`: production generated pack complete.
 
 Download/cache rule:
 
