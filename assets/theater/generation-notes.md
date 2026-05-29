@@ -2,10 +2,10 @@
 
 The generated theater pack uses a consistent runtime contract:
 
-- 19 raster theater styles: anime, cyberpunk, gothic-lolita, pixel, arcade, retro-16bit, storybook, chibi, painted-fantasy, muted-jp-life, arcade-fighter-90s, mecha-spy-race, geass-mecha-race, doraemon-cartoon-cafe, shinchan-yakiniku-road, hunter-nen-restaurant, hero-academy-canteen, gundam-mobile-suit-canteen, mirmo-magical-fairy-cafe.
+- 20 raster theater styles: anime, cyberpunk, gothic-lolita, pixel, arcade, retro-16bit, storybook, chibi, painted-fantasy, muted-jp-life, arcade-fighter-90s, mecha-spy-race, geass-mecha-race, doraemon-cartoon-cafe, shinchan-yakiniku-road, hunter-nen-restaurant, hero-academy-canteen, gundam-mobile-suit-canteen, mirmo-magical-fairy-cafe, rezero-isekai-cafe.
 - 5 restaurant stages per style: bento, drink, noodle, fastFood, cafe.
 - 6 character cutouts per style: runner, foodie, thinker, each with female and male variants.
-- All 11 planned animated style packs are production generated as of 2026-05-11.
+- All 12 planned animated style packs are production generated as of 2026-05-27.
 - Current runtime supports female and male character variants through coworker profile settings.
 
 Prompt principles:
@@ -125,6 +125,8 @@ Style references used for prompt wording:
 - Doraemon cartoon cafe: sky-blue/red/yellow family-anime restaurant stages, Shizuka and Nobita style actors, blue robot-cat waiter, dorayaki and future-gadget food props, colorful theatrical movie polish.
 - Shinchan yakiniku road: red/yellow/sky-blue Kasukabe family-comedy restaurant stages, Himawari and Shinnosuke style actors, Misae and Hiroshi waiter pair, exaggerated Yakiniku Road eating faces, fully generated food props.
 - Hunter Nen restaurant: green/pink/gold hunter-adventure restaurant stages, Biscuit and Gon style actors, Hisoka style waiter, Nen aura effects, card motifs, and Hunter Exam / Greed Island / Heaven's Arena / Yorknew visual cues.
+- Hunter Nen restaurant stages were refreshed on 2026-05-28 so every restaurant background has a left service counter, a clear center aisle, and a right-side foreground table or booth for the eating layer.
 - Hero Academy canteen: green/pink/gold superhero school restaurant stages, pink gravity heroine and green underdog hero student actors, golden hero-teacher waiter, academy lunch trays, comic impact shapes, and heroic payment FX.
 - Gundam mobile suit canteen: blue/red/yellow colony-cafeteria stages, red Zaku female actors, RX-78-2 male actors, Freedom Gundam waiter, mobile-suit plating, Haro-style motifs, and mecha-themed food props.
 - Mirmo magical fairy cafe: pink/blue/yellow magical fairy cafe stages, Rirumu-style female actors, Mirumo-style male actors, purple Yashichi waiter, mug-and-music motifs, pastel sweets, and colorful magical food props.
+- Re:Zero isekai cafe: blue/silver/lavender Lugnica mansion restaurant stages, Rem-style female actors, Subaru-style male actors, Emilia-style waiter, appa fruit, mayo burger and mansion tea props, and blue-silver magic payment FX.

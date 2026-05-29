@@ -46,10 +46,12 @@ test("records a coworker topup and a prepaid lunch order", async ({ page }) => {
   await expect(page.locator("html")).toHaveAttribute("data-theater-style", "muted-jp-life");
   await page.locator('[data-theater-style-id="arcade-fighter-90s"]').click();
   await expect(page.locator("html")).toHaveAttribute("data-theater-style", "arcade-fighter-90s");
+  await page.locator('[data-theater-style-id="rezero-isekai-cafe"]').click();
+  await expect(page.locator("html")).toHaveAttribute("data-theater-style", "rezero-isekai-cafe");
 
   await page.getByRole("button", { name: "Ledger" }).click();
-  await expect(page.locator("#statusTheater .anime-actor-sprite")).toHaveJSProperty("naturalWidth", 128);
-  await expect(page.locator("#statusTheater .theater-stage")).toHaveAttribute("style", /assets\/theater\/arcade-fighter-90s\/animated\//);
+  await expect(page.locator("#statusTheater .anime-actor-sprite")).toHaveJSProperty("naturalWidth", 512);
+  await expect(page.locator("#statusTheater .theater-stage")).toHaveAttribute("style", /assets\/theater\/rezero-isekai-cafe\/animated\//);
 
   await page.getByRole("button", { name: "Dinner" }).click();
   await expect(page.locator("#statusTheater")).toBeHidden();

@@ -1,0 +1,8 @@
+﻿{
+    "source":  "assets\\theater\\rezero-isekai-cafe\\raw\\food-atlas-transparent.png",
+    "generator":  "image_gen + scripts/process-theater-generated-atlas.py",
+    "style":  "rezero-isekai-cafe",
+    "subject":  "ReZero-inspired fantasy cafe food props",
+    "layout":  "5x3 food progression atlas",
+    "restaurantType":  "fastFood"
+}

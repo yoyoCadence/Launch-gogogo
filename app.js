@@ -30,8 +30,8 @@ const RESTAURANT_TYPES = [
 const THEME_STORAGE_KEY = "launch-gogogo-theme";
 const THEATER_STYLE_STORAGE_KEY = "launch-gogogo-theater-style";
 const INTERFACE_DESIGN_STORAGE_KEY = "launch-gogogo-interface-design";
-const THEATER_ASSET_CACHE_NAME = "launch-gogogo-theater-assets-v8";
-const THEATER_ANIMATION_ASSET_VERSION = "anim-v13";
+const THEATER_ASSET_CACHE_NAME = "launch-gogogo-theater-assets-v10";
+const THEATER_ANIMATION_ASSET_VERSION = "anim-v14";
 const SERVICE_WORKER_UPDATE_INTERVAL_MS = 30 * 60 * 1000;
 const DEFAULT_MEAL_NAME = "未指定餐點";
 const PLAYER_GENDERS = [
@@ -199,7 +199,7 @@ const THEATER_STYLES = [
   },
   {
     id: "hunter-nen-restaurant",
-    name: "Hunter Nen Restaurant",
+    name: "HUNTER×HUNTER 獵人餐廳",
     status: "ready",
     available: true,
     colors: ["#16a34a", "#f472b6", "#facc15"],
@@ -207,7 +207,7 @@ const THEATER_STYLES = [
   },
   {
     id: "hero-academy-canteen",
-    name: "Hero Academy Canteen",
+    name: "我的英雄學院 雄英食堂",
     status: "ready",
     available: true,
     colors: ["#22c55e", "#fb7185", "#facc15"],
@@ -228,6 +228,14 @@ const THEATER_STYLES = [
     available: true,
     colors: ["#f472b6", "#60a5fa", "#facc15"],
     description: "Mirmo de Pon inspired colorful magical fairy cafe theater with Rirumu-style female actors, Mirumo-style male actors, Yashichi waiter, pastel fairy stages, and sweet magical food props."
+  },
+  {
+    id: "rezero-isekai-cafe",
+    name: "Re:Zero Isekai Cafe",
+    status: "ready",
+    available: true,
+    colors: ["#60a5fa", "#a78bfa", "#f8fafc"],
+    description: "Re:Zero inspired chibi isekai cafe theater with Rem-style female actors, Subaru-style male actors, Emilia-style waiter, Lugnica mansion stages, appa fruit and mayo burger food props, and blue-silver magic payment FX."
   }
 ];
 

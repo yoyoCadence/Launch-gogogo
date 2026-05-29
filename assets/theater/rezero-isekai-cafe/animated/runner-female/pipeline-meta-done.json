@@ -1,0 +1,8 @@
+﻿{
+    "source":  "assets\\theater\\rezero-isekai-cafe\\raw\\rem-atlas-transparent.png",
+    "generator":  "image_gen + scripts/process-theater-generated-atlas.py",
+    "style":  "rezero-isekai-cafe",
+    "subject":  "runner-female Rem-inspired chibi",
+    "layout":  "5x4 action atlas",
+    "action":  "done"
+}
