@@ -322,6 +322,23 @@
         "foodie-male.png",
         "thinker-male.png"
       ]
+    },
+    "rezero-isekai-cafe": {
+      "stages": {
+        "bento": "assets/theater/rezero-isekai-cafe/stages/stage-bento.png",
+        "drink": "assets/theater/rezero-isekai-cafe/stages/stage-drink.png",
+        "noodle": "assets/theater/rezero-isekai-cafe/stages/stage-noodle.png",
+        "fastFood": "assets/theater/rezero-isekai-cafe/stages/stage-fastFood.png",
+        "cafe": "assets/theater/rezero-isekai-cafe/stages/stage-cafe.png"
+      },
+      "characters": [
+        "runner-female.png",
+        "foodie-female.png",
+        "thinker-female.png",
+        "runner-male.png",
+        "foodie-male.png",
+        "thinker-male.png"
+      ]
     }
   }
 }

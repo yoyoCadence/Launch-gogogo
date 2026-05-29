@@ -1,0 +1,8 @@
+﻿{
+    "source":  "assets\\theater\\rezero-isekai-cafe\\raw\\subaru-atlas-transparent.png",
+    "generator":  "image_gen + scripts/process-theater-generated-atlas.py",
+    "style":  "rezero-isekai-cafe",
+    "subject":  "thinker-male Subaru-inspired chibi",
+    "layout":  "5x4 action atlas",
+    "action":  "paying"
+}

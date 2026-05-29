@@ -32,7 +32,8 @@ describe("app UI components", () => {
       "hunter-nen-restaurant": "ready",
       "hero-academy-canteen": "ready",
       "gundam-mobile-suit-canteen": "ready",
-      "mirmo-magical-fairy-cafe": "ready"
+      "mirmo-magical-fairy-cafe": "ready",
+      "rezero-isekai-cafe": "ready"
     };
     window.LaunchGoGoGoApp.state.activePage = "ledger";
     window.LaunchGoGoGoApp.state.theaterCollapsed = false;
@@ -220,6 +221,14 @@ describe("app UI components", () => {
     expect(document.querySelector('[data-theater-style-id="anime"]').getAttribute("aria-pressed")).toBe("true");
     expect(document.querySelector('[data-theater-style-id="cyberpunk"]').dataset.assetState).toBe("ready");
     expect([...document.querySelectorAll("[data-theater-style-id]")].every((button) => button.dataset.assetState === "ready")).toBe(true);
+
+    window.LaunchGoGoGoApp.state.theaterStyle = "hunter-nen-restaurant";
+    window.LaunchGoGoGoApp.renderSettings();
+    expect(document.querySelector("#currentTheaterStyleName").textContent).toBe("HUNTER×HUNTER 獵人餐廳");
+
+    window.LaunchGoGoGoApp.state.theaterStyle = "hero-academy-canteen";
+    window.LaunchGoGoGoApp.renderSettings();
+    expect(document.querySelector("#currentTheaterStyleName").textContent).toBe("我的英雄學院 雄英食堂");
   });
 
   it("renders unloaded theater styles as download cards", () => {
@@ -294,6 +303,11 @@ describe("app UI components", () => {
 
     expect(window.LaunchGoGoGoApp.state.theaterStyle).toBe("mirmo-magical-fairy-cafe");
     expect(document.documentElement.dataset.theaterStyle).toBe("mirmo-magical-fairy-cafe");
+
+    window.LaunchGoGoGoApp.applyTheaterStyle("rezero-isekai-cafe");
+
+    expect(window.LaunchGoGoGoApp.state.theaterStyle).toBe("rezero-isekai-cafe");
+    expect(document.documentElement.dataset.theaterStyle).toBe("rezero-isekai-cafe");
   });
 
   it("renders the status theater as waiting until an unpaid order has a payment", () => {
@@ -822,7 +836,8 @@ describe("app UI components", () => {
       { styleId: "hunter-nen-restaurant", coworker: "Gon", mealName: "hunter lunch" },
       { styleId: "hero-academy-canteen", coworker: "Hero Student", mealName: "academy lunch" },
       { styleId: "gundam-mobile-suit-canteen", coworker: "Amuro", mealName: "colony lunch" },
-      { styleId: "mirmo-magical-fairy-cafe", coworker: "Mirumo", mealName: "magical sweets" }
+      { styleId: "mirmo-magical-fairy-cafe", coworker: "Mirumo", mealName: "magical sweets" },
+      { styleId: "rezero-isekai-cafe", coworker: "Subaru", mealName: "appa cafe lunch" }
     ];
 
     for (const themeCase of cases) {

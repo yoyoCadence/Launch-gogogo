@@ -1,0 +1,9 @@
+{
+  "source": "assets\\theater\\rezero-isekai-cafe\\raw\\payment-fx-transparent.png",
+  "generator": "image_gen + scripts/process-theater-generated-atlas.py",
+  "style": "rezero-isekai-cafe",
+  "subject": "ReZero-inspired magic payment FX",
+  "layout": "2x2 sheet",
+  "cellInset": "0",
+  "align": "center"
+}

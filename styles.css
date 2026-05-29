@@ -1367,6 +1367,102 @@ html[data-theater-style="shinchan-yakiniku-road"] .theater-server-sprite {
   clip-path: var(--theater-server-clip);
 }
 
+html[data-theater-style="hunter-nen-restaurant"] .theater-stage.restaurant-bento {
+  --theater-server-top: 42px;
+  --theater-server-left: 118px;
+  --theater-server-size: 68px;
+  --theater-payment-left: 110px;
+  --theater-server-clip: inset(0 0 34% 0);
+}
+
+html[data-theater-style="hunter-nen-restaurant"] .theater-stage.restaurant-drink {
+  --theater-server-top: 42px;
+  --theater-server-left: 118px;
+  --theater-server-size: 68px;
+  --theater-payment-left: 110px;
+  --theater-server-clip: inset(0 0 34% 0);
+}
+
+html[data-theater-style="hunter-nen-restaurant"] .theater-stage.restaurant-noodle {
+  --theater-server-top: 42px;
+  --theater-server-left: 120px;
+  --theater-server-size: 68px;
+  --theater-payment-left: 112px;
+  --theater-server-clip: inset(0 0 36% 0);
+  --theater-food-right: 12px;
+  --theater-food-bottom: 34px;
+  --theater-food-width: 152px;
+  --theater-food-height: 100px;
+}
+
+html[data-theater-style="hunter-nen-restaurant"] .theater-stage.restaurant-fastFood {
+  --theater-server-top: 42px;
+  --theater-server-left: 112px;
+  --theater-server-size: 68px;
+  --theater-payment-left: 106px;
+  --theater-server-clip: inset(0 0 34% 0);
+}
+
+html[data-theater-style="hunter-nen-restaurant"] .theater-stage.restaurant-cafe {
+  --theater-server-top: 42px;
+  --theater-server-left: 116px;
+  --theater-server-size: 68px;
+  --theater-payment-left: 108px;
+  --theater-server-clip: inset(0 0 34% 0);
+}
+
+html[data-theater-style="hunter-nen-restaurant"] .theater-server-sprite {
+  clip-path: var(--theater-server-clip);
+}
+
+html[data-theater-style="hero-academy-canteen"] .theater-stage.restaurant-bento {
+  --theater-server-top: 38px;
+  --theater-server-left: 120px;
+  --theater-server-size: 72px;
+  --theater-payment-left: 112px;
+  --theater-server-clip: inset(0 0 32% 0);
+}
+
+html[data-theater-style="hero-academy-canteen"] .theater-stage.restaurant-drink {
+  --theater-server-top: 38px;
+  --theater-server-left: 120px;
+  --theater-server-size: 72px;
+  --theater-payment-left: 112px;
+  --theater-server-clip: inset(0 0 32% 0);
+}
+
+html[data-theater-style="hero-academy-canteen"] .theater-stage.restaurant-noodle {
+  --theater-server-top: 38px;
+  --theater-server-left: 122px;
+  --theater-server-size: 72px;
+  --theater-payment-left: 114px;
+  --theater-server-clip: inset(0 0 34% 0);
+  --theater-food-right: 12px;
+  --theater-food-bottom: 34px;
+  --theater-food-width: 152px;
+  --theater-food-height: 100px;
+}
+
+html[data-theater-style="hero-academy-canteen"] .theater-stage.restaurant-fastFood {
+  --theater-server-top: 38px;
+  --theater-server-left: 114px;
+  --theater-server-size: 72px;
+  --theater-payment-left: 106px;
+  --theater-server-clip: inset(0 0 32% 0);
+}
+
+html[data-theater-style="hero-academy-canteen"] .theater-stage.restaurant-cafe {
+  --theater-server-top: 38px;
+  --theater-server-left: 118px;
+  --theater-server-size: 72px;
+  --theater-payment-left: 110px;
+  --theater-server-clip: inset(0 0 32% 0);
+}
+
+html[data-theater-style="hero-academy-canteen"] .theater-server-sprite {
+  clip-path: var(--theater-server-clip);
+}
+
 html[data-theater-style="gundam-mobile-suit-canteen"] .theater-stage.restaurant-bento {
   --theater-server-top: 36px;
   --theater-server-left: 66px;
@@ -1460,6 +1556,54 @@ html[data-theater-style="mirmo-magical-fairy-cafe"] .theater-stage.restaurant-ca
 }
 
 html[data-theater-style="mirmo-magical-fairy-cafe"] .theater-server-sprite {
+  clip-path: var(--theater-server-clip);
+}
+
+html[data-theater-style="rezero-isekai-cafe"] .theater-stage.restaurant-bento {
+  --theater-server-top: 38px;
+  --theater-server-left: 78px;
+  --theater-server-size: 82px;
+  --theater-payment-left: 116px;
+  --theater-server-clip: inset(0 0 27% 0);
+}
+
+html[data-theater-style="rezero-isekai-cafe"] .theater-stage.restaurant-drink {
+  --theater-server-top: 38px;
+  --theater-server-left: 78px;
+  --theater-server-size: 82px;
+  --theater-payment-left: 116px;
+  --theater-server-clip: inset(0 0 27% 0);
+}
+
+html[data-theater-style="rezero-isekai-cafe"] .theater-stage.restaurant-noodle {
+  --theater-server-top: 38px;
+  --theater-server-left: 78px;
+  --theater-server-size: 82px;
+  --theater-payment-left: 116px;
+  --theater-server-clip: inset(0 0 29% 0);
+  --theater-food-right: 12px;
+  --theater-food-bottom: 34px;
+  --theater-food-width: 152px;
+  --theater-food-height: 100px;
+}
+
+html[data-theater-style="rezero-isekai-cafe"] .theater-stage.restaurant-fastFood {
+  --theater-server-top: 38px;
+  --theater-server-left: 78px;
+  --theater-server-size: 82px;
+  --theater-payment-left: 116px;
+  --theater-server-clip: inset(0 0 27% 0);
+}
+
+html[data-theater-style="rezero-isekai-cafe"] .theater-stage.restaurant-cafe {
+  --theater-server-top: 38px;
+  --theater-server-left: 78px;
+  --theater-server-size: 82px;
+  --theater-payment-left: 116px;
+  --theater-server-clip: inset(0 0 27% 0);
+}
+
+html[data-theater-style="rezero-isekai-cafe"] .theater-server-sprite {
   clip-path: var(--theater-server-clip);
 }
 

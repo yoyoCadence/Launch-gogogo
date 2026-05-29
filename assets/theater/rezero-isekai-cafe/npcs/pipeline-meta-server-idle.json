@@ -1,0 +1,9 @@
+{
+  "source": "assets\\theater\\rezero-isekai-cafe\\raw\\server-atlas-transparent.png",
+  "generator": "image_gen + scripts/process-theater-generated-atlas.py",
+  "style": "rezero-isekai-cafe",
+  "subject": "Emilia-inspired chibi waiter",
+  "layout": "2x2 sheet",
+  "cellInset": "0",
+  "align": "bottom"
+}
