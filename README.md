@@ -12,19 +12,22 @@ https://yoyocadence.github.io/Launch-gogogo/
 
 > 實機截圖，`npm run start` 後拍攝（畫面中的同事與金額為示範資料）。
 
-14 種配色主題 × 6 種小劇場風格，都在設定頁即時切換：
+![訂餐帳本](docs/screenshots/ledger.png)
+
+**它在解決什麼**：同事各自儲值，午餐訂單直接從餘額扣款，帳本依部門分組顯示每個人還剩多少。
+截圖中小昱儲值 1000、點了 110 元的便當，餘額變成 890——下方「今日訂餐小劇場」會把這筆扣款演出來。
+資料存在瀏覽器 IndexedDB，不需登入也不上雲。
+
+### 換個樣子
+
+14 種配色主題 × 6 種小劇場風格，設定頁即時切換，小劇場會連插畫一起換：
 
 ![主題設定](docs/screenshots/themes.png)
 
-同一份帳本換上不同主題與小劇場風格：
-
-| 賽博龐克 + 科技感 | 極光藍 + 日本動漫 | 哥德蘿莉 |
+| 賽博龐克 | 哥德蘿莉 | 霓虹粉 |
 |---|---|---|
-| ![賽博龐克](docs/screenshots/theme-cyberpunk.png) | ![極光藍](docs/screenshots/theme-aurora.png) | ![哥德蘿莉](docs/screenshots/theme-gothic.png) |
+| ![賽博龐克](docs/screenshots/theme-cyberpunk.png) | ![哥德蘿莉](docs/screenshots/theme-gothic.png) | ![霓虹粉](docs/screenshots/theme-neon.png) |
 
-同事餘額依部門分組；「今日訂餐小劇場」會把當天的付款狀態演出來——
-上圖是小昱點了 110 元便當、從儲值金扣款後餘額 890 元的狀態。
-資料存在瀏覽器 IndexedDB，不需登入也不上雲。
 
 ## 檔案結構
 
