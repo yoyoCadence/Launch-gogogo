@@ -8,6 +8,16 @@ Launch-GoGoGo 是一個手機優先、可加入主畫面使用的午餐 / 晚餐
 https://yoyocadence.github.io/Launch-gogogo/
 ```
 
+## 畫面
+
+> 實機截圖，`npm run start` 後拍攝（畫面中的同事與金額為示範資料）。
+
+![Ledger](docs/screenshots/ledger.png)
+
+同事餘額依部門分組；下方「今日訂餐小劇場」會把當天的付款狀態演出來——
+截圖中是小昱點了 110 元便當、從儲值金扣款後餘額 890 元的狀態。
+資料存在瀏覽器 IndexedDB，不需登入也不上雲。
+
 ## 檔案結構
 
 ```text
