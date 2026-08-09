@@ -1,32 +1,65 @@
 # Launch-GoGoGo
 
-Launch-GoGoGo 是一個手機優先、可加入主畫面使用的午餐 / 晚餐代訂與儲值金管理工具。第一版不需要登入、不做雲端同步，資料保存在瀏覽器 IndexedDB，並透過 Service Worker 支援離線開啟。
+![Launch-GoGoGo：每一筆午餐，都有帳，也有戲](showcase/01-hero.png)
 
-線上版：
+**Launch-GoGoGo 是給辦公室午晚餐代訂者的手機帳本。** 它把同事儲值、餐點訂單、收款、目前餘額與常用店家收進同一個流程，再讓每筆訂單依角色、店家與付款狀態演成一幕「今日訂餐小劇場」。
 
-```text
-https://yoyocadence.github.io/Launch-gogogo/
-```
+[立即開啟線上版](https://yoyocadence.github.io/Launch-gogogo/)
 
-## 畫面
+## 為什麼需要 Launch-GoGoGo
 
-> 實機截圖，`npm run start` 後拍攝（畫面中的同事與金額為示範資料）。
+幫同事訂餐不只是記下「誰吃什麼」：代訂者還要知道誰有儲值、這餐怎麼付款、尚欠多少、哪家店最近吃過，以及事後如何找到交易紀錄。當這些資訊散落在聊天訊息、試算表與腦中，午休很容易變成一場人工對帳。
 
-![訂餐帳本](docs/screenshots/ledger.png)
+Launch-GoGoGo 將這些日常整理成一條可追溯的帳務流程：
 
-**它在解決什麼**：同事各自儲值，午餐訂單直接從餘額扣款，帳本依部門分組顯示每個人還剩多少。
-截圖中小昱儲值 1000、點了 110 元的便當，餘額變成 890——下方「今日訂餐小劇場」會把這筆扣款演出來。
-資料存在瀏覽器 IndexedDB，不需登入也不上雲。
+![儲值、點餐與餘額留在同一條帳](showcase/02-one-ledger.png)
 
-### 換個樣子
+- **儲值與收款**：記錄同事預付金額或後續收款。
+- **餐點與付款狀態**：訂單可標示儲值金扣款、當天現金付款或尚未付款。
+- **目前餘額與歷史紀錄**：交易會反映在同事餘額，並保留日期與明細供後續查看。
+- **午餐與晚餐店家**：分開管理店家、評分、備註與使用紀錄，並依星等或使用情況排序。
 
-14 種配色主題 × 6 種小劇場風格，設定頁即時切換，小劇場會連插畫一起換：
+> Launch-GoGoGo 是團隊內部的訂餐紀錄工具，不是銀行、支付處理或自動對帳服務；帳務結果仍取決於使用者輸入的交易。
 
-![主題設定](docs/screenshots/themes.png)
+## 一筆訂單，也是一幕午休小劇場
 
-| 賽博龐克 | 哥德蘿莉 | 霓虹粉 |
-|---|---|---|
-| ![賽博龐克](docs/screenshots/theme-cyberpunk.png) | ![哥德蘿莉](docs/screenshots/theme-gothic.png) | ![霓虹粉](docs/screenshots/theme-neon.png) |
+帳本負責把數字說清楚，小劇場則讓每天的訂餐狀態更容易被看見。系統會根據同事角色、店家類型、付款狀態與所選風格，組合出對應的今日場景；它是產品內建的狀態呈現，不是 AI 生成影片。
+
+![訂單資料如何成為今日訂餐小劇場](showcase/03-order-theater.png)
+
+配色主題與小劇場風格彼此獨立。現在可選擇 **14 種介面配色主題**與 **21 種小劇場風格**：帳務結構保持一致，團隊仍能換成喜歡的介面與舞台氣氛。
+
+![14 種配色主題與 21 種小劇場風格](showcase/04-style-system.png)
+
+## 不登入，也能保有自己的午餐帳
+
+Launch-GoGoGo 是純靜態、手機優先的 PWA，不需要建立帳號或連接後端。資料保存在目前瀏覽器的 IndexedDB，Service Worker 支援離線開啟；需要搬移或留存資料時，可從設定頁手動匯出與匯入 JSON 備份。
+
+![本機 IndexedDB、離線開啟與 JSON 備份](showcase/05-local-first.png)
+
+本機模式代表資料不會自動跨裝置同步，也可能受到瀏覽器資料清除或裝置狀態影響。重要帳務請定期匯出 JSON 備份。
+
+## 從開帳到開飯，一個手機流程完成
+
+![Ledger、午餐店家與設定頁組成完整的訂餐流程](showcase/06-closing.png)
+
+1. 在 **Ledger** 建立同事，依需要分組並記錄儲值。
+2. 在 **Lunch Stores** 或 **Dinner Stores** 維護常用店家與使用紀錄。
+3. 新增餐點訂單，選擇付款方式；需要時也能直接建立新店家。
+4. 回到 Ledger 查看餘額、收款、歷史交易與今日訂餐小劇場。
+5. 在 **Settings** 切換介面與小劇場風格，或匯出 JSON 備份。
+
+### 適合誰
+
+- 小型辦公室、工作室或固定幫團隊代訂午晚餐的人。
+- 希望把同事儲值、欠款與餐點紀錄放在同一處的人。
+- 不想先維護帳號、後端或雲端服務，仍需要可安裝手機工具的團隊。
+
+### 目前的產品邊界
+
+- 不提供即時多人協作或雲端同步。
+- 不會自動取得餐廳即時評價或推薦最佳餐廳。
+- 本機資料需由使用者自行透過 JSON 備份保管。
 
 
 ## 檔案結構
@@ -45,6 +78,7 @@ https://yoyocadence.github.io/Launch-gogogo/
 ├── eslint.config.js
 ├── assets/
 │   └── theater/
+├── showcase/
 ├── tests/
 ├── icon.svg
 ├── icon-192.png
@@ -366,7 +400,7 @@ Launch-GoGoGo 的 UI 採用 mobile-first、iOS dark productivity 風格。後續
 {
   id: string,
   date: "YYYY-MM-DD",
-  type: "topup" | "mealOrder" | "adjustment",
+  type: "topup" | "payment" | "mealOrder" | "adjustment",
   mealType: "lunch" | "dinner" | null,
   coworkerId: string,
   storeId: string | null,
@@ -379,13 +413,15 @@ Launch-GoGoGo 的 UI 採用 mobile-first、iOS dark productivity 風格。後續
 }
 ```
 
-目前 MVP UI 支援 `topup` 與 `mealOrder`。`adjustment` 已保留在模型中，適合下一版加入手動校正餘額。
+目前 UI 支援 `topup`、`payment` 與 `mealOrder`。`adjustment` 已保留在模型與匯入流程中，尚未提供手動編輯介面。
 
 ## 已完成功能
 
 - PWA 基礎架構：manifest、Service Worker、離線快取。
 - 四個主要分頁：Ledger、Lunch Stores、Dinner Stores、Settings。
 - 設定頁：可切換並保存 App 主題，主題色系參考 Orbit 的主題設計。
+- 14 種介面配色主題與 21 種可獨立選擇的小劇場風格。
+- 訂單小劇場會依同事角色、店家類型、付款狀態與所選風格呈現場景。
 - IndexedDB 本機資料保存。
 - 同事新增、編輯、刪除與餘額顯示。
 - 儲值金新增、編輯、刪除。
