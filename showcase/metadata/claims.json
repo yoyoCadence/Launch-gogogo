@@ -1,0 +1,112 @@
+{
+  "schema_version": 1,
+  "source_revision": "bf97c951ce1aeb301f31bd89ff0f5ee05d50f95a",
+  "claims": [
+    {
+      "claim_id": "claim-prepaid-ledger",
+      "claim": "Launch-GoGoGo 可在同一個手機帳本中記錄同事儲值、餐點、收款與目前餘額。",
+      "claim_type": "capability",
+      "status": "verified",
+      "evidence": [
+        {"path": "app.js", "kind": "implementation", "note": "renderCoworkers、renderDailySummary 與交易表單呈現儲值、餐點、收款與餘額。"},
+        {"path": "tests/e2e/ledger-flow.spec.js", "kind": "test", "note": "E2E 驗證儲值 500、預付餐點 120 後餘額為 380。"}
+      ],
+      "evidence_strength": "high",
+      "allowed_wording": ["儲值、點餐、餘額留在同一個帳本", "同事餘額與訂餐紀錄一起查看"],
+      "prohibited_stronger_wording": ["自動對帳所有付款", "零錯誤帳務"],
+      "limitations": ["餘額取決於使用者正確輸入交易；不是銀行或支付處理服務。"],
+      "runtime_verified": true,
+      "used_by_assets": ["hero", "one-ledger", "closing"]
+    },
+    {
+      "claim_id": "claim-order-theater",
+      "claim": "餐點訂單可依同事角色、店家類型、付款狀態與所選風格呈現訂餐小劇場。",
+      "claim_type": "capability",
+      "status": "verified",
+      "evidence": [
+        {"path": "app.js", "kind": "implementation", "note": "renderStatusTheater 由 active order、coworker、store、restaurant type 與 theater style 組合舞台。"},
+        {"path": "tests/e2e/ledger-flow.spec.js", "kind": "test", "note": "E2E 驗證 stage-eating、風格切換與對應 theater asset 路徑。"}
+      ],
+      "evidence_strength": "high",
+      "allowed_wording": ["一筆餐點，演成一幕午休小劇場", "訂單與付款狀態會帶出小劇場"],
+      "prohibited_stronger_wording": ["每筆交易都有完整動畫電影", "AI 即時生成動畫"],
+      "limitations": ["小劇場是產品內建狀態呈現，不是影音輸出或 AI 生成服務。"],
+      "runtime_verified": true,
+      "used_by_assets": ["hero", "order-theater", "closing"]
+    },
+    {
+      "claim_id": "claim-theme-breadth",
+      "claim": "目前程式碼提供 14 種介面配色主題與 21 種可選小劇場風格，兩者可分開選擇。",
+      "claim_type": "quantitative-capability",
+      "status": "verified",
+      "evidence": [
+        {"path": "app.js", "kind": "implementation", "note": "THEMES 有 14 筆，THEATER_STYLES 有 21 筆；theme 與 theaterStyle 使用獨立 state 與套用函式。"},
+        {"path": "tests/component/app-ui.test.js", "kind": "test", "note": "元件測試涵蓋多個劇場風格與 restaurant-specific asset。"}
+      ],
+      "evidence_strength": "high",
+      "allowed_wording": ["14 種配色主題 × 21 種可選小劇場風格", "配色與劇場分開選"],
+      "prohibited_stronger_wording": ["無限主題", "所有風格都無需下載", "官方授權動漫風格"],
+      "limitations": ["非迷你幾何風的小劇場素材需要在設定頁載入到本機 cache；campaign 不宣稱第三方 IP 授權。"],
+      "runtime_verified": true,
+      "used_by_assets": ["style-system"]
+    },
+    {
+      "claim_id": "claim-local-pwa",
+      "claim": "產品不需要登入或後端；資料保存在瀏覽器 IndexedDB，並以 Service Worker 支援離線開啟。",
+      "claim_type": "platform-and-architecture",
+      "status": "verified",
+      "evidence": [
+        {"path": "app.js", "kind": "implementation", "note": "使用 indexedDB.open 保存 coworkers、stores 與 transactions，並註冊 service-worker.js。"},
+        {"path": "service-worker.js", "kind": "implementation", "note": "包含 install、activate 與 fetch cache 流程。"},
+        {"path": "manifest.json", "kind": "configuration", "note": "display 為 standalone，含 start_url、scope、icons 與 portrait orientation。"}
+      ],
+      "evidence_strength": "high",
+      "allowed_wording": ["不登入，也有自己的午餐帳", "本機 IndexedDB 保存，支援離線開啟"],
+      "prohibited_stronger_wording": ["絕對私密", "端對端加密", "跨裝置自動同步"],
+      "limitations": ["本機資料受瀏覽器資料清除與裝置狀態影響；不是雲端同步。"],
+      "runtime_verified": true,
+      "used_by_assets": ["local-first"]
+    },
+    {
+      "claim_id": "claim-json-backup",
+      "claim": "使用者可從設定頁匯出 JSON 備份，並匯入通過 schema 驗證的備份資料。",
+      "claim_type": "capability",
+      "status": "verified",
+      "evidence": [
+        {"path": "app.js", "kind": "implementation", "note": "exportData 與 importDataFile 建立與驗證備份流程。"},
+        {"path": "tests/e2e/data-backup.spec.js", "kind": "test", "note": "E2E 驗證匯出 app/schemaVersion 與有效備份匯入。"},
+        {"path": "tests/unit/app-core.test.js", "kind": "test", "note": "單元測試驗證 backup payload 與不合法資料拒絕。"}
+      ],
+      "evidence_strength": "high",
+      "allowed_wording": ["JSON 匯出／匯入備份", "手動帶走本機帳務資料"],
+      "prohibited_stronger_wording": ["自動雲端備份", "即時同步"],
+      "limitations": ["匯入會覆寫目前本機資料，產品 UI 也提示先匯出備份。"],
+      "runtime_verified": true,
+      "used_by_assets": ["local-first"]
+    },
+    {
+      "claim_id": "claim-store-rotation",
+      "claim": "午餐與晚餐店家可分開管理，並依星等、最近使用、最久未使用或使用次數排序。",
+      "claim_type": "capability",
+      "status": "verified",
+      "evidence": [
+        {"path": "app.js", "kind": "implementation", "note": "renderStores 與 sortedStores 依 meal type 與排序選項呈現店家。"},
+        {"path": "app-core.js", "kind": "implementation", "note": "sortStores 與 storeStats 計算店家排序與使用統計。"},
+        {"path": "tests/unit/app-core.test.js", "kind": "test", "note": "單元測試覆蓋 store sorting 與 stats。"}
+      ],
+      "evidence_strength": "high",
+      "allowed_wording": ["午餐店家也有自己的輪替帳", "依星等與使用紀錄整理店家"],
+      "prohibited_stronger_wording": ["自動推薦最佳餐廳", "整合餐廳即時評價"],
+      "limitations": ["星等與店家資料由使用者維護；沒有外部餐廳評價整合證據。"],
+      "runtime_verified": true,
+      "used_by_assets": ["closing"]
+    }
+  ],
+  "rejected_claims": [
+    {"claim": "即時多人協作", "reason": "沒有帳號、後端或多使用者同步實作。"},
+    {"claim": "雲端同步與自動備份", "reason": "目前只提供本機 IndexedDB 與手動 JSON 匯出／匯入。"},
+    {"claim": "絕對安全或加密", "reason": "repository 沒有支持這類安全保證的架構證據。"},
+    {"claim": "節省特定比例的時間", "reason": "沒有基準測試或使用者研究。"},
+    {"claim": "6 種小劇場風格", "reason": "README 數字已落後；目前程式碼為 21 種。"}
+  ]
+}

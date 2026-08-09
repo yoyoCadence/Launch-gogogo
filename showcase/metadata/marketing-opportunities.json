@@ -1,0 +1,66 @@
+{
+  "schema_version": 1,
+  "generated_at": "2026-08-09T22:05:00+08:00",
+  "opportunities": [
+    {
+      "id": "opportunity-update-style-counts",
+      "category": "feature-visibility",
+      "observed_problem": "README 仍寫 6 種小劇場風格，但目前程式碼已有 21 種。",
+      "affected_feature": "feature-theme-system",
+      "marketing_impact": "對外數字不一致會削弱廣度宣稱的可信度。",
+      "evidence": ["README.md", "app.js: THEMES and THEATER_STYLES"],
+      "smallest_plausible_improvement": "從程式碼或 manifest 產生 README 的目前數量，或至少同步更新文字。",
+      "recommendation": "讓設定頁與文件共用一個風格數量來源。",
+      "expected_asset_benefit": "未來 campaign 不需以 metadata 說明 README 落差。",
+      "implementation_scope": "documentation-or-small-rendered-count",
+      "effort": "small",
+      "priority": "high",
+      "blocks_current_campaign": false
+    },
+    {
+      "id": "opportunity-showcase-fixture",
+      "category": "demo-state",
+      "observed_problem": "內建範例資料只建立未付款訂單，無法像 repository Ledger 截圖一樣清楚展示『儲值 1000、扣款 110、餘額 890』。",
+      "affected_feature": "feature-prepaid-ledger",
+      "marketing_impact": "live capture 的核心帳務結果不如既有截圖直觀。",
+      "evidence": ["app.js: sampleDataRecords", "docs/screenshots/ledger.png"],
+      "smallest_plausible_improvement": "新增一個僅供 demo／test 的預付儲值範例交易組合。",
+      "recommendation": "建立可重複、可清除的 showcase fixture，包含儲值、預付餐點與收款三種狀態。",
+      "expected_asset_benefit": "未來可全程 live capture，減少 existing／live 混用。",
+      "implementation_scope": "isolated-demo-fixture",
+      "effort": "small",
+      "priority": "medium",
+      "blocks_current_campaign": false
+    },
+    {
+      "id": "opportunity-local-data-explainer",
+      "category": "visual-proof",
+      "observed_problem": "設定頁有 JSON 按鈕，但沒有用一句話連結 IndexedDB、本機資料與離線開啟。",
+      "affected_feature": "feature-local-pwa",
+      "marketing_impact": "重要信任機制只能靠 campaign 圖解，產品畫面本身不自證。",
+      "evidence": ["index.html: data backup section", "app.js: IndexedDB and service worker registration"],
+      "smallest_plausible_improvement": "在資料備份標題下加入簡短的本機資料說明。",
+      "recommendation": "清楚區分『本機保存』『離線開啟』『手動 JSON 備份』三件事。",
+      "expected_asset_benefit": "信任素材可以更多使用 screenshot-led execution。",
+      "implementation_scope": "small-copy-change",
+      "effort": "small",
+      "priority": "medium",
+      "blocks_current_campaign": false
+    },
+    {
+      "id": "opportunity-style-filtering",
+      "category": "information-hierarchy",
+      "observed_problem": "21 種小劇場風格全部展開後形成很長的設定頁。",
+      "affected_feature": "feature-theme-system",
+      "marketing_impact": "廣度很強，但完整設定畫面在素材中難以同時保持可讀性。",
+      "evidence": ["app.js: visibleSettingItems and settingExpandButton", "docs/screenshots/themes.png"],
+      "smallest_plausible_improvement": "加入類型分組、搜尋或目前已下載／可下載的篩選。",
+      "recommendation": "優先保留目前風格與常用風格，再提供清楚的探索層級。",
+      "expected_asset_benefit": "能用更短畫面證明 21 種廣度。",
+      "implementation_scope": "settings-ui-enhancement",
+      "effort": "medium",
+      "priority": "low",
+      "blocks_current_campaign": false
+    }
+  ]
+}

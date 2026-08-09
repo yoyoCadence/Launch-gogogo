@@ -1,0 +1,27 @@
+{
+  "schema_version": 1,
+  "validated_at": "2026-08-09T22:12:00+08:00",
+  "checks": [
+    {"command": "npm run lint", "status": "passed"},
+    {"command": "npm run build", "status": "passed"},
+    {"command": "npm run test", "status": "passed", "details": "2 test files, 39 tests passed"},
+    {
+      "command": "npm run test:e2e",
+      "status": "failed",
+      "details": "2 of 8 tests passed with four workers; six timed out while opening forms or interacting with shared origin state."
+    },
+    {
+      "command": "npm run test:e2e -- --workers=1",
+      "status": "failed",
+      "details": "5 of 8 tests passed; two form-opening waits timed out and one theater-style cache transition remained on the previous style."
+    }
+  ],
+  "scope_assessment": "The campaign changes no application, test, service worker, manifest, storage or README code. The E2E failures were recorded as an existing environment/state issue and were not repaired outside campaign scope.",
+  "campaign_gates": {
+    "asset_tools_image_qa": "passed_with_declared_hero_alias_warning",
+    "asset_tools_contract": "passed",
+    "json_parse": "passed",
+    "visual_review": "passed",
+    "privacy_review": "passed"
+  }
+}

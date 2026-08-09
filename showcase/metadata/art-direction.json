@@ -1,0 +1,74 @@
+{
+  "schema_version": 1,
+  "art_direction_id": "lunch-call-sheet-v1",
+  "name": "午休場記單",
+  "premise": "把 Launch-GoGoGo 的『帳務交易變成小劇場』表達成一張張午餐場記單：數字、角色與店家狀態沿著訂單票帶進入舞台，讓務實可信的帳本與有玩心的午休世界同時成立。",
+  "product_metaphor": "一筆午餐訂單同時是帳務憑證，也是小劇場的場記單。",
+  "emotional_tone": ["可靠", "有玩心", "午休前的輕快期待", "小團隊日常"],
+  "creative_premise": "以真實訂餐帳務作為場記資訊，讓票帶、穿孔與舞台燈路徑把餘額、餐點與角色串成一幕。",
+  "visual_signature": {
+    "dominant_mood": "深夜帳本般可靠，帶一點午休開場前的明亮期待",
+    "composition_language": "場記票帶依真實工作流程穿越畫面；產品 UI 像主舞台，而不是漂浮裝飾卡片",
+    "color_character": "午夜藍黑為帳務底色，便當綠與劇場珊瑚作功能節點，米白票紙承載精確文字",
+    "graphic_motif": "有穿孔、日期戳與序號的午餐場記單，節點從儲值一路連到小劇場",
+    "typography_character": "粗而直接的繁體中文標題搭配等寬序號與短註記，像舞台 cue sheet",
+    "device_usage": "不用通用手機模型；以真實直向 UI 作為被票帶包圍的主舞台，必要時使用精準裁切",
+    "generation_style": "生成只建立無文字的觸感舞台與票帶環境；真實 UI 與所有文字由 deterministic compositing 鎖定",
+    "visual_metaphor": "訂單票帶把帳務送進午餐小劇場",
+    "spatial_model": "左到右的訂單流與近景舞台，個別資產可改成中心爆發或三段節奏",
+    "texture_material": "霧面票紙、柔和網點、壓印序號與木質迷你舞台",
+    "lighting": "從小劇場方向投出的溫暖側光，UI 保持清晰冷光",
+    "image_rhythm": "承諾、帳務流程、劇場放大、風格廣度、本機信任、完整日常"
+  },
+  "brand_basis": {
+    "repository_evidence": [
+      "styles.css 的深色 iOS productivity token 與高亮品牌色",
+      "app.js 的訂單狀態小劇場與角色／店家類型映射",
+      "docs/screenshots/ledger.png 的帳務與劇場並置",
+      "icon.svg 的青色火箭／發射意象"
+    ],
+    "product_traits": ["務實帳務", "午休劇場", "可自訂", "手機優先", "本機運作"],
+    "user_constraints": ["完整 campaign", "repository-native", "開立 PR"],
+    "portfolio_contrast": ["未提供既有 portfolio；刻意避開通用紫藍漸層、玻璃卡片與傾斜手機模板"]
+  },
+  "campaign_invariants": [
+    "所有產品 UI 必須來自 accepted capture 或 repository-owned screenshot",
+    "繁體中文 marketing copy 一律 deterministic 排版",
+    "票帶與場記單只在能表示工作流程或狀態時出現",
+    "午夜藍、便當綠、珊瑚、米白遵循固定功能色邏輯",
+    "舞台暖光永遠從產品小劇場方向出現"
+  ],
+  "flexible_variables": [
+    "每張素材的 UI 尺寸與裁切",
+    "票帶方向與節點數量",
+    "背景深度與舞台可見比例",
+    "標題位置與對齊",
+    "單一畫面或多畫面證據"
+  ],
+  "campaign_anchors": ["午休場記單", "真實直向 UI 主舞台", "冷帳務光與暖劇場光的交界", "短促序號註記"],
+  "asset_variation": ["hero 使用生成舞台環境", "流程圖使用三段票帶", "風格廣度使用色票矩陣", "本機信任使用 deterministic 架構圖"],
+  "render_strategy": ["HYBRID hero", "SCREENSHOT-LED feature proof", "DETERMINISTIC typography and diagrams"],
+  "ui_treatment": {
+    "immutable_regions": ["所有截圖內的控制、標籤、數字、狀態與導覽"],
+    "allowed_transformations": ["裁切", "等比例縮放", "遮罩圓角", "外部陰影", "不覆蓋內容的註記"],
+    "forbidden_transformations": ["重畫 UI", "生成新控制", "改寫截圖文字", "改變資料含義"]
+  },
+  "device_usage": "不使用硬體 mockup；產品直向 UI 以精準平面裁切保留可讀性。",
+  "illustration_or_generation_character": "像精緻桌上微縮劇場，而非通用 SaaS 3D 場景；不含假 UI、假字、品牌或人物肖像。",
+  "motion_impression": "票帶由左側儲值節點滑入，經餐點與餘額，最後在右側舞台亮燈。",
+  "recommended_render_modes": ["HYBRID", "SCREENSHOT-LED", "DETERMINISTIC"],
+  "must_preserve": ["Launch-GoGoGo 名稱", "真實 UI 結構", "approved claims", "繁體中文 copy"],
+  "avoid": ["通用玻璃擬態卡片", "傾斜手機", "紫藍霓虹 SaaS 背景", "假產品 UI", "生成文字", "第三方娛樂 IP 名稱與角色", "過度可愛而削弱帳務可信度"],
+  "platform_adaptation_notes": {
+    "github": "橫向 8:5 保持標題與 Ledger 證據可讀，thumbnail 另外重組。",
+    "portfolio": "使用 6 張連續敘事與 3×2 contact sheet。",
+    "social": "本次未宣稱特定社群平台規格；thumbnail 以通用 16:9 card composition 交付。"
+  },
+  "portfolio_context": {
+    "status": "not_provided",
+    "source": null,
+    "projects_compared": [],
+    "differences_introduced": ["以訂單票帶與小劇場工作流取代通用裝置展示"]
+  },
+  "style_version": 1
+}

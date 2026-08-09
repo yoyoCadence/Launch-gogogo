@@ -1,0 +1,208 @@
+{
+  "schema_version": 1,
+  "source_repository": "https://github.com/yoyoCadence/Launch-gogogo",
+  "source_revision": "bf97c951ce1aeb301f31bd89ff0f5ee05d50f95a",
+  "product_version": "0.1.0",
+  "analysis_time": "2026-08-09T21:49:40+08:00",
+  "product_name": "Launch-GoGoGo",
+  "product_category": "手機優先的辦公室午晚餐代訂與儲值金管理 PWA",
+  "target_users": {
+    "primary": [
+      "替小型辦公室或固定團隊彙整午晚餐訂單、管理同事儲值與欠款的人"
+    ],
+    "secondary": [
+      "需要查看個人餘額與訂餐紀錄的團隊成員"
+    ]
+  },
+  "primary_job_to_be_done": "在不建立帳號或後端系統的前提下，把同事餘額、餐點訂單、店家使用紀錄與收款狀態放進一個手機可用的日常帳本。",
+  "core_problem": "辦公室代訂午晚餐時，訂單、儲值、欠款、店家輪替與每個人的剩餘餘額容易散落在口頭訊息與不同紀錄裡。",
+  "desired_outcome": "負責代訂的人可以在一次手機流程中新增同事、記錄儲值或餐點、查看餘額與付款狀態，並保留可備份的本機帳務資料。",
+  "core_workflow": [
+    "建立同事與分組",
+    "建立午餐或晚餐店家",
+    "記錄儲值、收款或餐點訂單",
+    "依付款方式更新並查看同事餘額",
+    "從訂單或同事卡片開啟今日訂餐小劇場",
+    "在設定中切換配色與小劇場風格，或匯出 JSON 備份"
+  ],
+  "verified_features": [
+    {
+      "id": "feature-prepaid-ledger",
+      "name": "同事儲值與訂餐帳本",
+      "summary": "同事可依群組顯示；儲值、收款、餐點與調整交易共同形成目前餘額與歷史紀錄。",
+      "evidence_ids": ["evidence-ledger-ui", "evidence-balance-tests"],
+      "scores": {
+        "user_importance": 5,
+        "distinctiveness": 3,
+        "visual_proof_strength": 5,
+        "rapid_comprehension": 5,
+        "evidence_confidence": 5
+      },
+      "score_rationale": "這是核心日常工作，Ledger 截圖與自動化測試都能直接證明。"
+    },
+    {
+      "id": "feature-order-theater",
+      "name": "訂餐狀態小劇場",
+      "summary": "餐點訂單會依同事角色、店家類型、付款狀態與所選風格呈現對應小劇場。",
+      "evidence_ids": ["evidence-theater-render", "evidence-theater-e2e", "evidence-theater-assets"],
+      "scores": {
+        "user_importance": 3,
+        "distinctiveness": 5,
+        "visual_proof_strength": 5,
+        "rapid_comprehension": 4,
+        "evidence_confidence": 5
+      },
+      "score_rationale": "它不是帳務必要條件，但提供最獨特、最強的視覺記憶點。"
+    },
+    {
+      "id": "feature-theme-system",
+      "name": "可分開選擇的主題與小劇場風格",
+      "summary": "設定頁提供 14 種介面配色主題與 21 種小劇場風格，兩者使用獨立狀態。",
+      "evidence_ids": ["evidence-theme-arrays", "evidence-theme-settings", "evidence-theme-tests"],
+      "scores": {
+        "user_importance": 3,
+        "distinctiveness": 5,
+        "visual_proof_strength": 5,
+        "rapid_comprehension": 5,
+        "evidence_confidence": 5
+      },
+      "score_rationale": "選擇數量與視覺差異可由目前程式碼、設定 UI、測試與 repository 截圖交叉驗證。"
+    },
+    {
+      "id": "feature-local-pwa",
+      "name": "免登入的本機 PWA",
+      "summary": "產品以 IndexedDB 保存資料、註冊 Service Worker，並提供 Web App Manifest，可加入主畫面使用。",
+      "evidence_ids": ["evidence-pwa-manifest", "evidence-indexeddb", "evidence-service-worker"],
+      "scores": {
+        "user_importance": 4,
+        "distinctiveness": 3,
+        "visual_proof_strength": 2,
+        "rapid_comprehension": 4,
+        "evidence_confidence": 5
+      },
+      "score_rationale": "對小團隊導入很重要，但需要 manifest、程式碼與設定畫面一起說明。"
+    },
+    {
+      "id": "feature-store-rotation",
+      "name": "午晚餐店家管理",
+      "summary": "店家可分配到午餐或晚餐清單，並依星等、最近使用時間、最久未使用或使用次數排序。",
+      "evidence_ids": ["evidence-store-ui", "evidence-store-tests"],
+      "scores": {
+        "user_importance": 4,
+        "distinctiveness": 3,
+        "visual_proof_strength": 4,
+        "rapid_comprehension": 4,
+        "evidence_confidence": 5
+      },
+      "score_rationale": "能支援實際午餐決策，live capture 與核心排序測試可直接證明。"
+    },
+    {
+      "id": "feature-json-backup",
+      "name": "JSON 匯出與匯入",
+      "summary": "設定頁可匯出符合 schemaVersion 1 的本機資料備份，並在驗證後匯入。",
+      "evidence_ids": ["evidence-backup-ui", "evidence-backup-tests"],
+      "scores": {
+        "user_importance": 4,
+        "distinctiveness": 2,
+        "visual_proof_strength": 3,
+        "rapid_comprehension": 4,
+        "evidence_confidence": 5
+      },
+      "score_rationale": "是本機資料模式的重要補充，UI 與 E2E 測試都能證明。"
+    }
+  ],
+  "differentiators": [
+    {
+      "statement": "相較於只列數字的簡單午餐帳本，Launch-GoGoGo 把同一筆餐點交易轉成可重播的訂餐狀態小劇場。",
+      "comparison_basis": "一般只呈現清單與餘額的本機記帳流程",
+      "difference_type": "experiential",
+      "evidence_ids": ["evidence-theater-render", "evidence-theater-e2e"]
+    },
+    {
+      "statement": "介面配色與小劇場風格分開選擇，讓帳務結構保持一致，同時可改變整體視覺與場景。",
+      "comparison_basis": "只有單一整體主題切換的介面",
+      "difference_type": "aesthetic",
+      "evidence_ids": ["evidence-theme-arrays", "evidence-theme-settings"]
+    },
+    {
+      "statement": "不需帳號或後端即可在瀏覽器本機完成日常帳務，並用 JSON 手動備份與搬移資料。",
+      "comparison_basis": "需要雲端帳號或伺服器的團隊帳務工具",
+      "difference_type": "operational",
+      "evidence_ids": ["evidence-indexeddb", "evidence-backup-tests"]
+    }
+  ],
+  "proof_points": [
+    "Ledger 同時顯示同事分組、餘額、付款狀態與今日訂單",
+    "同一筆訂單下方直接出現具角色、店家與餘額狀態的小劇場",
+    "設定頁同時呈現多種配色卡與小劇場風格預覽",
+    "午餐店家頁顯示星等、使用次數、最後使用日期與排序控制",
+    "設定頁提供 JSON 匯出、匯入與內建範例資料開關"
+  ],
+  "premium_features": [],
+  "visual_strengths": [
+    "手機畫面中帳務與插畫舞台並置的獨特反差",
+    "主題切換可讓同一套真實 UI 形成明顯不同的視覺情緒",
+    "小劇場素材橫跨角色、店家、餐點、服務生與付款特效",
+    "深色 iOS productivity 風格讓數字與狀態標籤清楚"
+  ],
+  "brand_personality": [
+    "務實：核心文案聚焦同事餘額、訂餐、收款與備份",
+    "玩心：把午餐付款狀態演成小劇場",
+    "可自訂：配色與劇場風格分開選擇",
+    "小團隊友善：不需登入與後端"
+  ],
+  "technical_strengths": [
+    "純靜態 Vanilla JavaScript PWA",
+    "IndexedDB 本機資料持久化",
+    "Service Worker 離線開啟支援",
+    "Web App Manifest 與手機直向使用設定",
+    "Vitest 與 Playwright 覆蓋帳務、備份、範例資料與劇場流程"
+  ],
+  "maturity_signals": [
+    "核心與元件測試",
+    "桌面 Chromium 與 Pixel 7 E2E 專案",
+    "備份 payload 驗證",
+    "GitHub Pages 部署路徑"
+  ],
+  "weak_or_confusing_areas": [
+    "設定頁在展開全部風格後很長，較適合證明廣度，不適合作為第一張行銷圖",
+    "本機資料模式的價值無法只靠單一產品截圖充分說明",
+    "部分劇場風格名稱與描述帶有既有娛樂作品靈感，campaign 不使用這些名稱作主宣稱",
+    "README 的『6 種小劇場風格』已落後於目前程式碼中的 21 種"
+  ],
+  "unknowns": [
+    "沒有目前使用量、留存率或效能基準",
+    "沒有正式商店上架或付費方案證據",
+    "未驗證不同瀏覽器之間的資料搬移體驗"
+  ],
+  "excluded_claims": [
+    "即時多人協作",
+    "雲端同步",
+    "跨裝置自動同步",
+    "資料加密或安全等級",
+    "節省特定比例時間",
+    "市場領先或唯一"
+  ],
+  "analysis_limitations": [
+    "campaign 只分析目前本機 checkout 與隔離的本機瀏覽器狀態",
+    "未使用任何真實使用者、公司或生產資料",
+    "離線開啟由 Service Worker 實作與專案文件證明，未在本次素材中以斷網錄影呈現"
+  ],
+  "evidence_map": [
+    {"id": "evidence-ledger-ui", "path": "app.js", "locator": "renderCoworkers, renderDailySummary, renderCoworkerHistory", "kind": "implementation"},
+    {"id": "evidence-balance-tests", "path": "tests/e2e/ledger-flow.spec.js", "locator": "records a coworker topup and a prepaid lunch order", "kind": "test"},
+    {"id": "evidence-theater-render", "path": "app.js", "locator": "renderStatusTheater", "kind": "implementation"},
+    {"id": "evidence-theater-e2e", "path": "tests/e2e/ledger-flow.spec.js", "locator": "stage-eating and theater style assertions", "kind": "test"},
+    {"id": "evidence-theater-assets", "path": "assets/theater/theater-assets-manifest.json", "locator": "bundled theater asset inventory", "kind": "asset-manifest"},
+    {"id": "evidence-theme-arrays", "path": "app.js", "locator": "THEMES and THEATER_STYLES", "kind": "implementation"},
+    {"id": "evidence-theme-settings", "path": "app.js", "locator": "renderSettings, applyTheme, applyTheaterStyle", "kind": "implementation"},
+    {"id": "evidence-theme-tests", "path": "tests/component/app-ui.test.js", "locator": "theater style selection and asset assertions", "kind": "test"},
+    {"id": "evidence-pwa-manifest", "path": "manifest.json", "locator": "display, start_url, scope, orientation", "kind": "configuration"},
+    {"id": "evidence-indexeddb", "path": "app.js", "locator": "DB_NAME, DB_VERSION, indexedDB.open", "kind": "implementation"},
+    {"id": "evidence-service-worker", "path": "service-worker.js", "locator": "install, activate, fetch handlers", "kind": "implementation"},
+    {"id": "evidence-store-ui", "path": "app.js", "locator": "renderStores and sortedStores", "kind": "implementation"},
+    {"id": "evidence-store-tests", "path": "tests/unit/app-core.test.js", "locator": "sortStores and storeStats tests", "kind": "test"},
+    {"id": "evidence-backup-ui", "path": "index.html", "locator": "exportDataButton and importDataInput", "kind": "implementation"},
+    {"id": "evidence-backup-tests", "path": "tests/e2e/data-backup.spec.js", "locator": "exports local data and imports a valid backup", "kind": "test"}
+  ]
+}

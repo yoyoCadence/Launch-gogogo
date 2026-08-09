@@ -1,0 +1,76 @@
+{
+  "schema_version": 1,
+  "strongest_selling_points": [
+    {
+      "feature_id": "feature-order-theater",
+      "user_value": "讓午餐帳務不只是一串數字，也有可辨識、可分享的團隊日常感。",
+      "visual_proof": "Ledger 下方的訂餐小劇場會顯示同事、店家類型、付款狀態與餘額。"
+    },
+    {
+      "feature_id": "feature-prepaid-ledger",
+      "user_value": "代訂者在同一個手機畫面看見分組、餘額、欠款與當日訂單。",
+      "visual_proof": "目前 repository 的 Ledger 實機截圖與 live sample capture。"
+    },
+    {
+      "feature_id": "feature-theme-system",
+      "user_value": "帳務結構不變，但可以切換成符合團隊偏好的配色與小劇場氣氛。",
+      "visual_proof": "設定頁卡片以及同一 Ledger 的便當綠、Cyberpunk、哥德與霓虹版本。"
+    },
+    {
+      "feature_id": "feature-local-pwa",
+      "user_value": "小團隊不必先建帳號或維護後端，就能開始記錄午晚餐。",
+      "visual_proof": "Manifest、IndexedDB、Service Worker 程式碼與設定頁備份控制。"
+    }
+  ],
+  "strongest_visual_proof": [
+    "docs/screenshots/ledger.png",
+    "docs/screenshots/themes.png",
+    "docs/screenshots/theme-cyberpunk.png",
+    "docs/screenshots/theme-gothic.png",
+    "docs/screenshots/theme-neon.png",
+    "output/product-marketing-assets/2026-08-09-complete-campaign/raw-captures/lunch-stores-live.png"
+  ],
+  "weakest_visual_areas": [
+    "IndexedDB 與 Service Worker 的價值需要圖解，單靠畫面看不出來。",
+    "JSON 備份控制在長設定頁中不夠醒目。",
+    "店家排序是實用功能，但畫面辨識度低於小劇場。"
+  ],
+  "strategically_important_features_needing_non_screen_proof": [
+    "本機資料模型",
+    "離線開啟",
+    "JSON schema 驗證",
+    "同一筆交易如何影響餘額"
+  ],
+  "confusing_or_buried_differentiators": [
+    "主題與小劇場風格是兩套獨立選擇，而不是同一個主題下的固定搭配。",
+    "小劇場狀態來自真實訂單資料，不是純裝飾背景。"
+  ],
+  "missing_or_weak_demo_states": [
+    "內建 sample data 以 5 筆未付款訂單為主，適合測試廣度，但不如 repository 的實機 Ledger 截圖能清楚說明儲值扣款前後。"
+  ],
+  "low_value_screens_that_should_not_lead": [
+    "空白 Ledger",
+    "完整長設定頁",
+    "只有按鈕的資料備份區"
+  ],
+  "recommended_story": "先用『每一筆午餐，都有帳，也有戲』建立產品類別與記憶點，再依序證明同一帳本、訂單小劇場、雙層風格系統、本機 PWA 與店家日常，最後以『午休開場，帳務就位』收束。",
+  "recommended_assets": [
+    {"role": "hero", "reason": "把真實 Ledger 與訂餐小劇場放在同一個快速掃讀畫面中。"},
+    {"role": "workflow-proof", "reason": "用儲值、點餐、餘額三段場記單解釋核心帳務。"},
+    {"role": "differentiator-proof", "reason": "放大小劇場與訂單狀態，證明獨特機制。"},
+    {"role": "breadth-proof", "reason": "用真實設定頁與多個 Ledger 版本證明配色與劇場風格。"},
+    {"role": "trust-proof", "reason": "用本機資料與備份圖解說清楚不登入模式。"},
+    {"role": "closing-system-view", "reason": "把 Ledger、店家與設定連成完整午休工具。"}
+  ],
+  "claims_requiring_cautious_wording": [
+    "只能說支援離線開啟，不能宣稱所有功能永遠離線可用。",
+    "只能說本機保存與手動 JSON 備份，不能宣稱私密、加密或雲端同步。",
+    "小劇場風格數量依目前 source revision 為 21；README 的 6 已過時。",
+    "避免使用第三方娛樂作品名稱或官方授權暗示。"
+  ],
+  "product_improvement_opportunities": [
+    "讓設定頁顯示目前主題數與劇場風格數，減少 README 與 UI 數字落差。",
+    "為備份區增加『本機資料』的簡短架構說明。",
+    "提供一個能同時示範儲值與預付扣款的內建 showcase fixture。"
+  ]
+}

@@ -1,0 +1,123 @@
+{
+  "schema_version": 1,
+  "project_name": "Launch-GoGoGo",
+  "project_version": "0.1.0",
+  "generated_at": "2026-08-09T21:49:40+08:00",
+  "language": "zh-Hant-TW",
+  "platform": ["github", "portfolio"],
+  "asset_count": 6,
+  "art_direction": {
+    "id": "lunch-call-sheet-v1",
+    "name": "午休場記單",
+    "summary": "把真實午餐帳務當成場記資訊，讓訂單票帶一路連到產品內建小劇場。",
+    "path": "metadata/art-direction.json"
+  },
+  "visual_signature": {
+    "dominant_mood": "深夜帳本般可靠，帶一點午休開場前的明亮期待",
+    "composition_language": "場記票帶依真實工作流程穿越畫面；產品 UI 像主舞台",
+    "color_character": "午夜藍黑、便當綠、劇場珊瑚與米白票紙的功能色邏輯",
+    "graphic_motif": "有穿孔與序號的午餐場記單，從儲值連到小劇場",
+    "typography_character": "粗而直接的繁體中文標題搭配等寬 cue sheet 註記",
+    "device_usage": "不用通用手機模型；真實直向 UI 以精準平面裁切呈現",
+    "generation_style": "無文字生成舞台環境，疊加真實 UI 與 deterministic 繁中排版"
+  },
+  "brand_basis": {
+    "repository_evidence": ["styles.css", "app.js", "docs/screenshots/ledger.png", "icon.svg"],
+    "product_traits": ["務實帳務", "午休劇場", "可自訂", "手機優先", "本機運作"],
+    "user_constraints": ["完整產品行銷素材 campaign", "開立 PR"],
+    "portfolio_contrast": ["避開通用紫藍漸層、玻璃卡片與傾斜手機模板"]
+  },
+  "render_modes": ["HYBRID", "DETERMINISTIC", "SCREENSHOT-LED"],
+  "capture_mode": "mixed",
+  "capture_provenance": {
+    "source_revision": "bf97c951ce1aeb301f31bd89ff0f5ee05d50f95a",
+    "demo_state": {
+      "source": "built_in_sample_data",
+      "environment": "isolated_local_playwright_session",
+      "production_data_used": false,
+      "cleanup_status": "complete"
+    },
+    "sources": [
+      {"id": "existing-ledger-proof", "kind": "existing", "surface": "web-mobile", "screen": "ledger with prepaid deduction and theater", "source_path": "docs/screenshots/ledger.png", "source_version": "bf97c951ce1aeb301f31bd89ff0f5ee05d50f95a", "privacy_status": "passed", "retention": "repository_owned"},
+      {"id": "existing-themes", "kind": "existing", "surface": "web-mobile", "screen": "settings theme and theater selectors", "source_path": "docs/screenshots/themes.png", "source_version": "bf97c951ce1aeb301f31bd89ff0f5ee05d50f95a", "privacy_status": "passed", "retention": "repository_owned"},
+      {"id": "existing-theme-cyberpunk", "kind": "existing", "surface": "web-mobile", "screen": "ledger visual variant", "source_path": "docs/screenshots/theme-cyberpunk.png", "source_version": "bf97c951ce1aeb301f31bd89ff0f5ee05d50f95a", "privacy_status": "passed", "retention": "repository_owned"},
+      {"id": "existing-theme-gothic", "kind": "existing", "surface": "web-mobile", "screen": "ledger visual variant", "source_path": "docs/screenshots/theme-gothic.png", "source_version": "bf97c951ce1aeb301f31bd89ff0f5ee05d50f95a", "privacy_status": "passed", "retention": "repository_owned"},
+      {"id": "existing-theme-neon", "kind": "existing", "surface": "web-mobile", "screen": "ledger visual variant", "source_path": "docs/screenshots/theme-neon.png", "source_version": "bf97c951ce1aeb301f31bd89ff0f5ee05d50f95a", "privacy_status": "passed", "retention": "repository_owned"},
+      {"id": "live-ledger", "kind": "live", "surface": "web-mobile", "screen": "ledger with built-in sample state", "source_path": "output/product-marketing-assets/2026-08-09-complete-campaign/raw-captures/ledger-live.png", "captured_at": "2026-08-09T21:47:38+08:00", "privacy_status": "passed", "retention": "intermediate_retained"},
+      {"id": "live-lunch-stores", "kind": "live", "surface": "web-mobile", "screen": "lunch store list with built-in sample state", "source_path": "output/product-marketing-assets/2026-08-09-complete-campaign/raw-captures/lunch-stores-live.png", "captured_at": "2026-08-09T21:48:31+08:00", "privacy_status": "passed", "retention": "intermediate_retained"},
+      {"id": "live-settings", "kind": "live", "surface": "web-mobile", "screen": "settings with built-in sample state", "source_path": "output/product-marketing-assets/2026-08-09-complete-campaign/raw-captures/settings-live.png", "captured_at": "2026-08-09T21:48:04+08:00", "privacy_status": "passed", "retention": "intermediate_retained"},
+      {"id": "live-settings-backup", "kind": "live", "surface": "web-mobile", "screen": "settings JSON backup controls", "source_path": "output/product-marketing-assets/2026-08-09-complete-campaign/raw-captures/settings-backup-live.png", "captured_at": "2026-08-09T21:59:50+08:00", "privacy_status": "passed", "retention": "intermediate_retained"}
+    ],
+    "limitations": ["live capture 使用產品內建 5 筆範例資料；hero 的較清楚儲值扣款狀態沿用目前 repository-owned screenshot。"]
+  },
+  "target_audience": ["替小型辦公室或固定團隊彙整午晚餐訂單、管理同事儲值與欠款的人"],
+  "story_summary": "先建立『帳與戲同時成立』的產品記憶點，再依序證明同一帳本、訂單小劇場、雙層風格系統、本機 PWA 與店家日常。",
+  "source_commit": "bf97c951ce1aeb301f31bd89ff0f5ee05d50f95a",
+  "style_version": 1,
+  "variant": {"id": "primary", "status": "selected", "parent": null},
+  "portfolio_context": {"status": "not_provided", "projects_compared": []},
+  "template_fatigue": {
+    "status": "passed",
+    "tested_assets": ["hero.png", "thumbnail.png", "contact-sheet.png"],
+    "product_specific_reasons": ["訂單票帶對應真實儲值／點餐／餘額流程", "主舞台使用產品實際小劇場與真實 Ledger UI"]
+  },
+  "assets": [
+    {
+      "id": "hero", "order": 1, "role": "hero", "file": "01-hero.png", "width": 1600, "height": 1000,
+      "sha256": "bab3296d0d77b844aedd2d8e32fd68b1cbd0c390d876a6e4a502bd1ff06ae890",
+      "communication_goal": "說明這是一個把午餐帳務與小劇場放在一起的手機產品。",
+      "headline": "每一筆午餐，都有帳，也有戲。", "feature": "同事儲值與訂餐帳本＋訂餐狀態小劇場",
+      "claim_ids": ["claim-prepaid-ledger", "claim-order-theater"], "render_mode": "HYBRID",
+      "capture_source_ids": ["existing-ledger-proof"], "generation_iteration_ids": ["imagegen-stage-environment-v1"],
+      "selection_rationale": "生成舞台建立產品專屬隱喻，真實 Ledger 保留功能可信度。", "platform_targets": ["github", "portfolio"], "platform_variants": []
+    },
+    {
+      "id": "one-ledger", "order": 2, "role": "workflow-proof", "file": "02-one-ledger.png", "width": 1600, "height": 1000,
+      "sha256": "424788a769bba99a02af25fb3010622fd1085dd895fa7d2812e12f8df87830fb",
+      "communication_goal": "證明儲值、點餐與餘額在同一條帳務流程。", "headline": "儲值、點餐、餘額，留在同一條帳。", "feature": "同事儲值與訂餐帳本",
+      "claim_ids": ["claim-prepaid-ledger"], "render_mode": "DETERMINISTIC", "capture_source_ids": ["existing-ledger-proof"],
+      "selection_rationale": "三段場記單讓核心流程快速可讀，餘額 UI 提供直接證據。", "platform_targets": ["github", "portfolio"], "platform_variants": []
+    },
+    {
+      "id": "order-theater", "order": 3, "role": "differentiator-proof", "file": "03-order-theater.png", "width": 1600, "height": 1000,
+      "sha256": "927a619d2c5db648d6cae41bdcd6d60146260ffbfa90055d7dc0268320749932",
+      "communication_goal": "說明小劇場由同一筆訂單的角色、店家與付款狀態驅動。", "headline": "一筆餐點，演成一幕午休小劇場。", "feature": "訂餐狀態小劇場",
+      "claim_ids": ["claim-order-theater"], "render_mode": "SCREENSHOT-LED", "capture_source_ids": ["existing-ledger-proof", "existing-theme-cyberpunk", "existing-theme-gothic"],
+      "selection_rationale": "放大產品真實劇場區並以四個資料節點解釋其來源。", "platform_targets": ["github", "portfolio"], "platform_variants": []
+    },
+    {
+      "id": "style-system", "order": 4, "role": "breadth-proof", "file": "04-style-system.png", "width": 1600, "height": 1000,
+      "sha256": "5f29088369c1e829f565722d3a7f7a994f4488438f0a035cfc44407b78d481a8",
+      "communication_goal": "證明配色主題與小劇場風格可分開選擇。", "headline": "帳本可以很務實，也可以很有戲。", "feature": "可分開選擇的主題與小劇場風格",
+      "claim_ids": ["claim-theme-breadth"], "render_mode": "DETERMINISTIC", "capture_source_ids": ["existing-themes", "existing-theme-cyberpunk", "existing-theme-gothic", "existing-theme-neon"],
+      "selection_rationale": "設定矩陣證明選擇介面，三個真實舞台裁切證明可見差異。", "platform_targets": ["github", "portfolio"], "platform_variants": []
+    },
+    {
+      "id": "local-first", "order": 5, "role": "trust-proof", "file": "05-local-first.png", "width": 1600, "height": 1000,
+      "sha256": "61f44881128b6d68105d0e78fe3a07f96001d696f69b5cd7c598c73e17f0b85a",
+      "communication_goal": "說明不登入、本機保存、離線開啟與手動備份的真實範圍。", "headline": "不登入，也有自己的午餐帳。", "feature": "免登入的本機 PWA 與 JSON 備份",
+      "claim_ids": ["claim-local-pwa", "claim-json-backup"], "render_mode": "DETERMINISTIC", "capture_source_ids": ["live-settings-backup"],
+      "selection_rationale": "架構節點承載不可見機制，真實設定 UI 證明備份控制。", "platform_targets": ["github", "portfolio"], "platform_variants": []
+    },
+    {
+      "id": "closing", "order": 6, "role": "closing-system-view", "file": "06-closing.png", "width": 1600, "height": 1000,
+      "sha256": "af3747133ce63c546bda3adfd7673375920b530628b50be20cdb77e3d9b40320",
+      "communication_goal": "收束成涵蓋同事餘額、店家與風格的手機優先午休工具。", "headline": "午休開場，帳務就位。", "feature": "完整午休工作流",
+      "claim_ids": ["claim-prepaid-ledger", "claim-order-theater", "claim-store-rotation"], "render_mode": "DETERMINISTIC", "capture_source_ids": ["live-ledger", "live-lunch-stores", "live-settings"],
+      "selection_rationale": "三個 live 產品畫面在同一節奏中完成範圍收束。", "platform_targets": ["github", "portfolio"], "platform_variants": []
+    }
+  ],
+  "stable_aliases": [{"file": "hero.png", "source_asset_id": "hero", "sha256": "bab3296d0d77b844aedd2d8e32fd68b1cbd0c390d876a6e4a502bd1ff06ae890"}],
+  "derivatives": [
+    {"id": "thumbnail", "file": "thumbnail.png", "width": 1200, "height": 675, "strategy": "recomposed", "sha256": "e2b0020c8dd7fb1e97a3ee7b624a5c72cc05de185e8f3a4a249c1106bb638ed4"},
+    {"id": "contact-sheet", "file": "contact-sheet.png", "width": 1680, "height": 1620, "strategy": "deterministic-grid", "sha256": "8d33b41b73a5018d6986bb1732942f09037d557cf1b5a66ca193fccc0f9f4acc"}
+  ],
+  "qa_summary": {
+    "status": "passed",
+    "reviewed_at": "2026-08-09T22:10:00+08:00",
+    "gates": {"visual": "pass", "product_accuracy": "pass", "privacy": "pass", "technical": "pass", "campaign_consistency": "pass", "portfolio_diversity": "not_applicable"},
+    "platform_specifications": [{"platform": "github-and-portfolio-generic", "status": "not_applicable", "official_source": null, "verified_at": null}],
+    "open_findings": [],
+    "accepted_minor_findings": ["生成 hero 背景中的票紙只含抽象點線，未作為產品 UI 或資料證據。", "hero.png 與 01-hero.png 是 contract 明確允許的相同位元組別名。"]
+  }
+}
