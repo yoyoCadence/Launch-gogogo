@@ -1,6 +1,6 @@
 {
   "schema_version": 1,
-  "reviewed_at": "2026-08-09T22:05:00+08:00",
+  "reviewed_at": "2026-08-09T22:50:45+08:00",
   "reviewed_files": ["showcase/01-hero.png", "showcase/02-one-ledger.png", "showcase/03-order-theater.png", "showcase/04-style-system.png", "showcase/05-local-first.png", "showcase/06-closing.png", "showcase/thumbnail.png", "showcase/contact-sheet.png"],
   "gates": {
     "provenance_preflight": "pass",
@@ -13,7 +13,8 @@
   "repairs_completed": [
     {"asset": "04-style-system.png", "finding": "first render used overly narrow full-screen crops", "repair": "recomposed as three wider real theater crops"},
     {"asset": "05-local-first.png", "finding": "first render did not expose JSON controls", "repair": "recaptured the live backup section and replaced the proof crop"},
-    {"asset": "02-one-ledger.png", "finding": "supporting ticket used unnecessary instant wording", "repair": "narrowed copy to a factual result statement"}
+    {"asset": "02-one-ledger.png", "finding": "supporting ticket used unnecessary instant wording", "repair": "narrowed copy to a factual result statement"},
+    {"asset": "01-hero.png", "finding": "the 430x900 Ledger proof was cover-cropped into a narrower 386x930 frame, cutting UI at both horizontal edges", "repair": "matched the proof frame to the source aspect ratio, switched to contain, and added a 100px right safe margin"}
   ],
   "open_findings": [],
   "accepted_minor_findings": ["The hero illustration includes abstract dotted ticket markings; they are clearly conceptual and never presented as product UI or real data."],

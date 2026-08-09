@@ -2,7 +2,7 @@
   "schema_version": 1,
   "project_name": "Launch-GoGoGo",
   "project_version": "0.1.0",
-  "generated_at": "2026-08-09T21:49:40+08:00",
+  "generated_at": "2026-08-09T22:50:45+08:00",
   "language": "zh-Hant-TW",
   "platform": ["github", "portfolio"],
   "asset_count": 6,
@@ -64,7 +64,7 @@
   "assets": [
     {
       "id": "hero", "order": 1, "role": "hero", "file": "01-hero.png", "width": 1600, "height": 1000,
-      "sha256": "bab3296d0d77b844aedd2d8e32fd68b1cbd0c390d876a6e4a502bd1ff06ae890",
+      "sha256": "fc543666fa3112e854156cbd8a014b562fb85f2f9e6bb7449a5b64b061eaa614",
       "communication_goal": "說明這是一個把午餐帳務與小劇場放在一起的手機產品。",
       "headline": "每一筆午餐，都有帳，也有戲。", "feature": "同事儲值與訂餐帳本＋訂餐狀態小劇場",
       "claim_ids": ["claim-prepaid-ledger", "claim-order-theater"], "render_mode": "HYBRID",
@@ -107,14 +107,14 @@
       "selection_rationale": "三個 live 產品畫面在同一節奏中完成範圍收束。", "platform_targets": ["github", "portfolio"], "platform_variants": []
     }
   ],
-  "stable_aliases": [{"file": "hero.png", "source_asset_id": "hero", "sha256": "bab3296d0d77b844aedd2d8e32fd68b1cbd0c390d876a6e4a502bd1ff06ae890"}],
+  "stable_aliases": [{"file": "hero.png", "source_asset_id": "hero", "sha256": "fc543666fa3112e854156cbd8a014b562fb85f2f9e6bb7449a5b64b061eaa614"}],
   "derivatives": [
-    {"id": "thumbnail", "file": "thumbnail.png", "width": 1200, "height": 675, "strategy": "recomposed", "sha256": "e2b0020c8dd7fb1e97a3ee7b624a5c72cc05de185e8f3a4a249c1106bb638ed4"},
-    {"id": "contact-sheet", "file": "contact-sheet.png", "width": 1680, "height": 1620, "strategy": "deterministic-grid", "sha256": "8d33b41b73a5018d6986bb1732942f09037d557cf1b5a66ca193fccc0f9f4acc"}
+    {"id": "thumbnail", "file": "thumbnail.png", "width": 1200, "height": 675, "strategy": "recomposed", "sha256": "ac3b9235cd8e53041fd74720c39e81b30937b63ee7411356b200ae34a9dbfa16"},
+    {"id": "contact-sheet", "file": "contact-sheet.png", "width": 1680, "height": 1620, "strategy": "deterministic-grid", "sha256": "0152a4e6573d37e21f49bbb613090ccd553de6690d1b6baf11545fe8f9503618"}
   ],
   "qa_summary": {
     "status": "passed",
-    "reviewed_at": "2026-08-09T22:10:00+08:00",
+    "reviewed_at": "2026-08-09T22:50:45+08:00",
     "gates": {"visual": "pass", "product_accuracy": "pass", "privacy": "pass", "technical": "pass", "campaign_consistency": "pass", "portfolio_diversity": "not_applicable"},
     "platform_specifications": [{"platform": "github-and-portfolio-generic", "status": "not_applicable", "official_source": null, "verified_at": null}],
     "open_findings": [],

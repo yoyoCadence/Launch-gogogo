@@ -1,3 +1,4 @@
+import os
 from pathlib import Path
 from PIL import Image, ImageDraw, ImageFont, ImageFilter, ImageOps
 
@@ -5,7 +6,8 @@ from PIL import Image, ImageDraw, ImageFont, ImageFilter, ImageOps
 ROOT = Path(__file__).resolve().parents[4]
 WORK = ROOT / "output" / "product-marketing-assets" / "2026-08-09-complete-campaign" / "working"
 CAPTURES = ROOT / "output" / "product-marketing-assets" / "2026-08-09-complete-campaign" / "raw-captures"
-SHOWCASE = ROOT / "showcase"
+SHOWCASE = Path(os.environ.get("LAUNCH_CAMPAIGN_OUTPUT_DIR", ROOT / "showcase"))
+SHOWCASE.mkdir(parents=True, exist_ok=True)
 
 W, H = 1600, 1000
 BG = "#06121f"
@@ -192,7 +194,7 @@ for i, (label, color) in enumerate([("同事餘額", GREEN), ("餐點扣款", CO
     x = 98 + i * 210
     d.rounded_rectangle((x, 720, x + 184, 770), radius=25, fill=(6, 18, 31, 210), outline=color, width=2)
     d.text((x + 22, 730), label, font=font(22, bold=True), fill=INK)
-paste_card(c, ledger, (1134, 35, 386, 930), radius=36, border=3, mode="cover", focus=(0.5, 0.22))
+paste_card(c, ledger, (1080, 35, 420, 879), radius=36, border=3, mode="contain")
 d = ImageDraw.Draw(c)
 footer_mark(d, 1)
 save(c, "01-hero.png")
@@ -333,7 +335,7 @@ td.text((166, 78), "Launch-GoGoGo", font=font(27, bold=True), fill=INK)
 text_block(td, (70, 185), "每一筆午餐，\n都有帳，也有戲。", font(58, bold=True), INK, 620, 8)
 td.rounded_rectangle((72, 500, 390, 550), radius=25, fill=GREEN)
 td.text((105, 510), "午餐帳本 × 訂餐小劇場", font=font(23, bold=True), fill=BG)
-paste_card(t, ledger, (850, 24, 290, 627), radius=30, border=3, focus=(0.5, 0.19))
+paste_card(t, ledger, (820, 24, 300, 628), radius=30, border=3, mode="contain")
 t.convert("RGB").save(SHOWCASE / "thumbnail.png", quality=95)
 
 
