@@ -1,0 +1,151 @@
+{
+  "schema_version": 1,
+  "project": "Launch-GoGoGo",
+  "project_slug": "launch-gogogo",
+  "language": "zh-Hant-TW",
+  "hero": "hero.png",
+  "thumbnail": "thumbnail.png",
+  "contact_sheet": "contact-sheet.png",
+  "campaign": "campaign.json",
+  "metadata": {
+    "product_model": "metadata/product-model.json",
+    "storyboard": "metadata/storyboard.json",
+    "claims": "metadata/claims.json",
+    "art_direction": "metadata/art-direction.json",
+    "marketing_review": "metadata/marketing-review.json",
+    "marketing_opportunities": "metadata/marketing-opportunities.json"
+  },
+  "assets": [
+    {
+      "id": "hero",
+      "order": 1,
+      "file": "01-hero.png",
+      "role": "hero",
+      "headline": "每一筆午餐，都有帳，也有戲。",
+      "feature": "同事儲值與訂餐帳本＋訂餐狀態小劇場",
+      "communication_goal": "說明產品類別與核心承諾",
+      "render_mode": "HYBRID",
+      "capture_source_ids": [
+        "existing-ledger-proof"
+      ],
+      "platform_targets": [
+        "github",
+        "portfolio"
+      ],
+      "variants": []
+    },
+    {
+      "id": "one-ledger",
+      "order": 2,
+      "file": "02-one-ledger.png",
+      "role": "workflow-proof",
+      "headline": "儲值、點餐、餘額，留在同一條帳。",
+      "feature": "同事儲值與訂餐帳本",
+      "communication_goal": "證明核心帳務流程",
+      "render_mode": "DETERMINISTIC",
+      "capture_source_ids": [
+        "existing-ledger-proof"
+      ],
+      "platform_targets": [
+        "github",
+        "portfolio"
+      ],
+      "variants": []
+    },
+    {
+      "id": "order-theater",
+      "order": 3,
+      "file": "03-order-theater.png",
+      "role": "differentiator-proof",
+      "headline": "一筆餐點，演成一幕午休小劇場。",
+      "feature": "訂餐狀態小劇場",
+      "communication_goal": "證明 signature differentiator",
+      "render_mode": "SCREENSHOT-LED",
+      "capture_source_ids": [
+        "existing-ledger-proof",
+        "existing-theme-cyberpunk",
+        "existing-theme-gothic"
+      ],
+      "platform_targets": [
+        "github",
+        "portfolio"
+      ],
+      "variants": []
+    },
+    {
+      "id": "style-system",
+      "order": 4,
+      "file": "04-style-system.png",
+      "role": "breadth-proof",
+      "headline": "帳本可以很務實，也可以很有戲。",
+      "feature": "14 種配色主題與 21 種小劇場風格",
+      "communication_goal": "證明風格廣度與獨立選擇",
+      "render_mode": "DETERMINISTIC",
+      "capture_source_ids": [
+        "existing-themes",
+        "existing-theme-cyberpunk",
+        "existing-theme-gothic",
+        "existing-theme-neon"
+      ],
+      "platform_targets": [
+        "github",
+        "portfolio"
+      ],
+      "variants": []
+    },
+    {
+      "id": "local-first",
+      "order": 5,
+      "file": "05-local-first.png",
+      "role": "trust-proof",
+      "headline": "不登入，也有自己的午餐帳。",
+      "feature": "本機 PWA 與 JSON 備份",
+      "communication_goal": "說明本機資料邊界",
+      "render_mode": "DETERMINISTIC",
+      "capture_source_ids": [
+        "live-settings-backup"
+      ],
+      "platform_targets": [
+        "github",
+        "portfolio"
+      ],
+      "variants": []
+    },
+    {
+      "id": "closing",
+      "order": 6,
+      "file": "06-closing.png",
+      "role": "closing-system-view",
+      "headline": "午休開場，帳務就位。",
+      "feature": "完整午休工作流",
+      "communication_goal": "收束產品範圍",
+      "render_mode": "DETERMINISTIC",
+      "capture_source_ids": [
+        "live-ledger",
+        "live-lunch-stores",
+        "live-settings"
+      ],
+      "platform_targets": [
+        "github",
+        "portfolio"
+      ],
+      "variants": []
+    }
+  ],
+  "visual_signature": {
+    "dominant_mood": "可靠又有玩心的午休開場",
+    "composition_language": "場記票帶依真實帳務流程連到產品小劇場",
+    "color_character": "午夜藍黑、便當綠、劇場珊瑚與米白票紙",
+    "graphic_motif": "穿孔午餐場記單與 cue 序號",
+    "typography_character": "粗繁中標題搭配等寬 cue sheet 註記",
+    "device_usage": "無硬體 mockup 的真實直向 UI 裁切",
+    "generation_style": "無文字概念環境＋真實 UI＋deterministic 排版"
+  },
+  "extensions": {
+    "campaign.run": {
+      "run_id": "2026-08-09-complete-campaign",
+      "style_version": 1,
+      "variant": "primary"
+    }
+  }
+}

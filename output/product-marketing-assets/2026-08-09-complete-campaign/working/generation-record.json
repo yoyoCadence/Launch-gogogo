@@ -1,0 +1,13 @@
+{
+  "schema_version": 1,
+  "iteration_id": "imagegen-stage-environment-v1",
+  "capability": "built-in image generation",
+  "use_case": "stylized-concept",
+  "asset_type": "product marketing campaign hero environment",
+  "source_output": "output/product-marketing-assets/2026-08-09-complete-campaign/working/generated-stage-environment.png",
+  "used_by_assets": ["hero", "thumbnail"],
+  "prompt": "Create a wide premium tactile miniature scene for a mobile-first office lunch ledger whose real orders become tiny status-theater scenes. A continuous perforated lunch-order ticket ribbon travels from a cool midnight bookkeeping desk through three cue points into a warm miniature lunch counter stage. Refined editorial miniature photography and paper-craft; left side calm for copy, right side stage for exact UI compositing. Midnight navy, ivory paper, bento green, restrained coral, pale cyan abstract glow. No words, letters, numbers, logos, watermark, device, UI, controls, chart, branded packaging, recognizable copyrighted characters, people or hands. Avoid generic purple SaaS gradients, glassmorphism, floating UI cards and cyberpunk city.",
+  "integrity_boundary": "Conceptual environment only. All product UI and campaign text were added deterministically from accepted sources.",
+  "known_limitations": ["Abstract dotted ticket markings remain conceptual paper texture and do not represent product data."],
+  "selection_rationale": "The generated ticket-to-stage environment directly expresses the verified order-to-theater mechanism and leaves room for exact UI proof."
+}
